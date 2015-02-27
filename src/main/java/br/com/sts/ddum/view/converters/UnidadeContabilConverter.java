@@ -5,8 +5,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 
-import br.com.sts.ddum.domain.entities.BaseEntity;
-import br.com.sts.ddum.domain.entities.UnidadeContabil;
+import br.com.sts.ddum.model.entities.BaseEntity;
+import br.com.sts.ddum.model.entities.UnidadeContabil;
 import br.com.sts.ddum.view.controllers.UnidadeController;
 
 @FacesConverter(value = "unidadeContabilConverter")

@@ -37,8 +37,8 @@ import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
 import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.j2ee.servlets.ImageServlet;
 import ar.com.fdvs.dj.domain.DynamicReport;
-import br.com.sts.ddum.domain.enums.ReportType;
-import br.com.sts.ddum.domain.utils.DataValidatorUtils;
+import br.com.sts.ddum.model.enums.ReportType;
+import br.com.sts.ddum.model.utils.DataValidatorUtils;
 
 @WebServlet(name = "Report", urlPatterns = { "/ReportData" })
 public class ServletReportData extends HttpServlet {

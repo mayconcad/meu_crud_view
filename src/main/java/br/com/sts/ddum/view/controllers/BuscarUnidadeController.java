@@ -19,17 +19,17 @@ import javax.faces.event.ActionEvent;
 import org.primefaces.component.tabview.Tab;
 import org.primefaces.component.tabview.TabView;
 
-import br.com.sts.ddum.domain.entities.AtividadeContabil;
-import br.com.sts.ddum.domain.entities.ContaContabil;
-import br.com.sts.ddum.domain.entities.FonteRecurso;
-import br.com.sts.ddum.domain.entities.ParametroRepasse;
-import br.com.sts.ddum.domain.entities.Responsavel;
-import br.com.sts.ddum.domain.entities.SegmentoEnum;
-import br.com.sts.ddum.domain.entities.Unidade;
-import br.com.sts.ddum.domain.entities.UnidadeContabil;
-import br.com.sts.ddum.domain.enums.QueryEnum;
-import br.com.sts.ddum.domain.enums.ResultMessages;
-import br.com.sts.ddum.domain.enums.ZonaLocalizacaoEnum;
+import br.com.sts.ddum.model.entities.AtividadeContabil;
+import br.com.sts.ddum.model.entities.ContaContabil;
+import br.com.sts.ddum.model.entities.FonteRecurso;
+import br.com.sts.ddum.model.entities.ParametroRepasse;
+import br.com.sts.ddum.model.entities.Responsavel;
+import br.com.sts.ddum.model.entities.SegmentoEnum;
+import br.com.sts.ddum.model.entities.Unidade;
+import br.com.sts.ddum.model.entities.UnidadeContabil;
+import br.com.sts.ddum.model.enums.QueryEnum;
+import br.com.sts.ddum.model.enums.ResultMessages;
+import br.com.sts.ddum.model.enums.ZonaLocalizacaoEnum;
 import br.com.sts.ddum.service.interfaces.ParametroRepasseService;
 import br.com.sts.ddum.service.interfaces.UnidadeService;
 

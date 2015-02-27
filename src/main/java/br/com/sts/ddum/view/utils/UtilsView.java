@@ -1,7 +1,5 @@
 package br.com.sts.ddum.view.utils;
 
-import java.math.BigDecimal;
-import java.util.Collection;
 import java.util.Iterator;
 
 import javax.faces.component.EditableValueHolder;
@@ -10,7 +8,7 @@ import javax.faces.context.FacesContext;
 
 import br.com.sts.ddum.view.controllers.BaseController;
 
-public class Utils {
+public class UtilsView {
 
 	/**
 	 * Limpa os dados dos componentes de edição e de seus filhos,
@@ -64,23 +62,6 @@ public class Utils {
 		}
 	}
 
-	// converte o valor do cpf formatado para somente numeros em formato de
-	// string
-	public static String convertFormatCPF(String cpf) {
-		return cpf.replace(".", "").replace("-", "").trim();
-	}
-
-	public static String pegarSeisCaracteres(String codElementoDespesa) {
-		if (codElementoDespesa != null && codElementoDespesa.length() > 6)
-			return codElementoDespesa.substring(0, 6);
-		return codElementoDespesa;
-	}
-
-	public static BigDecimal convertStringToBigDecimal(String valorRepasse) {
-		return new BigDecimal(valorRepasse.replace("R$", "").replace(".", "")
-				.replace(",", ".").trim());
-	}
-
 	public static <T extends BaseController> T getControllerInstance(
 			Class<T> klass) {
 		FacesContext currentInstance = FacesContext.getCurrentInstance();
@@ -95,18 +76,5 @@ public class Utils {
 								+ klass.getSimpleName().substring(1)));
 
 		return newInstance;
-	}
-
-	public static boolean possuiValorValido(Object... valores) {
-		boolean result = true;
-		for (Object object : valores) {
-			if (object instanceof Collection) {
-				if (((Collection) object).isEmpty())
-					result = false;
-			} else if (object == null || object.equals(""))
-				result = false;
-			result &= result;
-		}
-		return result;
 	}
 }

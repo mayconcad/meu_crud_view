@@ -12,13 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 
-import br.com.sts.ddum.domain.entities.ParametroRepasse;
-import br.com.sts.ddum.domain.entities.SegmentoEnum;
-import br.com.sts.ddum.domain.enums.QueryEnum;
-import br.com.sts.ddum.domain.enums.ResultMessages;
+import br.com.sts.ddum.model.entities.ParametroRepasse;
+import br.com.sts.ddum.model.entities.SegmentoEnum;
+import br.com.sts.ddum.model.enums.QueryEnum;
+import br.com.sts.ddum.model.enums.ResultMessages;
+import br.com.sts.ddum.model.utils.UtilsModel;
 import br.com.sts.ddum.service.interfaces.ConnectionConfigService;
 import br.com.sts.ddum.service.interfaces.ParametroRepasseService;
-import br.com.sts.ddum.view.utils.Utils;
 
 @Controller
 @ViewScoped
@@ -61,7 +61,7 @@ public class ParametroRepasseController extends BaseController {
 			String query = String.format(
 					QueryEnum.ParametroRepasse.DOTACAO_ORCAMENTO_ID.toString(),
 					parametroRepasse.getCodUnidade(), parametroRepasse
-							.getCodAtividade(), StringUtils.rightPad(Utils
+							.getCodAtividade(), StringUtils.rightPad(UtilsModel
 							.pegarSeisCaracteres(parametroRepasse
 									.getCodElementoDespesa()), 12, "0"),
 					parametroRepasse.getCodFonteRecurso(), parametroRepasse

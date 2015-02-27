@@ -5,7 +5,7 @@ import javax.inject.Inject;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.sts.ddum.domain.entities.UserSystem;
+import br.com.sts.ddum.model.entities.UserSystem;
 import br.com.sts.ddum.domain.repository.interfaces.UserRepository;
 
 @ContextConfiguration(locations = { "classpath:applicationContext.xml" })

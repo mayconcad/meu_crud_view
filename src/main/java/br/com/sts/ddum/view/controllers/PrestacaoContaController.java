@@ -21,19 +21,20 @@ import org.primefaces.model.UploadedFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import br.com.sts.ddum.domain.entities.Documento;
-import br.com.sts.ddum.domain.entities.PrestacaoConta;
-import br.com.sts.ddum.domain.entities.Repasse;
-import br.com.sts.ddum.domain.entities.Responsavel;
-import br.com.sts.ddum.domain.enums.ResultMessages;
-import br.com.sts.ddum.domain.springsecurity.entities.User;
+import br.com.sts.ddum.model.entities.Documento;
+import br.com.sts.ddum.model.entities.PrestacaoConta;
+import br.com.sts.ddum.model.entities.Repasse;
+import br.com.sts.ddum.model.entities.Responsavel;
+import br.com.sts.ddum.model.enums.ResultMessages;
+import br.com.sts.ddum.model.springsecurity.entities.User;
+import br.com.sts.ddum.model.utils.UtilsModel;
 import br.com.sts.ddum.service.interfaces.ConnectionConfigService;
 import br.com.sts.ddum.service.interfaces.PrestacaoContaService;
 import br.com.sts.ddum.service.interfaces.RepasseService;
 import br.com.sts.ddum.service.interfaces.ResponsavelService;
 import br.com.sts.ddum.service.interfaces.UserService;
 import br.com.sts.ddum.view.uploads.UploadedFileUtil;
-import br.com.sts.ddum.view.utils.Utils;
+import br.com.sts.ddum.view.utils.UtilsView;
 
 @Controller
 @ViewScoped
@@ -101,6 +102,7 @@ public class PrestacaoContaController extends BaseController {
 		arquivoNomeFileUpload = new InputText();
 		arquivoNomeFileUpload.setStyleClass(null);
 		valorTotal = BigDecimal.ZERO;
+		valorDoc = new String();
 		conexaoBancoCGP = connectionConfigService.obterConexaoBancoCGP();
 		Ajax.update(":prestacaoContaTabView");
 	}
@@ -108,7 +110,7 @@ public class PrestacaoContaController extends BaseController {
 	public void setRepasseSemPrestacaoConta() {
 
 		this.init();
-		LoginBean controllerInstance = Utils
+		LoginBean controllerInstance = UtilsView
 				.getControllerInstance(LoginBean.class);
 		User currentUser = (User) controllerInstance.getCurrentUser();
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -139,14 +141,16 @@ public class PrestacaoContaController extends BaseController {
 
 	public void registrar() {
 
-		if (!Utils.possuiValorValido(getDocumentos())) {
+		if (!UtilsModel.possuiValorValido(getDocumentos())) {
 			addErrorMessage("Pelo menos um documento deve ser informado!");
 			return;
 		}
 
 		// prestacaoConta.setRepasse(getRepasse());
-		prestacaoConta.setDocumentos(getDocumentos());
+		List<Documento> asList = new ArrayList<Documento>(getDocumentos());
+		prestacaoConta.setDocumentos(asList);
 		try {
+			prestacaoConta.setSaldoDisponivel(getSaldoAberto());
 			prestacaoContaService.salvar(prestacaoConta);
 		} catch (Exception e) {
 			addErrorMessage(ResultMessages.ERROR_CRUD.getDescricao());
@@ -179,7 +183,7 @@ public class PrestacaoContaController extends BaseController {
 
 		documento.setTamanho(arquivoUploadFile.getSize());
 		String caminho = FacesContext.getCurrentInstance().getExternalContext()
-				.getRealPath(arquivoUploadFile.getFileName());
+				.getRealPath(File.separator);
 		documento.setCaminho(caminho);
 		documento.setArquivo(arquivoUploadFile.getContents());
 		documento.setNome(arquivoUploadFile.getFileName());
@@ -188,7 +192,7 @@ public class PrestacaoContaController extends BaseController {
 		documento.setAtivo(true);
 		documento.setNomeOriginal(String.format("%s%s%s", caminho,
 				File.separator, arquivoUploadFile.getFileName()));
-		documento.setValor(Utils.convertStringToBigDecimal(getValorDoc()));
+		documento.setValor(UtilsModel.convertStringToBigDecimal(getValorDoc()));
 
 		saldoAberto = saldoAberto.subtract(documento.getValor());
 		if (saldoAberto.compareTo(BigDecimal.ZERO) < 0) {
@@ -205,6 +209,7 @@ public class PrestacaoContaController extends BaseController {
 	}
 
 	public void editarDoc() {
+		setDocumento(documentoEdite);
 		valorTotal = valorTotal.subtract(documentoEdite.getValor());
 		saldoAberto = saldoAberto.add(documentoEdite.getValor());
 		setValorDoc(converterForCurrency(documentoEdite.getValor().toString()));

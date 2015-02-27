@@ -11,7 +11,7 @@ import javax.faces.context.FacesContext;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import br.com.sts.ddum.domain.springsecurity.entities.User;
+import br.com.sts.ddum.model.springsecurity.entities.User;
 import br.com.sts.ddum.service.interfaces.AuthenticationService;
 
 @ManagedBean

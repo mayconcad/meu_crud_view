@@ -15,13 +15,13 @@ import javax.faces.event.ActionEvent;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.component.tabview.TabView;
 
-import br.com.sts.ddum.domain.entities.ParametroRepasse;
-import br.com.sts.ddum.domain.entities.SegmentoEnum;
-import br.com.sts.ddum.domain.enums.QueryEnum;
-import br.com.sts.ddum.domain.enums.ResultMessages;
+import br.com.sts.ddum.model.entities.ParametroRepasse;
+import br.com.sts.ddum.model.entities.SegmentoEnum;
+import br.com.sts.ddum.model.enums.QueryEnum;
+import br.com.sts.ddum.model.enums.ResultMessages;
+import br.com.sts.ddum.model.utils.UtilsModel;
 import br.com.sts.ddum.service.interfaces.ConnectionConfigService;
 import br.com.sts.ddum.service.interfaces.ParametroRepasseService;
-import br.com.sts.ddum.view.utils.Utils;
 
 @ManagedBean
 @ViewScoped
@@ -113,7 +113,7 @@ public class BuscarParametroRepasseController extends BaseController {
 					QueryEnum.ParametroRepasse.DOTACAO_ORCAMENTO_ID.toString(),
 					parametroRepasseEdite.getCodUnidade(),
 					parametroRepasseEdite.getCodAtividade(),
-					StringUtils.rightPad(Utils
+					StringUtils.rightPad(UtilsModel
 							.pegarSeisCaracteres(parametroRepasseEdite
 									.getCodElementoDespesa()), 12, "0"),
 					parametroRepasseEdite.getCodFonteRecurso(),

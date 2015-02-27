@@ -15,12 +15,12 @@ import javax.inject.Inject;
 import org.primefaces.component.tabview.TabView;
 import org.springframework.stereotype.Controller;
 
-import br.com.sts.ddum.domain.enums.ResultMessages;
-import br.com.sts.ddum.domain.springsecurity.entities.Role;
-import br.com.sts.ddum.domain.springsecurity.entities.User;
+import br.com.sts.ddum.model.enums.ResultMessages;
+import br.com.sts.ddum.model.springsecurity.entities.Role;
+import br.com.sts.ddum.model.springsecurity.entities.User;
 import br.com.sts.ddum.service.interfaces.AclService;
 import br.com.sts.ddum.service.interfaces.UserService;
-import br.com.sts.ddum.view.utils.Utils;
+import br.com.sts.ddum.view.utils.UtilsView;
 
 @Controller
 @ViewScoped
@@ -90,11 +90,11 @@ public class BuscarUserController extends BaseController {
 			params.put("dataInicial", getDataInicial());
 		if (getDataFinal() != null)
 			params.put("dataFinal", getDataFinal());
-		String principalRole = Utils.getControllerInstance(
+		String principalRole = UtilsView.getControllerInstance(
 				LoginController.class).getPrincipalRole();
 		if (principalRole != null && !principalRole.equals("ADMIN"))
 			params.put("principalRole",
-					Utils.getControllerInstance(LoginController.class)
+					UtilsView.getControllerInstance(LoginController.class)
 							.getPrincipalRole());
 		usuarios = userService.buscar(params);
 	}

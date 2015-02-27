@@ -21,10 +21,10 @@
 	<context:annotation-config />
 	<!-- Define o pacote onde o Spring vai procurar por beans anotados -->
 	<context:component-scan
-		base-package="br.com.sts.ddum.domain.repository.interfaces, br.com.sts.ddum.domain.repository.impls, br.com.sts.ddum.domain.interceptors, br.com.sts.ddum.domain.utils,br.com.sts.ddum.domain.handlers, br.com.sts.ddum.view.controllers, br.com.sts.ddum.service.interfaces, br.com.sts.ddum.service.impls" />
+		base-package="br.com.sts.ddum.model.repository.interfaces, br.com.sts.ddum.model.repository.impls, br.com.sts.ddum.model.interceptors, br.com.sts.ddum.model.utils,br.com.sts.ddum.model.handlers, br.com.sts.ddum.view.controllers, br.com.sts.ddum.service.interfaces, br.com.sts.ddum.service.impls" />
 
 	<!-- Indica onde se encontram as interfaces que estendem JpaRepository -->
-	<jpa:repositories base-package="br.com.sts.ddum.domain.repository.interfaces" />
+	<jpa:repositories base-package="br.com.sts.ddum.model.repository.interfaces" />
 
 	<!-- define que as transaÃ§oes irao ser anotadas -->
 	<tx:annotation-driven />
@@ -46,8 +46,8 @@
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="org.postgresql.Driver" />
-		<property name="url" value="jdbc:postgresql://192.10.0.10:5432/ddum"/>
-<!-- 		<property name="url" value="jdbc:postgresql://localhost:5432/ddum"/> -->
+<!-- 		<property name="url" value="jdbc:postgresql://192.10.0.10:5432/ddum"/> -->
+		<property name="url" value="jdbc:postgresql://localhost:5432/ddum"/>
 		<property name="username" value="postgres" />
 		<property name="password" value="postgres" />
 	</bean>
@@ -77,7 +77,7 @@
 		<property name="entityManagerFactory" ref="entityManagerFactory" />
 	</bean>
 
-	<bean class="br.com.sts.ddum.domain.interceptors.ServiceInterceptor" />
+	<bean class="br.com.sts.ddum.model.interceptors.ServiceInterceptor" />
 
 	<bean id="jspViewResolver"
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">

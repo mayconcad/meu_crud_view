@@ -14,7 +14,7 @@ import javax.servlet.ServletContext;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import br.com.sts.ddum.domain.entities.BaseEntity;
+import br.com.sts.ddum.model.entities.BaseEntity;
 
 @FacesConverter(value = "autocompleteConverter")
 public class AutocompleteConverter implements Converter {

@@ -15,12 +15,13 @@ import javax.faces.event.ActionEvent;
 import org.primefaces.component.tabview.TabView;
 import org.primefaces.context.RequestContext;
 
-import br.com.sts.ddum.domain.entities.Responsavel;
-import br.com.sts.ddum.domain.enums.ResultMessages;
-import br.com.sts.ddum.domain.enums.TipoContaEnum;
-import br.com.sts.ddum.domain.springsecurity.entities.User;
+import br.com.sts.ddum.model.entities.Responsavel;
+import br.com.sts.ddum.model.enums.ResultMessages;
+import br.com.sts.ddum.model.enums.TipoContaEnum;
+import br.com.sts.ddum.model.springsecurity.entities.User;
+import br.com.sts.ddum.model.utils.UtilsModel;
 import br.com.sts.ddum.service.interfaces.ResponsavelService;
-import br.com.sts.ddum.view.utils.Utils;
+import br.com.sts.ddum.view.utils.UtilsView;
 import br.com.sts.ddum.view.utils.ValidateUtils;
 
 @ManagedBean
@@ -52,7 +53,8 @@ public class BuscarResponsavelController extends BaseController {
 		params.put("matriculaFuncional",
 				responsavelBusca.getMatriculaFuncional());
 		params.put("rg", responsavelBusca.getRg());
-		params.put("cpf", Utils.convertFormatCPF(responsavelBusca.getCpf()));
+		params.put("cpf",
+				UtilsModel.convertFormatCPF(responsavelBusca.getCpf()));
 		params.put("cargo", responsavelBusca.getCargo());
 		responsaveis = responsavelService.buscar(params);
 	}
@@ -70,8 +72,8 @@ public class BuscarResponsavelController extends BaseController {
 
 	public void editar(ActionEvent actionEvent) {
 		try {
-			responsavelEdite.setCpf(Utils.convertFormatCPF(responsavelEdite
-					.getCpf()));
+			responsavelEdite.setCpf(UtilsModel
+					.convertFormatCPF(responsavelEdite.getCpf()));
 			if (!ValidateUtils.isValidCPF(responsavelEdite.getCpf())) {
 				addErrorMessage(ResultMessages.INVALID_CPF.getDescricao());
 				return;
@@ -99,7 +101,7 @@ public class BuscarResponsavelController extends BaseController {
 		getEditTab().setRendered(false);
 		TabView parent = (TabView) getEditTab().getParent();
 		parent.setActiveIndex(1);
-		LoginBean controllerInstance = Utils
+		LoginBean controllerInstance = UtilsView
 				.getControllerInstance(LoginBean.class);
 
 		User currentUser = controllerInstance.getCurrentUser();

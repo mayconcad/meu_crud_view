@@ -22,22 +22,21 @@ import org.omnifaces.util.Ajax;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import br.com.sts.ddum.domain.entities.Repasse;
-import br.com.sts.ddum.domain.entities.Responsavel;
-import br.com.sts.ddum.domain.entities.Unidade;
-import br.com.sts.ddum.domain.enums.NaturezaEmpenhoEnum;
-import br.com.sts.ddum.domain.enums.TipoCreditoEnum;
-import br.com.sts.ddum.domain.enums.TipoEmpenhoEnum;
-import br.com.sts.ddum.domain.enums.TipoMetaEnum;
+import br.com.sts.ddum.model.entities.Repasse;
+import br.com.sts.ddum.model.entities.Responsavel;
+import br.com.sts.ddum.model.entities.Unidade;
+import br.com.sts.ddum.model.enums.ResultMessages;
+import br.com.sts.ddum.model.utils.UtilsModel;
+import br.com.sts.ddum.model.vos.ReservaDotacaoVO;
 import br.com.sts.ddum.service.interfaces.ConnectionConfigService;
 import br.com.sts.ddum.service.interfaces.RepasseService;
-import br.com.sts.ddum.view.utils.Utils;
 
 @Controller
 @ViewScoped
 public class RepasseController extends BaseController {
 
 	private static final long serialVersionUID = -3922297442654647722L;
+
 	private final String DE_HISTORICO = "Empenho de suprimento de fundo para atender as necessidades de manutenção de bens móveis e imóveis conforme a lei 2.928, de 18 de agosto de 2014, que instituiu o Programa Municipal Dinheiro Direto nas Unidades Municipais - PMDDU";
 
 	@Autowired
@@ -63,49 +62,74 @@ public class RepasseController extends BaseController {
 
 	public void gerarRepasse() {
 
-		Responsavel credor = null;
+		// Responsavel credor = null;
+		// try {
+		// credor = obterCredor(repasse.getUnidade().getResponsavel());
+		// } catch (SQLException e) {
+		// e.printStackTrace();
+		// addErrorMessage("Não foi possível registrar o reponsável como credor!\n"
+		// + e.getLocalizedMessage());
+		// return;
+		// }
+
+		long proximoNumeroEmpenho = repasseService
+				.obterProximoNumeroEmpenho(repasse.getUnidade()
+						.getUnidadeContabil());
+		// int exercicio = repasse.getUnidade().getParametroRepasse()
+		// .getExercicio();
+		// String codConta = StringUtils.rightPad(repasse.getUnidade()
+		// .getParametroRepasse().getCodElementoDespesa(), 12, "0");
+		// BigDecimal valorEmpenho = getValorEmpenho(repasse.getUnidade()
+		// .getParametroRepasse().getValorRepasse());
+		// BigDecimal saldoDotacao = calculoSaldoDotacao(repasse.getUnidade(),
+		// repasse.getDataEmissao());
+
+		// if (valorEmpenho.compareTo(saldoDotacao) > 0) {
+		// addErrorMessage("Não foi possível gerar o Repasse. O valor do empenho é superior ao saldo da dotação");
+		// return;
+		// }
+
+		// repasse.setExercicio(exercicio);
+		// repasse.setCodAplicacao("100");
+		// repasse.setDataEmissao(new Date());
+		// repasse.setHistorico(DE_HISTORICO);
+		// repasse.setNaturezaEmpenho(NaturezaEmpenhoEnum.EMPENHO_SUPRIMENTO_FUNDO);
+		// repasse.setTipoCredito(TipoCreditoEnum.ORCAMENTARIO);
+		// repasse.setTipoEmpenho(TipoEmpenhoEnum.GLOBAL);
+		// repasse.setTipoMeta(TipoMetaEnum.OUTRAS);
+		// repasse.setValorEmpenho(valorEmpenho);
+		// repasse.setValorLiquidacao(repasse.getUnidade().getParametroRepasse()
+		// .getValorRepasse());
+		// repasse.setValorRepasse(repasse.getUnidade().getParametroRepasse()
+		// .getValorRepasse());
+
+		// repasse.setNumeroEmpenho(proximoNumeroEmpenho);
+
+		// gerarEmpenho(credor, proximoNumeroEmpenho, exercicio, codConta,
+		// valorEmpenho, saldoDotacao);
+		//
 		try {
-			credor = obterCredor(repasse.getUnidade().getResponsavel());
-		} catch (SQLException e) {
-			e.printStackTrace();
-			addErrorMessage("Não foi possível registrar o reponsável como credor!\n"
-					+ e.getLocalizedMessage());
+			repasseService.repasseAutomatico(repasse, proximoNumeroEmpenho);
+		} catch (IllegalArgumentException e) {
+			addErrorMessage(e.getMessage());
+			return;
+		} catch (Exception e) {
+			addErrorMessage(ResultMessages.ERROR_CRUD.getDescricao());
 			return;
 		}
+
+		init();
+		addInfoMessage(String.format(
+				"Foi gerado o número ( %s ) para o Empenho",
+				proximoNumeroEmpenho));
+
+	}
+
+	private void gerarEmpenho(Responsavel credor, long proximoNumeroEmpenho,
+			int exercicio, String codConta, BigDecimal valorEmpenho,
+			BigDecimal saldoDotacao) {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		long proximoNumeroEmpenho = repasseService
-				.getProximoNumeroEmpenho(repasse.getUnidade()
-						.getUnidadeContabil());
-		int exercicio = repasse.getUnidade().getParametroRepasse()
-				.getExercicio();
-		String codConta = StringUtils.rightPad(repasse.getUnidade()
-				.getParametroRepasse().getCodElementoDespesa(), 12, "0");
-		BigDecimal valorEmpenho = getValorEmpenho(repasse.getUnidade()
-				.getParametroRepasse().getValorRepasse());
-		BigDecimal saldoDotacao = calculoSaldoDotacao(repasse.getUnidade(),
-				repasse.getDataEmissao());
-
-		if (valorEmpenho.compareTo(saldoDotacao) > 0) {
-			addErrorMessage("Não foi possível gerar o Repasse. O valor do empenho é superior ao saldo da dotação");
-			return;
-		}
-
-		repasse.setExercicio(exercicio);
-		repasse.setCodAplicacao("100");
-		repasse.setDataEmissao(new Date());
-		repasse.setHistorico(DE_HISTORICO);
-		repasse.setNaturezaEmpenho(NaturezaEmpenhoEnum.EMPENHO_SUPRIMENTO_FUNDO);
-		repasse.setTipoCredito(TipoCreditoEnum.ORCAMENTARIO);
-		repasse.setTipoEmpenho(TipoEmpenhoEnum.GLOBAL);
-		repasse.setTipoMeta(TipoMetaEnum.OUTRAS);
-		repasse.setValorEmpenho(valorEmpenho);
-		repasse.setValorLiquidacao(repasse.getUnidade().getParametroRepasse()
-				.getValorRepasse());
-		repasse.setValorRepasse(repasse.getUnidade().getParametroRepasse()
-				.getValorRepasse());
-
-		repasse.setNumeroEmpenho(proximoNumeroEmpenho);
 
 		// @formatter:off
 		String query = "INSERT INTO cgp.empenho( cd_entidade, cd_orgao, cd_unidade,"
@@ -117,32 +141,26 @@ public class RepasseController extends BaseController {
 				+ " cd_aplicacao, st_passivo, dt_registro ) VALUES("
 				+ String.format(
 						"%d, '%s', '%s', '%s', %d, %d, %d, '%s', %d, %d, '%s', '%s', '%s', %s, %d, %d, %d, %d, %s, '%s', %d, %d, %d, %d, %d, '%s' )",
-						1,
-						repasse.getUnidade().getUnidadeContabil()
-								.getAtividade().getCodOrgao(),
-						repasse.getUnidade().getParametroRepasse()
-								.getCodUnidade(),
-						repasse.getUnidade().getParametroRepasse()
-								.getCodAtividade(),
-						exercicio,
-						proximoNumeroEmpenho,
-						4,
-						codConta,
-						repasse.getTipoMeta().OUTRAS.getNumero(),
-						repasse.getTipoEmpenho().GLOBAL.getNumero(),
-						repasse.getUnidade().getParametroRepasse()
-								.getCodFonteRecurso(),
-						credor.getCodigoBanco(),
-						sdf.format(repasse.getDataEmissao()),
-						Utils.convertStringToBigDecimal(valorEmpenho.toString()),
+						1, repasse.getUnidade().getUnidadeContabil()
+								.getAtividade().getCodOrgao(), repasse
+								.getUnidade().getParametroRepasse()
+								.getCodUnidade(), repasse.getUnidade()
+								.getParametroRepasse().getCodAtividade(),
+						exercicio, proximoNumeroEmpenho, 4, codConta, repasse
+								.getTipoMeta().OUTRAS.getNumero(), repasse
+								.getTipoEmpenho().GLOBAL.getNumero(), repasse
+								.getUnidade().getParametroRepasse()
+								.getCodFonteRecurso(), credor.getCodigoBanco(),
+						sdf.format(repasse.getDataEmissao()), UtilsModel
+								.convertStringToBigDecimal(valorEmpenho
+										.toString()),
 						repasse.getTipoCredito().ORCAMENTARIO.getNumero(),
 						repasse.getNaturezaEmpenho().EMPENHO_SUPRIMENTO_FUNDO
-								.getNumero(),
-						repasse.getNumeroProcesso(),
-						0,
-						Utils.convertStringToBigDecimal(saldoDotacao.toString()),
-						DE_HISTORICO, repasse.getUnidade()
-								.getParametroRepasse().getCodDotacao(), 0,
+								.getNumero(), repasse.getNumeroProcesso(), 0,
+						UtilsModel.convertStringToBigDecimal(saldoDotacao
+								.toString()), DE_HISTORICO, repasse
+								.getUnidade().getParametroRepasse()
+								.getCodDotacao(), 0,
 						/* "Não é obrigtorio" */0, 100, 0, sdf.format(repasse
 								.getDataEmissao()));
 
@@ -152,16 +170,10 @@ public class RepasseController extends BaseController {
 			createStatement.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
-			addErrorMessage("Ocorreu um erro durante a geração do Empenho!");
+			addErrorMessage("Ocorreu um erro durante a geração do Empenho! "
+					+ e.getLocalizedMessage());
 			return;
 		}
-
-		repasseService.salvar(repasse);
-		init();
-		addInfoMessage(String.format(
-				"Foi gerado o número ( %s ) para o Empenho",
-				proximoNumeroEmpenho));
-
 	}
 
 	/**
@@ -228,7 +240,7 @@ public class RepasseController extends BaseController {
 			BigDecimal valorFixado = getValorFixado(String
 					.format("SELECT vl_fixado FROM cgp.orcamento WHERE nu_exercicio = %d AND cd_codigo_conta = '%s' AND cd_atividade_projeto = '%s' AND cd_fonte_recurso = '%s' ",
 							unidade.getParametroRepasse().getExercicio(),
-							StringUtils.rightPad(Utils
+							StringUtils.rightPad(UtilsModel
 									.pegarSeisCaracteres(unidade
 											.getParametroRepasse()
 											.getCodElementoDespesa()), 12, "0"),
@@ -291,14 +303,14 @@ public class RepasseController extends BaseController {
 						idDotacao, mes, exercicio);
 		result = createStatement.executeQuery(query);
 
-		Set<ReservaDotacao> reservas = new HashSet<ReservaDotacao>();
+		Set<ReservaDotacaoVO> reservas = new HashSet<ReservaDotacaoVO>();
 		while (result.next()) {
-			reservas.add(new ReservaDotacao(result.getLong(1), result
+			reservas.add(new ReservaDotacaoVO(result.getLong(1), result
 					.getBigDecimal(2), result.getInt(3)));
 		}
 		result.close();
 
-		for (ReservaDotacao reserva : reservas) {
+		for (ReservaDotacaoVO reserva : reservas) {
 			if (reserva.getStatusReserva() == 0)
 				valorAcomuladoReserva = valorAcomuladoReserva.add(reserva
 						.getValor());
@@ -416,54 +428,5 @@ public class RepasseController extends BaseController {
 
 	public void setRepasse(Repasse repasse) {
 		this.repasse = repasse;
-	}
-
-	final class ReservaDotacao {
-
-		private BigDecimal valor;
-
-		private long numReserva;
-
-		private int statusReserva;
-
-		public ReservaDotacao() {
-		}
-
-		/**
-		 * @param valor
-		 * @param numReserva
-		 * @param statusReserva
-		 */
-		public ReservaDotacao(long numReserva, BigDecimal valor,
-				int statusReserva) {
-			super();
-			this.valor = valor;
-			this.numReserva = numReserva;
-			this.statusReserva = statusReserva;
-		}
-
-		public long getNumReserva() {
-			return numReserva;
-		}
-
-		public void setNumReserva(long numReserva) {
-			this.numReserva = numReserva;
-		}
-
-		public int getStatusReserva() {
-			return statusReserva;
-		}
-
-		public void setStatusReserva(int statusReserva) {
-			this.statusReserva = statusReserva;
-		}
-
-		public BigDecimal getValor() {
-			return valor;
-		}
-
-		public void setValor(BigDecimal valor) {
-			this.valor = valor;
-		}
 	}
 }

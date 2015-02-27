@@ -73,7 +73,7 @@ span>input.ui-inputfield {
 						required="true" scrollHeight="250">
 						<p:ajax event="itemSelect" process="@this" />
 						<f:attribute name="entityClass"
-							value="br.com.sts.ddum.domain.entities.Responsavel" />
+							value="br.com.sts.ddum.model.entities.Responsavel" />
 					</p:autoComplete>
 				</div>
 				<fieldset>
@@ -90,7 +90,7 @@ span>input.ui-inputfield {
 							converter="autocompleteConverter" var="var"
 							itemLabel="#{var.descricao}" itemValue="#{var}" dropdown="true">
 							<f:attribute name="entityClass"
-								value="br.com.sts.ddum.domain.entities.ParametroRepasse" />
+								value="br.com.sts.ddum.model.entities.ParametroRepasse" />
 							<!-- 							<p:ajax event="itemSelect" process="@this" -->
 							<!-- 								update=":unidadeTabView:createUnidadeForm:unidadeValorRepasse" /> -->
 							<p:ajax event="itemSelect"

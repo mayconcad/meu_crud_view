@@ -7,8 +7,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.component.UIForm;
 
-import br.com.sts.ddum.domain.entities.Responsavel;
-import br.com.sts.ddum.domain.entities.Unidade;
+import br.com.sts.ddum.model.entities.Responsavel;
+import br.com.sts.ddum.model.entities.Unidade;
 
 @ManagedBean
 @ViewScoped

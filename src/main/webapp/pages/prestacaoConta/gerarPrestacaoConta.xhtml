@@ -1,7 +1,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html" xmlns:o="http://omnifaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:of="http://omnifaces.org/functions"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 
 <div class="container_24">
@@ -98,8 +100,6 @@
 					update=":prestacaoContaTabView:prestacaoContaForm:saldoAberto, @form"
 					action="#{prestacaoContaController.adicionarArquivo}"
 					styleClass="w3 r8" style="margin: 5px 5px 5px 5px" />
-				<!-- :prestacaoContaTabView:prestacaoContaForm:messages -->
-<!-- 				<p:outputPanel id="documentosOutputPanel"> -->
 					<p:dataTable id="documentosDataTable" draggableColumns="true"
 						emptyMessage="#{wd['item.emptyAddTable']}"
 						value="#{prestacaoContaController.documentos}" var="item">
@@ -109,13 +109,13 @@
 							<p:commandButton id="editarCommandButton" icon="ui-icon-pencil"
 								process="@this" action="#{prestacaoContaController.editarDoc}"
 								title="#{wds['table.columns.options.update.hint']}"
-								update="@form" styleClass="icon">
-								<f:setPropertyActionListener
-									target="#{prestacaoContaController.documento}" value="#{item}" />
+								update=":prestacaoContaTabView:prestacaoContaForm" styleClass="icon">
+<!-- 								<f:setPropertyActionListener -->
+<!-- 									target="#{prestacaoContaController.documento}" value="#{item}" /> -->
 								<f:setPropertyActionListener
 									target="#{prestacaoContaController.documentoEdite}"
 									value="#{item}" />
-								<p:collector value="#{prestacaoContaController.documento}"
+								<p:collector value="#{prestacaoContaController.documentoEdite}"
 									removeFrom="#{prestacaoContaController.documentos}" />
 							</p:commandButton>
 

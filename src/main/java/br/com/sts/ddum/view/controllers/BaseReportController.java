@@ -12,7 +12,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 
 import ar.com.fdvs.dj.domain.DynamicReport;
-import br.com.sts.ddum.domain.enums.ReportType;
+import br.com.sts.ddum.model.enums.ReportType;
 
 public class BaseReportController extends BaseController {
 

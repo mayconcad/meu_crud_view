@@ -16,13 +16,14 @@ import org.omnifaces.util.Ajax;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import br.com.sts.ddum.domain.entities.Responsavel;
-import br.com.sts.ddum.domain.enums.QueryEnum;
-import br.com.sts.ddum.domain.enums.ResultMessages;
-import br.com.sts.ddum.domain.enums.TipoContaEnum;
+import br.com.sts.ddum.model.entities.Responsavel;
+import br.com.sts.ddum.model.enums.QueryEnum;
+import br.com.sts.ddum.model.enums.ResultMessages;
+import br.com.sts.ddum.model.enums.TipoContaEnum;
+import br.com.sts.ddum.model.utils.UtilsModel;
 import br.com.sts.ddum.service.interfaces.ConnectionConfigService;
 import br.com.sts.ddum.service.interfaces.ResponsavelService;
-import br.com.sts.ddum.view.utils.Utils;
+import br.com.sts.ddum.view.utils.UtilsView;
 import br.com.sts.ddum.view.utils.ValidateUtils;
 
 @Controller
@@ -48,10 +49,11 @@ public class ResponsavelController extends BaseController {
 	}
 
 	protected static final String FIREBIRD_DRIVER = "org.firebirdsql.jdbc.FBDriver";
-	protected static final String URL = String.format(
-			"jdbc:firebirdsql:192.10.0.10/3050:%shome%sfirebird%s",
-			// "jdbc:firebirdsql:192.168.1.2/3050:%shome%sfirebird%sgcs-efetivos-phb.fdb",
-			File.separator, File.separator, File.separator);
+	protected static final String URL = String
+			.format(
+			// "jdbc:firebirdsql:192.10.0.10/3050:%shome%sfirebird%s",
+			"jdbc:firebirdsql:192.168.1.2/3050:%shome%sfirebird%sgcs-efetivos-phb.fdb",
+					File.separator, File.separator, File.separator);
 	// "jdbc:firebirdsql:192.10.0.10/3050:%shome%sfirebird%s",
 	protected static final String SENHA = "masterkey";
 	protected static final String USUARIO = "SYSDBA";
@@ -88,13 +90,14 @@ public class ResponsavelController extends BaseController {
 
 	public void criar() {
 		try {
-			LoginBean controllerInstance = Utils
+			LoginBean controllerInstance = UtilsView
 					.getControllerInstance(LoginBean.class);
 			if (controllerInstance.getPrincipalRole().equals("RESPONSÁVEL")) {
 				addErrorMessage("Usuário sem permissão para realizar a operação!");
 				return;
 			}
-			responsavel.setCpf(Utils.convertFormatCPF(responsavel.getCpf()));
+			responsavel
+					.setCpf(UtilsModel.convertFormatCPF(responsavel.getCpf()));
 			if (!ValidateUtils.isValidCPF(responsavel.getCpf())) {
 				addErrorMessage(ResultMessages.INVALID_CPF.getDescricao());
 				return;

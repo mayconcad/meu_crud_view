@@ -18,21 +18,21 @@ import org.primefaces.context.RequestContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import br.com.sts.ddum.domain.entities.AtividadeContabil;
-import br.com.sts.ddum.domain.entities.ContaContabil;
-import br.com.sts.ddum.domain.entities.FonteRecurso;
-import br.com.sts.ddum.domain.entities.ParametroRepasse;
-import br.com.sts.ddum.domain.entities.Responsavel;
-import br.com.sts.ddum.domain.entities.SegmentoEnum;
-import br.com.sts.ddum.domain.entities.Unidade;
-import br.com.sts.ddum.domain.entities.UnidadeContabil;
-import br.com.sts.ddum.domain.enums.QueryEnum;
-import br.com.sts.ddum.domain.enums.ResultMessages;
-import br.com.sts.ddum.domain.enums.ZonaLocalizacaoEnum;
+import br.com.sts.ddum.model.entities.AtividadeContabil;
+import br.com.sts.ddum.model.entities.ContaContabil;
+import br.com.sts.ddum.model.entities.FonteRecurso;
+import br.com.sts.ddum.model.entities.ParametroRepasse;
+import br.com.sts.ddum.model.entities.Responsavel;
+import br.com.sts.ddum.model.entities.SegmentoEnum;
+import br.com.sts.ddum.model.entities.Unidade;
+import br.com.sts.ddum.model.entities.UnidadeContabil;
+import br.com.sts.ddum.model.enums.QueryEnum;
+import br.com.sts.ddum.model.enums.ResultMessages;
+import br.com.sts.ddum.model.enums.ZonaLocalizacaoEnum;
+import br.com.sts.ddum.model.utils.UtilsModel;
 import br.com.sts.ddum.service.interfaces.ConnectionConfigService;
 import br.com.sts.ddum.service.interfaces.ParametroRepasseService;
 import br.com.sts.ddum.service.interfaces.UnidadeService;
-import br.com.sts.ddum.view.utils.Utils;
 
 @Controller
 @ViewScoped
@@ -237,7 +237,7 @@ public class UnidadeController extends BaseController {
 	private void carregarConta() throws SQLException {
 		String query = String.format(QueryEnum.CONTAS_CONTABEIS.toString()
 				.concat(COD_CONTA_QUERY), parametroRepasse.getCodAtividade(),
-				Utils.pegarSeisCaracteres(parametroRepasse
+				UtilsModel.pegarSeisCaracteres(parametroRepasse
 						.getCodElementoDespesa()));
 		result = createStatement.executeQuery(query);
 
@@ -250,7 +250,7 @@ public class UnidadeController extends BaseController {
 
 	private void carregarRecurso() throws SQLException {
 		String query = String.format(QueryEnum.RECURSOS_CONTABEIS.toString()
-				.concat(COD_RECURSO_QUERY), Utils
+				.concat(COD_RECURSO_QUERY), UtilsModel
 				.pegarSeisCaracteres(parametroRepasse.getCodElementoDespesa()),
 				parametroRepasse.getCodFonteRecurso());
 		result = createStatement.executeQuery(query);

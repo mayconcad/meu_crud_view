@@ -22,7 +22,7 @@ import org.springframework.core.type.filter.AssignableTypeFilter;
 import org.springframework.stereotype.Controller;
 
 import br.com.sts.ddum.WebProperties;
-import br.com.sts.ddum.domain.utils.ResourceBundleUtils;
+import br.com.sts.ddum.model.utils.ResourceBundleUtils;
 
 @Controller
 @Scope("singleton")

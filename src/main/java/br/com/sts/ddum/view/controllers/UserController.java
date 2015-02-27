@@ -9,10 +9,10 @@ import javax.faces.bean.ViewScoped;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import br.com.sts.ddum.domain.entities.Responsavel;
-import br.com.sts.ddum.domain.enums.ResultMessages;
-import br.com.sts.ddum.domain.springsecurity.entities.Role;
-import br.com.sts.ddum.domain.springsecurity.entities.User;
+import br.com.sts.ddum.model.entities.Responsavel;
+import br.com.sts.ddum.model.enums.ResultMessages;
+import br.com.sts.ddum.model.springsecurity.entities.Role;
+import br.com.sts.ddum.model.springsecurity.entities.User;
 import br.com.sts.ddum.service.interfaces.ResponsavelService;
 import br.com.sts.ddum.service.interfaces.RoleService;
 import br.com.sts.ddum.service.interfaces.UserService;

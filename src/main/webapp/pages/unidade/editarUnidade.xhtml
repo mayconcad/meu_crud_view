@@ -49,7 +49,7 @@
 					itemValue="#{var}" process="@this" dropdown="true"
 					forceSelection="true" scrollHeight="250">
 					<f:attribute name="entityClass"
-						value="br.com.sts.ddum.domain.entities.Responsavel" />
+						value="br.com.sts.ddum.model.entities.Responsavel" />
 				</p:autoComplete>
 			</div>
 
@@ -71,7 +71,7 @@
 						itemLabel="#{var.descricao}" itemValue="#{var}" process="@this"
 						dropdown="true" forceSelection="true" scrollHeight="250">
 						<f:attribute name="entityClass"
-							value="br.com.sts.ddum.domain.entities.ParametroRepasse" />
+							value="br.com.sts.ddum.model.entities.ParametroRepasse" />
 						<p:ajax event="itemSelect" process="@this, unidadeTipoEdite"
 							update="unidadeValorRepasse, unidadeTipoEdite" />
 					</p:autoComplete>
