@@ -3,6 +3,6 @@
   <nodes xsi:type="pageflow:PFPage" name="*" id="pf14237459890970" outlinks="pf14237459890981 pf14237459890982" path="*"/>
   <nodes xsi:type="pageflow:PFPage" name="login.xhtml" id="pf14237459890983" referenceLink="//@navigationRule.0/@navigationCase.1/@toViewId|" inlinks="pf14237459890981" path="/login.xhtml"/>
   <nodes xsi:type="pageflow:PFPage" name="pages/index.xhtml" id="pf14237459890994" referenceLink="//@navigationRule.0/@navigationCase.0/@toViewId|" inlinks="pf14237459890982" path="/pages/index.xhtml"/>
-  <links id="pf14237459890981" target="pf14237459890983" source="pf14237459890970"/>
-  <links id="pf14237459890982" target="pf14237459890994" source="pf14237459890970"/>
+  <links id="pf14237459890981" target="pf14237459890983" source="pf14237459890970" outcome="login" redirect="true"/>
+  <links id="pf14237459890982" target="pf14237459890994" source="pf14237459890970" outcome="sucessoLogin" redirect="true"/>
 </pageflow:Pageflow>

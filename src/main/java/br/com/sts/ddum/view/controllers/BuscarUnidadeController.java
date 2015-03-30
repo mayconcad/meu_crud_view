@@ -18,6 +18,7 @@ import javax.faces.event.ActionEvent;
 
 import org.primefaces.component.tabview.Tab;
 import org.primefaces.component.tabview.TabView;
+import org.primefaces.context.RequestContext;
 
 import br.com.sts.ddum.model.entities.AtividadeContabil;
 import br.com.sts.ddum.model.entities.ContaContabil;
@@ -152,10 +153,15 @@ public class BuscarUnidadeController extends BaseController {
 	}
 
 	public void remover() {
+
+		if (usuarioSemPermissao())
+			return;
+
 		try {
 			unidadeService.remover(unidadeRemove);
 		} catch (Exception e) {
-			addErrorMessage(String.format("%s \nConsulte o Analista: %s",
+			addErrorMessage(String.format(
+					"%s \nConsulte o Suporte Técnico: %s",
 					ResultMessages.ERROR_CRUD.getDescricao(), e.getMessage()));
 			return;
 		}
@@ -164,6 +170,7 @@ public class BuscarUnidadeController extends BaseController {
 	}
 
 	public void editar(ActionEvent actionEvent) {
+
 		try {
 			unidadeEdite.getUnidadeContabil().setAtividade(
 					getAtividadeContabil());
@@ -174,7 +181,8 @@ public class BuscarUnidadeController extends BaseController {
 			unidadeEdite.getParametroRepasse().setSegmento(getSegmento());
 			unidadeService.atualizar(unidadeEdite);
 		} catch (Exception e) {
-			addErrorMessage(String.format("%s \nConsulte o Analista: %s",
+			addErrorMessage(String.format(
+					"%s \nConsulte o Suporte Técnico: %s",
 					ResultMessages.ERROR_CRUD.getDescricao(),
 					e.getLocalizedMessage()));
 			return;
@@ -191,6 +199,17 @@ public class BuscarUnidadeController extends BaseController {
 	}
 
 	public void carregar() {
+
+		// getEditTab().setRendered(false);
+		// parent.setActiveIndex(1);
+
+		if (usuarioSemPermissao()) {
+
+			RequestContext.getCurrentInstance().update(
+					"unidadeTabView:buscarUnidadeForm");
+			return;
+		}
+
 		getEditTab().setRendered(true);
 		TabView parent = (TabView) getEditTab().getParent();
 		int editIndex = parent.getChildren().indexOf(getEditTab());

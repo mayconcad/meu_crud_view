@@ -21,48 +21,58 @@ public class MenuController implements Serializable {
 		this.numIndex = 0;
 	}
 
-	public void parametroRepasse() {
+	public void parametroModulo() {
 		setNumIndex(1);
+		setIndex("/pages/parametroModulo/parametroModulo.xhtml");
+	}
+
+	public void parametroRepasse() {
+		setNumIndex(2);
 		setIndex("/pages/parametroRepasse/parametroRepasse.xhtml");
 	}
 
 	public void responsavel() {
-		setNumIndex(2);
+		setNumIndex(3);
 		setIndex("/pages/responsavel/responsavel.xhtml");
 	}
 
 	public void unidade() {
-		setNumIndex(3);
+		setNumIndex(4);
 		setIndex("/pages/unidade/unidade.xhtml");
 	}
 
 	public void usuario() {
-		setNumIndex(4);
+		setNumIndex(5);
 		setIndex("/pages/usuario/usuario.xhtml");
 	}
 
-	public void report() {
-		setNumIndex(5);
-		setIndex("/pages/reports/termoCompromisso/report.xhtml");
-	}
-
-	public void legislacaoReport() {
-		setNumIndex(6);
-		setIndex("/pages/reports/legislacao/legislacao.xhtml");
-	}
-
 	public void gerarRepasse() {
-		setNumIndex(7);
+		setNumIndex(6);
 		setIndex("/pages/repasse/repasse.xhtml");
 	}
 
 	public void prestacaoConta() {
-		setNumIndex(8);
+		setNumIndex(7);
 		setIndex("/pages/prestacaoConta/prestacaoConta.xhtml");
 	}
 
-	public void style() {
+	public void report() {
+		setNumIndex(8);
+		setIndex("/pages/reports/termoCompromisso/report.xhtml");
+	}
+
+	public void legislacaoReport() {
 		setNumIndex(9);
+		setIndex("/pages/reports/legislacao/legislacao.xhtml");
+	}
+
+	public void pesquisaPrecoReport() {
+		setNumIndex(10);
+		setIndex("/pages/reports/legislacao/pesquisaPreco.xhtml");
+	}
+
+	public void style() {
+		setNumIndex(11);
 		setIndex("/pages/style.xhtml");
 	}
 

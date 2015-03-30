@@ -5,67 +5,72 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 
-<div class="container_24">
+<div class="container">
 	<h:form>
 		<p:messages id="messages" />
 		<p:panel header="#{wd['fieldset.data']}" toggleable="false"
-			styleClass="clearfix grid_24">
-			<div class="grid_2" style="padding-top: 5px !important">
-				<p:outputLabel value="#{lb['userSystem.name']}" for="userName" />
+			styleClass="clearfix">
+			<div class="row">
+				<div class="col-md-2">
+					<p:outputLabel value="#{lb['userSystem.name']}" for="userName" />
+				</div>
+				<div class="col-md-12">
+					<p:inputText id="userName"
+						value="#{buscarUserController.userEdite.name}" required="true" />
+				</div>
+				<div class="col-md-2">
+					<p:outputLabel value="#{lb['userSystem.email']}" for="userEmail" />
+				</div>
+				<div class="col-md-8">
+					<p:inputText id="userEmail"
+						value="#{buscarUserController.userEdite.email}" required="true" />
+				</div>
 			</div>
-			<div class="grid_12">
-				<p:inputText id="userName"
-					value="#{buscarUserController.userEdite.name}" required="true" />
-			</div>
-			<div class="grid_1" style="padding-top: 5px !important">
-				<p:outputLabel value="#{lb['userSystem.email']}" for="userEmail" />
-			</div>
-			<div class="grid_9">
-				<p:inputText id="userEmail"
-					value="#{buscarUserController.userEdite.email}" required="true" />
-			</div>
+			<div class="row">
+				<div class="col-md-2">
+					<p:outputLabel value="#{lb['userSystem.username']}"
+						for="userUserName" />
+				</div>
+				<div class="col-md-5">
+					<p:inputText id="userUserName"
+						value="#{buscarUserController.usernameEdite}" required="true" />
+				</div>
+				<div class="col-md-2" style="text-align: rigth;">
+					<p:outputLabel value="#{lb['userSystem.password']}"
+						for="userPassword" />
+				</div>
+				<div class="col-md-5">
+					<p:password id="userPassword"
+						value="#{buscarUserController.passwordEdite}" required="true" />
+				</div>
 
-			<div class="grid_2" style="padding-top: 5px !important">
-				<p:outputLabel value="#{lb['userSystem.username']}"
-					for="userUserName" />
-			</div>
-			<div class="grid_6">
-				<p:inputText id="userUserName"
-					value="#{buscarUserController.usernameEdite}" required="true" />
-			</div>
-			<div class="grid_2" style="padding-top: 5px !important">
-				<p:outputLabel value="Nova #{lb['userSystem.password']}"
-					for="userPassword" />
-			</div>
-			<div class="grid_4">
-				<p:password id="userPassword"
-					value="#{buscarUserController.passwordEdite}" required="true" />
-			</div>
+				<div class="col-md-2">
+					<p:outputLabel value="Perfil" for="roleEditeAC" />
+				</div>
 
-			<div class="grid_1" style="padding-top: 5px !important">
-				<p:outputLabel value="Perfil" for="roleEditeAC" />
-			</div>
-
-			<div class="grid_9">
-				<p:autoComplete id="roleEditeAC"
-					value="#{buscarUserController.roleEdite}"
-					completeMethod="#{userController.autocompletarRole}"
-					converter="autocompleteConverter" var="var" itemLabel="#{var.name}"
-					itemValue="#{var}" dropdown="true" required="true"
-					scrollHeight="250">
-					<p:ajax event="itemSelect" process="@this" />
-					<f:attribute name="entityClass"
-						value="br.com.sts.ddum.domain.springsecurity.entities.Role" />
-				</p:autoComplete>
+				<div class="col-md-8">
+					<p:autoComplete id="roleEditeAC"
+						value="#{buscarUserController.roleEdite}"
+						completeMethod="#{userController.autocompletarRole}"
+						converter="autocompleteConverter" var="var"
+						itemLabel="#{var.name}" itemValue="#{var}" dropdown="true"
+						required="true" scrollHeight="250"
+						disabled="#{loginController.principalRole eq 'ADMIN' ? false : true}">
+						<p:ajax event="itemSelect" process="@this" />
+						<f:attribute name="entityClass"
+							value="br.com.sts.ddum.model.springsecurity.entities.Role" />
+					</p:autoComplete>
+				</div>
 			</div>
 			<div class="clear" />
-			<p:commandButton value="#{wd['button.update']}" update=":usuarioTabView, messages"
-				actionListener="#{buscarUserController.editar}" styleClass="w4 r7"
-				process="@form" />
+			<p:commandButton value="#{wd['button.update']}"
+				update=":usuarioTabView, messages"
+				actionListener="#{buscarUserController.editar}"
+				styleClass="col-md-4 r6" process="@form" icon="ui-icon-disk" />
 			<p:commandButton value="#{wd['button.cancel']}" type="reset"
-				icon="ui-icon-cancel"
+				process="@this" icon="ui-icon-cancel"
 				onclick="usuarioTabs.remove(usuarioTabs.getActiveIndex())"
-				styleClass="w4 r8" />
+				styleClass="col-md-4 r7" />
 		</p:panel>
 	</h:form>
 </div>

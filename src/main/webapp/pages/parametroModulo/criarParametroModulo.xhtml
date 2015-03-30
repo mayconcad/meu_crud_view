@@ -1,0 +1,82 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:form id="createParRepForm">
+	<p:messages id="messages" />
+
+	<p:panel id="dataPanel" header="#{wd['fieldset.data']}" toggleable="false"
+		styleClass="clearfix">
+		<p:focus context="dataPanel"/>
+		<p:outputLabel value="#{lb['parametroModulo.descricao']}"
+			for="parametroRepasseDescricao" styleClass="w2" />
+		<p:inputText id="parametroRepasseDescricao"
+			value="#{parametroModuloController.parametroModulo.descricao}"
+			styleClass="w8" required="true" />
+		<p:outputLabel value="#{lb['parametroModulo.valorRepasse']}"
+			for="parametroRepasseValorRep" styleClass="w2" />
+		<p:inputText id="parametroRepasseValorRep"
+			value="#{parametroModuloController.valorRepasse}" styleClass="w3"
+			required="true" onkeypress="mascara(this,currency);">
+		</p:inputText>
+
+		<p:outputLabel value="#{lb['parametroModulo.segmento']}"
+			for="segmentoParametroRepasse" styleClass="w2" />
+		<div class="w2">
+			<p:selectOneMenu id="segmentoParametroRepasse"
+				itemLabel="#{wd['dialog.optionYes']}"
+				value="#{parametroModuloController.parametroModulo.segmento}"
+				rendered="true">
+				<f:selectItems value="#{parametroModuloController.segmentos}" />
+			</p:selectOneMenu>
+		</div>
+
+		<div class="clear" />
+		<fieldset>
+			<LEGEND>Dotação Orçamentária</LEGEND>
+			<p:outputLabel value="#{lb['parametroModulo.codUnidade']}"
+				for="pRepasseCodUnidade" styleClass="w2" />
+			<p:inputText id="pRepasseCodUnidade"
+				value="#{parametroModuloController.parametroModulo.codUnidade}"
+				styleClass="w2" required="true" onkeypress="mascara(this,number);" />
+
+			<p:outputLabel value="#{lb['parametroModulo.codAtividade']}"
+				for="pRepasseCodAtividade" styleClass="w2" />
+			<p:inputText id="pRepasseCodAtividade"
+				value="#{parametroModuloController.parametroModulo.codAtividade}"
+				styleClass="w2" required="true" onkeypress="mascara(this,number);" />
+			
+
+			<p:outputLabel value="#{lb['parametroModulo.codElementoDespesa']}"
+				for="pRepasseCodElementoDespesa" styleClass="w2" />
+			<p:inputText id="pRepasseCodElementoDespesa"
+				value="#{parametroModuloController.parametroModulo.codElementoDespesa}"
+				styleClass="w2" required="true" onkeypress="mascara(this,number);" />
+
+			<p:outputLabel value="#{lb['parametroModulo.codFonteRecurso']}"
+				for="pRepasseCodFonteRecurso" styleClass="w2" />
+			<p:inputText id="pRepasseCodFonteRecurso"
+				value="#{parametroModuloController.parametroModulo.codFonteRecurso}"
+				styleClass="w2" required="true" onkeypress="mascara(this,number);" />
+
+			<p:outputLabel value="#{lb['parametroModulo.exercicio']}"
+				for="pRepasseExercicio" styleClass="w2" />
+			<p:inputMask id="pRepasseExercicio"
+				value="#{parametroModuloController.parametroModulo.exercicio}"
+				styleClass="w2" required="true" mask="9999"/>
+
+		</fieldset>
+
+		<p:commandButton value="#{wd['button.create']}" update="@form"
+			actionListener="#{parametroModuloController.criar}"
+			styleClass="w4 r6" icon="ui-icon-disk"/>
+		<p:commandButton id="limparCommandButton"
+			value="#{wd['button.clean']}" icon="ui-icon-arrowrefresh-1-w"
+			actionListener="#{parametroModuloController.init}" update="@form"
+			process="@this" styleClass="w4 r7">
+		</p:commandButton>
+	</p:panel>
+</h:form>
+</html>

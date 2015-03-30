@@ -1,14 +1,25 @@
 package br.com.sts.ddum.view.controllers;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.component.UIForm;
+import javax.faces.context.FacesContext;
+import javax.servlet.ServletContext;
+
+import org.primefaces.component.media.Media;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 
 import br.com.sts.ddum.model.entities.Responsavel;
 import br.com.sts.ddum.model.entities.Unidade;
+import br.com.sts.ddum.service.interfaces.UnidadeService;
 
 @ManagedBean
 @ViewScoped
@@ -26,8 +37,17 @@ public class TermoCompromissoReportController extends BaseReportController {
 
 	private UIForm termoCompromissoReportForm;
 
+	private Media termoCompromissoMedia;
+
+	private StreamedContent reportStream;
+
+	@ManagedProperty("#{unidadeService}")
+	private UnidadeService unidadeService;
+
 	@PostConstruct
 	public void init() {
+		termoCompromissoMedia = new Media();
+		reportStream = new DefaultStreamedContent();
 		responsavel = new Responsavel();
 		unidade = new Unidade();
 	}
@@ -65,12 +85,32 @@ public class TermoCompromissoReportController extends BaseReportController {
 						.getNumeroLogradouro(), getUnidade().getBairro()));
 		parameters.put("segmento", getUnidade().getParametroRepasse()
 				.getSegmento().toString());
-		session.setAttribute("reportInline", reportInline);
-		session.setAttribute("reportType", getReportType());
-		session.setAttribute("parameters", parameters);
 
-		redirect("/ReportData");
+		FacesContext context = FacesContext.getCurrentInstance();
+		ServletContext servletContext = (ServletContext) context
+				.getExternalContext().getContext();
+		generateStremedReport(servletContext.getRealPath(File.separator.concat(
+				"reports").concat(File.separator)), "TermoCompromisso",
+				new ArrayList(), parameters);
+
+		getTermoCompromissoMedia().setValue("/reports/TermoCompromisso.pdf");
+		// if (session != null) {
+		// session.setAttribute("reportInline", reportInline);
+		// session.setAttribute("reportType", getReportType());
+		// session.setAttribute("parameters", parameters);
+		// }
+		//
+		// redirect("/ReportData");
 		init();
+	}
+
+	public List<Unidade> autocompletarUnidade(String valor) {
+		return unidadeService.autocompletarPorResponsavel(valor,
+				getResponsavel().getId());
+	}
+
+	public void limparRelatorio() {
+		getTermoCompromissoMedia().setValue(null);
 	}
 
 	public boolean getDetailed() {
@@ -111,5 +151,21 @@ public class TermoCompromissoReportController extends BaseReportController {
 
 	public void setTermoCompromissoReportForm(UIForm termoCompromissoReportForm) {
 		this.termoCompromissoReportForm = termoCompromissoReportForm;
+	}
+
+	public UnidadeService getUnidadeService() {
+		return unidadeService;
+	}
+
+	public void setUnidadeService(UnidadeService unidadeService) {
+		this.unidadeService = unidadeService;
+	}
+
+	public Media getTermoCompromissoMedia() {
+		return termoCompromissoMedia;
+	}
+
+	public void setTermoCompromissoMedia(Media termoCompromissoMedia) {
+		this.termoCompromissoMedia = termoCompromissoMedia;
 	}
 }

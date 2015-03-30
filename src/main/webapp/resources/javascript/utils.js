@@ -111,7 +111,36 @@ function cep(v) {
 	// ultimos 2 digitos
 	return v;
 }
-
+//click do campo de texto referente ao nome do arquivo na tela de prestação de contas
 function clickUploadFile() {
 	$(PrimeFaces.escapeClientId("prestacaoContaTabView:arquivoFileUpload_input")).click();
 }
+
+//Traduz para o português palavras em inglês do componente calendar do primefaces
+PrimeFaces.locales['pt'] = {  
+        closeText: 'Fechar',  
+        prevText: 'Anterior',  
+        nextText: 'Próximo',  
+        currentText: 'Começo',  
+        monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],  
+        monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun', 'Jul','Ago','Set','Out','Nov','Dez'],  
+        dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'],  
+        dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'],  
+        dayNamesMin: ['Dom','Seg','Ter','Qua','Qui','Sex','S&aacute;b'],  
+        weekHeader: 'Semana',  
+        firstDay: 1,  
+        isRTL: false,  
+        showMonthAfterYear: false,  
+        yearSuffix: '',  
+        timeOnlyTitle: 'Só Horas',  
+        timeText: 'Tempo',  
+        hourText: 'Hora',  
+        minuteText: 'Minuto',  
+        secondText: 'Segundo',  
+        currentText: 'Data Atual',  
+        ampm: false,  
+        month: 'Mês',  
+        week: 'Semana',  
+        day: 'Dia',  
+        allDayText : 'Todo Dia'  
+    }

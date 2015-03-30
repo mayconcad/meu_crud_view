@@ -85,4 +85,10 @@ public class UploadedFileUtil implements UploadedFile {
 	public void setContentType(String contentType) {
 		this.contentType = contentType;
 	}
+
+	// @Override
+	// public void write(String arg0) throws Exception {
+	// // TODO Auto-generated method stub
+	//
+	// }
 }

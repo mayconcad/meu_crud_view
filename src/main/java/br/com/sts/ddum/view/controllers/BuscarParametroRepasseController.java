@@ -29,7 +29,9 @@ public class BuscarParametroRepasseController extends BaseController {
 
 	private static final long serialVersionUID = 2883233373923310796L;
 
-	private String valorRepasse;
+	private String valorRepasseEdite;
+
+	private String valorRepasseBusca;
 
 	private ParametroRepasse parametroRepasseBusca;
 
@@ -64,8 +66,9 @@ public class BuscarParametroRepasseController extends BaseController {
 		if (parametroRepasseBusca.getSegmento() != null
 				&& !"".equals(parametroRepasseBusca.getSegmento()))
 			params.put("segmento", parametroRepasseBusca.getSegmento());
-		if (valorRepasse != null && !"".equals(valorRepasse))
-			params.put("valorRepasse", convertStringToBigDecimal(valorRepasse));
+		if (valorRepasseBusca != null && !"".equals(valorRepasseBusca))
+			params.put("valorRepasse",
+					convertStringToBigDecimal(valorRepasseBusca));
 		if (parametroRepasseBusca.getCodUnidade() != null
 				&& !"".equals(parametroRepasseBusca.getCodUnidade()))
 			params.put("codUnidade", parametroRepasseBusca.getCodUnidade());
@@ -96,13 +99,17 @@ public class BuscarParametroRepasseController extends BaseController {
 
 	public void remover() {
 		try {
+			if (usuarioSemPermissao())
+				return;
 			parametroRepasseService.remover(parametroRepasseRemove);
 		} catch (Exception e) {
-			addErrorMessage(String.format("%s \nConsulte o Analista: %s",
+			addErrorMessage(String.format(
+					"%s \nConsulte o Suporte Técnico: %s",
 					ResultMessages.ERROR_CRUD.getDescricao(), e.getMessage()));
 			return;
 		}
 		buscar();
+		addInfoMessage(ResultMessages.DELETE_SUCESS.getDescricao());
 	}
 
 	public void editar(ActionEvent actionEvent) {
@@ -134,11 +141,12 @@ public class BuscarParametroRepasseController extends BaseController {
 			}
 
 			parametroRepasseEdite
-					.setValorRepasse(convertStringToBigDecimal(getValorRepasse()));
+					.setValorRepasse(convertStringToBigDecimal(getValorRepasseEdite()));
 			parametroRepasseService.atualizar(parametroRepasseEdite);
 			addInfoMessage(ResultMessages.UPDATE_SUCESS.getDescricao());
 		} catch (Exception e) {
-			addErrorMessage(String.format("%s \nConsulte o Analista: %s",
+			addErrorMessage(String.format(
+					"%s \nConsulte o Suporte Técnico: %s",
 					ResultMessages.ERROR_CRUD.getDescricao(),
 					e.getLocalizedMessage()));
 		}
@@ -162,16 +170,24 @@ public class BuscarParametroRepasseController extends BaseController {
 		TabView parent = (TabView) getEditTab().getParent();
 		int editIndex = parent.getChildren().indexOf(getEditTab());
 		parent.setActiveIndex(editIndex);
-		setValorRepasse(convertBigDecimalToString(parametroRepasseEdite
+		setValorRepasseEdite(convertBigDecimalToString(parametroRepasseEdite
 				.getValorRepasse()));
 	}
 
-	public String getValorRepasse() {
-		return valorRepasse;
+	public String getValorRepasseBusca() {
+		return valorRepasseBusca;
 	}
 
-	public void setValorRepasse(String valorRepasse) {
-		this.valorRepasse = valorRepasse;
+	public void setValorRepasseBusca(String valorRepasseBusca) {
+		this.valorRepasseBusca = valorRepasseBusca;
+	}
+
+	public String getValorRepasseEdite() {
+		return valorRepasseEdite;
+	}
+
+	public void setValorRepasseEdite(String valorRepasseEdite) {
+		this.valorRepasseEdite = valorRepasseEdite;
 	}
 
 	public ParametroRepasse getParametroRepasseRemove() {

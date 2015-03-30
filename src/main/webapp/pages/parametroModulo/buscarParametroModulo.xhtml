@@ -1,0 +1,162 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:form id="buscarParametroRepasseForm" prependId="false">
+	<p:messages id="messages" />
+	<p:confirmDialog message="#{wd['dialog.deleteConfirmation.message']}"
+		header="#{wd['dialog.alert.header']}" severity="alert"
+		widgetVar="confirmation" modal="true" appendToBody="true">
+		<p:commandButton id="btnSim" value="#{wd['dialog.optionYes']}"
+			oncomplete="confirmation.hide();" styleClass="r6"
+			action="#{buscarParametroRepasseController.remover}" process="@this"
+			update="buscarParametroRepasseTable" />
+		<p:commandButton id="btnNao" value="#{wd['dialog.optionNo']}"
+			onclick="confirmation.hide();" type="button" styleClass="r7" />
+	</p:confirmDialog>
+
+	<f:validateBean disabled="true">
+		<p:panel header="#{wd['fieldset.filters']}" id="findPanel">
+			<p:outputLabel value="#{lb['parametroRepasse.descricao']}"
+				for="buscarNome" styleClass="w2" />
+			<p:inputText id="buscarNome" widgetVar="buscarNome" alt="nome"
+				value="#{buscarParametroRepasseController.parametroRepasseBusca.descricao}"
+				styleClass="w12" />
+
+			<p:outputLabel value="#{lb['parametroRepasse.valorRepasse']}"
+				for="buscarValorRep" styleClass="w2" />
+			<p:inputText id="buscarValorRep" widgetVar="buscarValorRep"
+				alt="valorRepasse"
+				value="#{buscarParametroRepasseController.valorRepasseBusca}"
+				styleClass="w4" onkeypress="mascara(this,currency);" />
+
+			<div class="clear" />
+
+			<p:outputLabel value="Cód. #{lb['parametroRepasse.codUnidade']}"
+				for="pRepasseCodUnidade" styleClass="w3" />
+			<p:inputText id="pRepasseCodUnidade"
+				value="#{buscarParametroRepasseController.parametroRepasseBusca.codUnidade}"
+				styleClass="w4" />
+
+			<p:outputLabel value="Cód. #{lb['parametroRepasse.codAtividade']}"
+				for="pRepasseCodAtividade" styleClass="w2" />
+			<p:inputText id="pRepasseCodAtividade"
+				value="#{buscarParametroRepasseController.parametroRepasseBusca.codAtividade}"
+				styleClass="w4"  />
+
+			<p:outputLabel
+				value="Cód. #{lb['parametroRepasse.codElementoDespesa']}"
+				for="pRepasseCodElementoDespesa" styleClass="w3" />
+			<p:inputText id="pRepasseCodElementoDespesa"
+				value="#{buscarParametroRepasseController.parametroRepasseBusca.codElementoDespesa}"
+				styleClass="w4"  />
+			<div class="clear" />
+
+			<p:outputLabel value="Cód. #{lb['parametroRepasse.codFonteRecurso']}"
+				for="pRepasseCodFonteRecurso" styleClass="w3" />
+			<p:inputText id="pRepasseCodFonteRecurso"
+				value="#{buscarParametroRepasseController.parametroRepasseBusca.codFonteRecurso}"
+				styleClass="w4"  />
+
+			<p:outputLabel value="Cód. #{lb['parametroRepasse.exercicio']}"
+				for="pRepasseExercicio" styleClass="w2" />
+			<p:inputMask id="pRepasseExercicio"
+				value="#{buscarParametroRepasseController.parametroRepasseBusca.exercicio}"
+				styleClass="w4"  mask="9999" />
+
+			<p:outputLabel value="#{lb['parametroRepasse.segmento']}"
+				for="segmentoParametroRepasse" styleClass="w3" />
+			<div class="w3">
+				<p:selectOneMenu id="segmentoParametroRepasse"
+					itemLabel="#{wd['dialog.optionYes']}"
+					value="#{buscarParametroRepasseController.parametroRepasseBusca.segmento}">
+					<f:selectItem itemLabel="#{wd['selection.allLabel']}" itemValue="" />
+					<f:selectItems
+						value="#{buscarParametroRepasseController.segmentos}" />
+				</p:selectOneMenu>
+			</div>
+
+			<!-- 			<p:spacer styleClass="w10" /> -->
+
+			<p:commandButton value="#{wd['button.search']}" process="findPanel"
+				styleClass="w4 r8"
+				action="#{buscarParametroRepasseController.buscar}"
+				update="buscarParametroRepasseTable" icon="ui-icon-search">
+			</p:commandButton>
+		</p:panel>
+	  </f:validateBean>
+
+	<fieldset>
+		<legend>Resultados</legend>
+		<p:dataTable
+			value="#{buscarParametroRepasseController.parametrosRepasse}"
+			emptyMessage="#{wd['item.emptyFind']}" var="parametroRepasse"
+			id="buscarParametroRepasseTable" paginator="true" rows="5"
+			paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+			<p:column headerText="#{wd['table.columns.options']}"
+				style="width:50px; ; text-align: center;">
+				<p:commandButton icon="ui-icon-trash" onclick="confirmation.show()"
+					styleClass="icon"
+					title="#{wd['table.columns.options.delete.hint']}">
+					<f:setPropertyActionListener
+						target="#{buscarParametroRepasseController.parametroRepasseRemove}"
+						value="#{parametroRepasse}" />
+				</p:commandButton>
+				<p:commandButton icon="ui-icon-pencil" styleClass="icon"
+					action="#{buscarParametroRepasseController.carregar}"
+					update=":parametroRepasseTabView" process="@form"
+					title="#{wd['table.columns.options.edit.hint']}">
+					<f:setPropertyActionListener
+						target="#{buscarParametroRepasseController.parametroRepasseEdite}"
+						value="#{parametroRepasse}" />
+				</p:commandButton>
+			</p:column>
+
+			<p:column headerText="#{lb['parametroRepasse.descricao']}"
+				style="width: 150px; text-align: center;">
+				<h:outputText value="#{parametroRepasse.descricao}" style="font-weight:100"/>
+			</p:column>
+
+			<p:column headerText="#{lb['parametroRepasse.valorRepasse']}"
+				style="width: 50px; text-align: center;">
+				<h:outputLabel value="#{parametroRepasse.valorRepasse}"
+					 style="font-weight:100">
+					 <f:convertNumber type="currency" currencyCode="BRL" />
+					 </h:outputLabel>
+			</p:column>
+
+			<p:column headerText="#{lb['parametroRepasse.segmento']}"
+				style="width: 50px; text-align: center;">
+				<h:outputText value="#{parametroRepasse.segmento.toString()}" style="font-weight:100" />
+			</p:column>
+			
+			<p:column headerText="#{lb['parametroRepasse.codUnidade']}"
+				style="width: 30px; text-align: center;">
+				<h:outputText value="#{parametroRepasse.codUnidade}" style="font-weight:100"/>
+			</p:column>
+			
+			<p:column headerText="#{lb['parametroRepasse.codAtividade']}"
+				style="width: 30px; text-align: center;">
+				<h:outputText value="#{parametroRepasse.codAtividade}" style="font-weight:100"/>
+			</p:column>
+			
+			<p:column headerText="#{lb['parametroRepasse.codElementoDespesa']}"
+				style="width: 30px; text-align: center;">
+				<h:outputText value="#{parametroRepasse.codElementoDespesa}" style="font-weight:100"/>
+			</p:column>
+			<p:column headerText="#{lb['parametroRepasse.codFonteRecurso']}"
+				style="width: 30px; text-align: center;">
+				<h:outputText value="#{parametroRepasse.codFonteRecurso}" style="font-weight:100"/>
+			</p:column>
+			<p:column headerText="#{lb['parametroRepasse.exercicio']}"
+				style="width: 20px; text-align: center;">
+				<h:outputText value="#{parametroRepasse.exercicio}" style="font-weight:100"/>
+			</p:column>
+		</p:dataTable>
+	</fieldset>
+
+</h:form>
+</html>

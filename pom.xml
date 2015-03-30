@@ -36,7 +36,7 @@
 			<version>3.0.1</version>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<!-- Upload -->
 		<dependency>
 			<groupId>commons-fileupload</groupId>
@@ -62,6 +62,18 @@
 			<groupId>org.primefaces</groupId>
 			<artifactId>primefaces</artifactId>
 			<version>3.5</version>
+<!-- 			<version>5.1</version> -->
+		</dependency>
+		<dependency>
+			<groupId>org.primefaces.extensions</groupId>
+			<artifactId>primefaces-extensions</artifactId>
+			<version>0.6.2</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>primefaces</artifactId>
+					<groupId>org.primefaces</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.omnifaces</groupId>
@@ -84,6 +96,16 @@
 			<groupId>org.codehaus.groovy</groupId>
 			<artifactId>groovy-all</artifactId>
 			<version>1.7.5</version>
+		</dependency>
+		<dependency>
+			<groupId>net.tanesha.recaptcha4j</groupId>
+			<artifactId>recaptcha4j</artifactId>
+			<version>0.0.7</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports-fonts</artifactId>
+			<version>4.0.0</version>
 		</dependency>
 	</dependencies>
 

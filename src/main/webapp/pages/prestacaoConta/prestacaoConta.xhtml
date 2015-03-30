@@ -17,5 +17,9 @@
 	<p:tab id="createTab" title="Prestação de Contas">
 		<ui:include src="gerarPrestacaoConta.xhtml" />
 	</p:tab>
+	<p:tab id="editTab" title="#{wd['tab.report']}" rendered="false"
+		binding="#{prestacaoContaController.editTab}" closable="true">
+		<ui:include src="prestacaoContaReport.xhtml" />
+	</p:tab>
 </p:tabView>
 </html>

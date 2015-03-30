@@ -102,11 +102,7 @@ public class UnidadeController extends BaseController {
 		unidade.setUnidadeContabil(unidadeContabil);
 		unidade.setParametroRepasse(parametroRepasse);
 		unidade.setResponsavel(responsavel);
-		// 67.23.240.183:5433
 		conexaoBanco = connectionConfigService.obterConexaoBancoCGP();
-		// .obterConexaoBanco(POSTGRESQL_DRIVER,
-		// "jdbc:postgresql://67.23.240.183:5433/CGPPHB15",
-		// USUARIO, SENHA);
 		Ajax.update(":unidadeTabView");
 
 	}
@@ -149,6 +145,10 @@ public class UnidadeController extends BaseController {
 	}
 
 	public void criar(boolean gerarTermo) {
+
+		if (usuarioSemPermissao())
+			return;
+
 		getFonteRecurso().setId(null);
 		getContaContabil().setId(null);
 		getContaContabil().setFonteRecurso(getFonteRecurso());
@@ -166,7 +166,8 @@ public class UnidadeController extends BaseController {
 
 			unidade = unidadeService.salvar(unidade);
 		} catch (Exception e) {
-			addErrorMessage(String.format("%s \nConsulte o Analista: %s",
+			addErrorMessage(String.format(
+					"%s \nConsulte o Suporte Técnico: %s",
 					ResultMessages.ERROR_CRUD.getDescricao(), e.getMessage()));
 			return;
 		}

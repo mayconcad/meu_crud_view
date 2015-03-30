@@ -4,202 +4,231 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 
-<div class="container_24">
+<div class="container">
 	<h:form id="updateResponsavelForm">
 		<p:messages id="messages" />
 
 		<p:panel header="#{wd['fieldset.data']}" toggleable="false"
 			styleClass="clearfix">
-
-			<div class="grid_2" style="padding-top: 5px !important">
-				<p:outputLabel value="#{lb['responsavel.nome']}" for="responsavelAC" />
-			</div>
-			<div class="grid_15">
-				<p:inputText value="#{buscarResponsavelController.responsavelEdite.nome}"
-					for="responsavelAC" id="responsavelAC" />
-			</div>
-<!-- 			<div class="grid_15"> -->
-<!-- 				<p:autoComplete id="responsavelAC" minQueryLength="3" -->
-<!-- 					value="#{buscarResponsavelController.responsavelEdite}" -->
-<!-- 					label="#{lb['responsavel.nome']}" required="true" -->
-<!-- 					completeMethod="#{responsavelController.autocompletarBDFolha}" -->
-<!-- 					queryDelay="3" widgetVar="responsavelAC" var="var" -->
-<!-- 					itemLabel="#{var.nome}" itemValue="#{var}" process="@this" -->
-<!-- 					dropdown="true" converter="responsavelConverter" -->
-<!-- 					forceSelection="true" scrollHeight="250"> -->
-<!-- 					<p:ajax event="itemSelect" process="@this" update="@form" /> -->
-<!-- 				</p:autoComplete> -->
-<!-- 			</div> -->
-			<div class="grid_2" style="padding-top: 5px !important;">
-				<p:outputLabel value="#{lb['responsavel.matricula']}"
-					for="respMatriFunc" />
-			</div>
-			<div class="grid_5" style="margin-top: -1px">
-				<p:inputText id="respMatriFunc"
-					value="#{buscarResponsavelController.responsavelEdite.matriculaFuncional}"
-					required="true" />
+			<div class="row">
+				<div class="col-md-2">
+					<p:outputLabel value="#{lb['responsavel.nome']}"
+						for="responsavelAC" />
+				</div>
+				<div class="col-md-16">
+					<p:inputText
+						value="#{buscarResponsavelController.responsavelEdite.nome}"
+						for="responsavelAC" id="responsavelAC" />
+				</div>
+				<!-- 			<div class="grid_15"> -->
+				<!-- 				<p:autoComplete id="responsavelAC" minQueryLength="3" -->
+				<!-- 					value="#{buscarResponsavelController.responsavelEdite}" -->
+				<!-- 					label="#{lb['responsavel.nome']}" required="true" -->
+				<!-- 					completeMethod="#{responsavelController.autocompletarBDFolha}" -->
+				<!-- 					queryDelay="3" widgetVar="responsavelAC" var="var" -->
+				<!-- 					itemLabel="#{var.nome}" itemValue="#{var}" process="@this" -->
+				<!-- 					dropdown="true" converter="responsavelConverter" -->
+				<!-- 					forceSelection="true" scrollHeight="250"> -->
+				<!-- 					<p:ajax event="itemSelect" process="@this" update="@form" /> -->
+				<!-- 				</p:autoComplete> -->
+				<!-- 			</div> -->
+				<div class="col-md-2">
+					<p:outputLabel value="#{lb['responsavel.matricula']}"
+						for="respMatriFunc" />
+				</div>
+				<div class="col-md-4">
+					<p:inputText id="respMatriFunc"
+						value="#{buscarResponsavelController.responsavelEdite.matriculaFuncional}"
+						required="true" />
+				</div>
 			</div>
 			<div class="clear" />
+			<div class="row">
+				<div class="col-md-2">
+					<p:outputLabel value="#{lb['responsavel.rg']}" for="respRG" />
+				</div>
+				<div class="col-md-3">
+					<p:inputText id="respRG"
+						value="#{buscarResponsavelController.responsavelEdite.rg}"
+						required="true" />
+				</div>
+				<div class="col-md-2">
+					<p:outputLabel value="#{lb['responsavel.orgaoExpedidor']}"
+						for="respOrgExp" />
+				</div>
+				<div class="col-md-3">
+					<p:inputText id="respOrgExp"
+						value="#{buscarResponsavelController.responsavelEdite.orgaoExpedidor}"
+						required="true" />
+				</div>
 
-			<div class="grid_2" style="padding-top: 5px !important;">
-				<p:outputLabel value="#{lb['responsavel.rg']}" for="respRG" />
-			</div>
-			<div class="grid_4">
-				<p:inputText id="respRG"
-					value="#{buscarResponsavelController.responsavelEdite.rg}"
-					required="true" />
-			</div>
-			<div class="grid_2"
-				style="padding-top: 5px !important; text-align: right;">
-				<p:outputLabel value="#{lb['responsavel.orgaoExpedidor']}"
-					for="respOrgExp" />
-			</div>
-			<div class="grid_2">
-				<p:inputText id="respOrgExp"
-					value="#{buscarResponsavelController.responsavelEdite.orgaoExpedidor}"
-					required="true" />
+				<div class="col-md-1">
+					<p:outputLabel value="#{lb['responsavel.cpf']}" for="respCPF" />
+				</div>
+				<div class="col-md-5">
+					<p:inputMask id="respCPF"
+						value="#{buscarResponsavelController.responsavelEdite.cpf}"
+						required="true" mask="999.999.999-99" />
+				</div>
+				<div class="col-md-1">
+					<p:outputLabel value="#{lb['responsavel.cargo']}" for="respCargo" />
+				</div>
+				<div class="col-md-7">
+					<p:inputText id="respCargo"
+						value="#{buscarResponsavelController.responsavelEdite.cargo}"
+						required="true" />
+				</div>
 			</div>
 
-			<div class="grid_2"
-				style="padding-top: 5px !important; text-align: right;">
-				<p:outputLabel value="#{lb['responsavel.cpf']}" for="respCPF" />
-			</div>
-			<div class="grid_4">
-				<p:inputMask id="respCPF"
-					value="#{buscarResponsavelController.responsavelEdite.cpf}"
-					required="true" mask="999.999.999-99"/>
-			</div>
-			<div class="grid_2" style="padding-top: 5px !important;">
-				<p:outputLabel value="#{lb['responsavel.cargo']}" for="respCargo" />
-			</div>
-			<div class="grid_6">
-				<p:inputText id="respCargo"
-					value="#{buscarResponsavelController.responsavelEdite.cargo}"
-					required="true" />
-			</div>
-			<div class="grid_2" style="padding-top: 5px !important;">
-				<p:outputLabel value="#{lb['responsavel.dataInicial']}"
-					for="dataInicial" />
-			</div>
-			<div class="grid_4" style="margin-top: 4px">
-				<p:calendar id="dataInicial"
-					value="#{buscarResponsavelController.responsavelEdite.dataInicial}"
-					showOn="button" pattern="dd/MM/yyyy" locale="pt"
-					styleClass="fieldFullWidth" navigator="true" effect="fadeIn"
-					required="true" />
-			</div>
-			<div class="grid_2"
-				style="padding-top: 5px !important; text-align: right;">
-				<p:outputLabel value="#{lb['responsavel.dataFinal']}"
-					for="dataFinal" />
-			</div>
-			<div class="grid_4" style="margin-top: 4px">
-				<p:calendar id="dataFinal"
-					value="#{buscarResponsavelController.responsavelEdite.dataFinal}"
-					showOn="button" pattern="dd/MM/yyyy" locale="pt"
-					styleClass="fieldFullWidth" navigator="true" effect="fadeIn" />
+			<div class="row">
+				<div class="col-md-3">
+					<p:outputLabel value="#{lb['responsavel.dataInicial']}"
+						for="dataInicial" />
+				</div>
+				<div class="col-md-4">
+					<p:calendar id="dataInicial"
+						value="#{buscarResponsavelController.responsavelEdite.dataInicial}"
+						showOn="button" pattern="dd/MM/yyyy" locale="pt" navigator="true"
+						effect="fadeIn" required="true" />
+				</div>
+				<div class="col-md-4">
+					<p:outputLabel value="#{lb['responsavel.dataFinal']}"
+						for="dataFinal" />
+				</div>
+				<div class="col-md-4">
+					<p:calendar id="dataFinal"
+						value="#{buscarResponsavelController.responsavelEdite.dataFinal}"
+						showOn="button" pattern="dd/MM/yyyy" locale="pt" navigator="true"
+						effect="fadeIn" />
+				</div>
 			</div>
 			<div class="clear" />
 			<fieldset>
 				<legend>Endereço</legend>
-
-				<p:outputLabel value="#{lb['responsavel.endereco']}"
-					for="responsavelEndereco" styleClass="w2" />
-				<p:inputText id="responsavelEndereco"
-					value="#{buscarResponsavelController.responsavelEdite.endereco}"
-					styleClass="w10" />
-				<p:outputLabel value="#{lb['responsavel.bairro']}"
-					for="responsavelBairro" styleClass="w2" />
-				<p:inputText id="responsavelBairro"
-					value="#{buscarResponsavelController.responsavelEdite.bairro}"
-					styleClass="w6" />
+				<div class="row">
+					<div class="col-md-2">
+						<p:outputLabel value="#{lb['responsavel.endereco']}"
+							for="responsavelEndereco" />
+					</div>
+					<div class="col-md-11">
+						<p:inputText id="responsavelEndereco"
+							value="#{buscarResponsavelController.responsavelEdite.endereco}" />
+					</div>
+					<div class="col-md-2">
+						<p:outputLabel value="#{lb['responsavel.bairro']}"
+							for="responsavelBairro" />
+					</div>
+					<div class="col-md-9">
+						<p:inputText id="responsavelBairro"
+							value="#{buscarResponsavelController.responsavelEdite.bairro}" />
+					</div>
+				</div>
 				<div class="clear" />
-				<p:outputLabel value="#{lb['responsavel.cidade']}"
-					for="responsavelCidade" styleClass="w2" />
-				<p:inputText id="responsavelCidade"
-					value="#{buscarResponsavelController.responsavelEdite.cidade}"
-					styleClass="w8" />
-				<p:outputLabel value="#{lb['responsavel.uf']}" for="responsavelUf"
-					styleClass="w2" />
-				<p:inputText id="responsavelUf"
-					value="#{buscarResponsavelController.responsavelEdite.uf}"
-					styleClass="w2" />
+				<div class="row">
+					<div class="col-md-2">
+						<p:outputLabel value="#{lb['responsavel.cidade']}"
+							for="responsavelCidade" />
+					</div>
+					<div class="col-md-13">
+						<p:inputText id="responsavelCidade"
+							value="#{buscarResponsavelController.responsavelEdite.cidade}" />
+					</div>
+					<div class="col-md-1">
+						<p:outputLabel value="#{lb['responsavel.uf']}" for="responsavelUf" />
+					</div>
+					<div class="col-md-2">
+						<p:inputText id="responsavelUf"
+							value="#{buscarResponsavelController.responsavelEdite.uf}" />
+					</div>
+					<div class="col-md-2">
 
-				<p:outputLabel value="#{lb['responsavel.telefone']}"
-					for="responsavelTelefone" styleClass="w2" />
-				<p:inputMask id="responsavelTelefone"
-					value="#{buscarResponsavelController.responsavelEdite.telefone}"
-					styleClass="w4" mask="(999)9999-9999"/>
+						<p:outputLabel value="#{lb['responsavel.telefone']}"
+							for="responsavelTelefone" />
+					</div>
+					<div class="col-md-4">
+						<p:inputMask id="responsavelTelefone"
+							value="#{buscarResponsavelController.responsavelEdite.telefone}"
+							mask="(999)9999-9999" />
+					</div>
+				</div>
 			</fieldset>
 
 			<fieldset>
 				<legend>Dados Bancários</legend>
-				<p:outputLabel value="#{lb['responsavel.codigoBanco']}"
-					for="codigoBanco" styleClass="w2" />
-				<p:inputText id="codigoBanco"
-					value="#{buscarResponsavelController.responsavelEdite.codigoBanco}"
-					styleClass="w2" required="true" />
+				<div class="row">
+					<div class="col-md-2">
+						<p:outputLabel value="#{lb['responsavel.codigoBanco']}"
+							for="codigoBanco" />
+					</div>
+					<div class="col-md-2">
+						<p:inputText id="codigoBanco"
+							value="#{buscarResponsavelController.responsavelEdite.codigoBanco}"
+							required="true" />
+					</div>
+					<div class="col-md-2">
+						<p:outputLabel value="#{lb['responsavel.numeroAgencia']}"
+							for="numeroAgencia" />
+					</div>
+					<div class="col-md-3">
+						<p:inputText id="numeroAgencia"
+							value="#{buscarResponsavelController.responsavelEdite.numeroAgencia}"
+							required="true" />
+					</div>
+					<div class="col-md-2">
+						<p:outputLabel value="#{lb['responsavel.digitoAgencia']}"
+							for="digitoAgencia" />
+					</div>
+					<div class="col-md-2">
+						<p:inputText id="digitoAgencia"
+							value="#{buscarResponsavelController.responsavelEdite.digitoAgencia}"
+							required="true" />
+					</div>
+					<div class="col-md-2">
 
-				<p:outputLabel value="#{lb['responsavel.numeroAgencia']}"
-					for="numeroAgencia" styleClass="w2" />
-				<p:inputText id="numeroAgencia"
-					value="#{buscarResponsavelController.responsavelEdite.numeroAgencia}"
-					styleClass="w3" required="true" />
+						<p:outputLabel value="#{lb['responsavel.numeroConta']}"
+							for="numeroConta" />
+					</div>
+					<div class="col-md-5">
+						<p:inputText id="numeroConta"
+							value="#{buscarResponsavelController.responsavelEdite.numeroConta}"
+							required="true" />
+					</div>
+					<div class="col-md-2">
 
-				<p:outputLabel value="#{lb['responsavel.digitoAgencia']}"
-					for="digitoAgencia" styleClass="w2" />
-				<p:inputText id="digitoAgencia"
-					value="#{buscarResponsavelController.responsavelEdite.digitoAgencia}"
-					styleClass="w1" required="true" />
-
-				<p:outputLabel value="#{lb['responsavel.numeroConta']}"
-					for="numeroConta" styleClass="w2" />
-				<p:inputText id="numeroConta"
-					value="#{buscarResponsavelController.responsavelEdite.numeroConta}"
-					styleClass="w3" required="true" />
-
-				<p:outputLabel value="#{lb['responsavel.digitoConta']}"
-					for="digitoConta" styleClass="w2" />
-				<p:inputText id="digitoConta"
-					value="#{buscarResponsavelController.responsavelEdite.digitoConta}"
-					styleClass="w1" required="true" />
-
-				<p:outputLabel value="#{lb['responsavel.tipoConta']}"
-					for="tipoConta" styleClass="w2" />
-				<div class="w2">
-					<p:selectOneMenu id="tipoConta"
-						itemLabel="#{wd['dialog.optionYes']}"
-						value="#{buscarResponsavelController.responsavelEdite.tipoConta}"
-						required="true">
-						<f:selectItems value="#{buscarResponsavelController.tipoContas()}" />
-					</p:selectOneMenu>
+						<p:outputLabel value="#{lb['responsavel.digitoConta']}"
+							for="digitoConta" />
+					</div>
+					<div class="col-md-2">
+						<p:inputText id="digitoConta"
+							value="#{buscarResponsavelController.responsavelEdite.digitoConta}"
+							required="true" />
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-2">
+						<p:outputLabel value="#{lb['responsavel.tipo']}" for="tipoConta" />
+					</div>
+					<div class="col-md-3">
+						<p:selectOneMenu id="tipoConta"
+							itemLabel="#{wd['dialog.optionYes']}"
+							value="#{buscarResponsavelController.responsavelEdite.tipoConta}"
+							required="true">
+							<f:selectItems
+								value="#{buscarResponsavelController.tipoContas()}" />
+						</p:selectOneMenu>
+					</div>
 				</div>
 			</fieldset>
 
 			<p:commandButton value="#{wd['button.update']}"
 				update=":responsavelTabView, messages"
 				actionListener="#{buscarResponsavelController.editar}"
-				styleClass="w4 r6" />
-			<!-- 		<p:commandButton id="limparCommandButton" -->
-			<!-- 			value="#{wd['button.cancel']}" icon="ui-icon-cancel" -->
-			<!-- 			actionListener="#{buscarResponsavelController.init}" update="@form" -->
-			<!-- 			process="@this" styleClass="w4 r7"> -->
-			<!-- 				<p:resetInput target=":responsavelTabView:updateResponsavelForm" /> -->
-			<!-- 		</p:commandButton> -->
-
-			<!-- 			<div class="buttonsAction"> -->
-			<!-- 				<p:commandButton id="salvarCommandButton" icon="ui-icon-disk" value="#{wds['button.update']}" -->
-			<!-- 					update="@form" action="#{controladorConsultarAtivo.salvar}" -->
-			<!-- 					process="@this :#{p:component('dadosAtualizarPanel')} :#{p:component('propriedadesAtualizarPanel')} :#{p:component('medidoresAtualizarDataTable')} :#{p:component('patrimonioAtualizarPanel')}" -->
-			<!-- 					onclick="javascript:window.location='#ativoTabView'" /> -->
+				styleClass="col-md-4 r6" icon="ui-icon-disk" process="@this" />
 			<p:commandButton value="#{wd['button.cancel']}" type="reset"
 				icon="ui-icon-cancel"
 				onclick="responsavelTabs.remove(responsavelTabs.getActiveIndex())"
-				styleClass="w4 r8" />
-			<!-- 			</div> -->
-
+				styleClass="col-md-4 r7" process="@this" />
 		</p:panel>
-
 	</h:form>
 </div>
 </html>

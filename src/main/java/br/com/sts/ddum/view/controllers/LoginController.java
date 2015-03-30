@@ -89,7 +89,7 @@ public class LoginController extends BaseController {
 		Authentication auth = SecurityContextHolder.getContext()
 				.getAuthentication();
 		User user = (User) auth.getPrincipal();
-		return user.getRoles().get(0).getName();
+		return user.getRoles().iterator().next().getName();
 	}
 
 	public User getCurrentUser() {

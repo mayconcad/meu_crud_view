@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ViewScoped;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,9 @@ import br.com.sts.ddum.model.springsecurity.entities.User;
 import br.com.sts.ddum.service.interfaces.ResponsavelService;
 import br.com.sts.ddum.service.interfaces.RoleService;
 import br.com.sts.ddum.service.interfaces.UserService;
+import br.com.sts.ddum.view.utils.UtilsView;
+
+import com.google.common.collect.Sets;
 
 @Controller
 @ViewScoped
@@ -51,16 +55,37 @@ public class UserController extends BaseController {
 		login = senha = new String();
 	}
 
+	@PostConstruct
+	public void init() {
+		responsavel = new Responsavel();
+		role = new Role();
+		user = new User();
+		login = senha = new String();
+	}
+
 	public void save() {
+
+		LoginBean controllerInstance = UtilsView
+				.getControllerInstance(LoginBean.class);
+		if (!controllerInstance.getPrincipalRole().equals("ADMIN")
+				&& !controllerInstance.getPrincipalRole().equals("GESTOR")) {
+			addErrorMessage(ResultMessages.ERROR_ONLY_ADMIN_AND_GESTOR_OPERATION
+					.getDescricao());
+			return;
+		}
 
 		boolean possuiResponsavel = responsavel != null
 				&& responsavel.getId() != null && responsavel.getId() > 0;
 
 		List<Role> roles = new ArrayList<Role>();
 		roles.add(role);
-		this.user.setRoles(roles);
-		if (possuiResponsavel)
+		this.user.setRoles(Sets.newHashSet(roles));
+		if (possuiResponsavel) {
 			this.user.setName(responsavel.getNome());
+			List<Responsavel> responsaveis = new ArrayList<Responsavel>();
+			responsaveis.add(responsavel);
+			this.user.setResponsaveis(Sets.newHashSet(responsaveis));
+		}
 		this.user.setUsername(getLogin());
 		this.user.setPassword(getSenha());
 		this.user.setCreatedAt(new Date());
@@ -68,11 +93,13 @@ public class UserController extends BaseController {
 		this.user.setId(null);
 		try {
 			userService.save(this.user);
-			if (possuiResponsavel) {
-				responsavel.setUser(getUser());
-				responsavelService.atualizar(responsavel);
-			}
 		} catch (Exception e) {
+			if (e.getMessage() != null
+					&& e.getMessage().contains("user_username_ativo_key")) {
+				addErrorMessage(ResultMessages.ERROR_CRUD.getDescricao()
+						+ " O item já existe!");
+				return;
+			}
 			addErrorMessage(ResultMessages.ERROR_CRUD.getDescricao()
 					+ e.getLocalizedMessage());
 			return;

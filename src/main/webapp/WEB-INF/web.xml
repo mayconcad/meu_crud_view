@@ -73,5 +73,14 @@
   <context-param>
     <param-name>primefaces.UPLOADER</param-name>
     <param-value>auto</param-value>
+<!--     <param-value>commons</param-value> -->
+  </context-param>
+  <context-param>
+  		<param-name>primefaces.PUBLIC_CAPTCHA_KEY</param-name>
+  		<param-value>6LdjYwMTAAAAAM1Du_WUUp3CUfFu92jMe8JF4ul6</param-value>
+  </context-param>
+    <context-param>
+  		<param-name>primefaces.PRIVATE_CAPTCHA_KEY</param-name>
+  		<param-value>6LdjYwMTAAAAAMKUrQlgEqPbe_ViBe-AeQBB5g9s</param-value>
   </context-param>
 </web-app>

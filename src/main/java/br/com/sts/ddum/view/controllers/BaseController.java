@@ -11,6 +11,9 @@ import javax.faces.context.FacesContext;
 
 import org.primefaces.component.tabview.Tab;
 
+import br.com.sts.ddum.model.enums.ResultMessages;
+import br.com.sts.ddum.view.utils.UtilsView;
+
 public class BaseController implements Serializable {
 
 	private static final long serialVersionUID = 891153748337320506L;
@@ -57,6 +60,17 @@ public class BaseController implements Serializable {
 
 	protected void addInfoMessage(String infoMessage) {
 		addInfoMessage(null, infoMessage);
+	}
+
+	protected boolean usuarioSemPermissao() {
+		LoginBean controllerInstance = UtilsView
+				.getControllerInstance(LoginBean.class);
+		if (!controllerInstance.getPrincipalRole().equals("ADMIN")) {
+			addErrorMessage(ResultMessages.ERROR_ONLY_ADMIN_OPERATION
+					.getDescricao());
+			return true;
+		}
+		return false;
 	}
 
 	private void addMessage(String componentId, String errorMessage,

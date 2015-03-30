@@ -93,7 +93,7 @@ public class ParametroRepasseController extends BaseController {
 			addErrorMessage("O item já está cadastrado");
 			return;
 		} catch (Exception e) {
-			addErrorMessage(String.format("%s \nConsulte o Analista: %s",
+			addErrorMessage(String.format("%s \nConsulte o Suporte Técnico: %s",
 					ResultMessages.ERROR_CRUD.getDescricao(),
 					e.getLocalizedMessage()));
 			return;

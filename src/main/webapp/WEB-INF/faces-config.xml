@@ -50,7 +50,7 @@
 	</converter>
 
 	<!-- <factory> -->
-	<!-- <exception-handler-factory>br.com.sts.ddum.domain.handlers.ServiceExceptionHandlerFactory</exception-handler-factory> -->
+	<!-- <exception-handler-factory>br.com.sts.ddum.model.handlers.ServiceExceptionHandlerFactory</exception-handler-factory> -->
 	<!-- </factory> -->
 	<navigation-rule>
 		<navigation-case>

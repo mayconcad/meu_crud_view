@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PrestacaoContas" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="0.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="36"/>
+	<subDataset name="documentosDataset">
+		<field name="tipo" class="java.lang.String"/>
+		<field name="numero" class="java.lang.String"/>
+		<field name="valor" class="java.math.BigDecimal"/>
+		<field name="nome" class="java.lang.String"/>
+		<field name="contentType" class="java.lang.String"/>
+	</subDataset>
+	<parameter name="logo" class="java.lang.String"/>
+	<parameter name="valor" class="java.lang.String"/>
+	<parameter name="dataPrestacao" class="java.lang.String"/>
+	<parameter name="agencia" class="java.lang.String"/>
+	<parameter name="conta" class="java.lang.String"/>
+	<parameter name="local" class="java.lang.String"/>
+	<parameter name="repasse" class="java.lang.String"/>
+	<parameter name="saldo" class="java.lang.String"/>
+	<field name="documentos" class="java.util.List"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="395">
+			<staticText>
+				<reportElement x="0" y="31" width="555" height="28"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="13" isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Declaração de Prestação de Contas]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement x="9" y="88" width="532" height="242"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" rotation="None" markup="html">
+					<font fontName="SansSerif" size="11" isBold="false" isStrikeThrough="false" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Declaro que prestei contas do valor <b>" +$P{valor}+"</b> referente ao repasse recebido em <b>"+$P{dataPrestacao}+"</b> no valor <b>"+$P{repasse}+"</b> ficando com um saldo disponível na minha conta bancária agência <b>"+$P{agencia}+"</b> conta nº <b>"+$P{conta}+"</b> de <b>"+$P{saldo}+"</b> e que os documentos comprobatórios das despesas encontram-se nesta unidade beneficiária sob minha boa guarda e organização, os quais serão conservados por cinco anos conforme determina a Lei 2.928/2014 art.5º, bem como ficarão disponível para efeito de acompanhamento, fiscalização e auditorias internas e externas conforme art.7º, c.<p/><p>Declaro também está ciente conforme determina o artigo 4º § 2º que o gestor, responsável pela prestação de contas, que permitir, inserir ou fizer inserir documentos ou declaração falsa ou diversa da que deveria ser inscrita, com o fim de alterar a verdade sobre os fatos, será responsabilizado na forma da lei.</p>"]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="0" width="1" height="395"/>
+			</line>
+			<staticText>
+				<reportElement mode="Opaque" x="24" y="383" width="112" height="12" backcolor="#D9D2D2"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[tipo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="136" y="383" width="113" height="12" backcolor="#D9D2D2"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[numero]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="249" y="383" width="122" height="12" backcolor="#D9D2D2"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[valor]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="371" y="383" width="170" height="12" backcolor="#D9D2D2"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[nome]]></text>
+			</staticText>
+			<line>
+				<reportElement x="554" y="0" width="1" height="395"/>
+			</line>
+			<line>
+				<reportElement x="0" y="0" width="555" height="1"/>
+			</line>
+		</band>
+	</title>
+	<detail>
+		<band height="310" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="0" width="1" height="310"/>
+			</line>
+			<line>
+				<reportElement x="554" y="0" width="1" height="310"/>
+			</line>
+			<componentElement>
+				<reportElement positionType="Float" isPrintRepeatedValues="false" x="24" y="0" width="517" height="17"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="documentosDataset">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{documentos})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="17" width="517">
+						<textField isStretchWithOverflow="true">
+							<reportElement positionType="Float" stretchType="RelativeToTallestObject" isPrintRepeatedValues="false" x="0" y="0" width="112" height="17"/>
+							<box>
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="1.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<paragraph leftIndent="5"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{tipo}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true">
+							<reportElement positionType="Float" stretchType="RelativeToTallestObject" isPrintRepeatedValues="false" x="112" y="0" width="113" height="17"/>
+							<box>
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="1.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<paragraph leftIndent="5"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{numero}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" pattern="¤ #,##0.00">
+							<reportElement positionType="Float" stretchType="RelativeToTallestObject" isPrintRepeatedValues="false" x="225" y="0" width="122" height="17"/>
+							<box>
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="1.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<paragraph leftIndent="5"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{valor}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true">
+							<reportElement positionType="Float" stretchType="RelativeToTallestObject" isPrintRepeatedValues="false" x="347" y="0" width="170" height="17"/>
+							<box>
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="1.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<paragraph leftIndent="5"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="157" width="555" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom" markup="none">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{local}+",___/___/_______"]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement stretchType="RelativeToTallestObject" x="112" y="204" width="300" height="1"/>
+			</line>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" x="112" y="205" width="300" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Assinatura do Responsável]]></text>
+			</staticText>
+			<line>
+				<reportElement x="1" y="309" width="555" height="1"/>
+			</line>
+		</band>
+	</detail>
+</jasperReport>

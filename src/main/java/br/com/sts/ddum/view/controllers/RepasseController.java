@@ -1,5 +1,6 @@
 package br.com.sts.ddum.view.controllers;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.sql.Connection;
@@ -7,18 +8,25 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.servlet.ServletContext;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Months;
 import org.omnifaces.util.Ajax;
+import org.primefaces.component.media.Media;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -30,10 +38,11 @@ import br.com.sts.ddum.model.utils.UtilsModel;
 import br.com.sts.ddum.model.vos.ReservaDotacaoVO;
 import br.com.sts.ddum.service.interfaces.ConnectionConfigService;
 import br.com.sts.ddum.service.interfaces.RepasseService;
+import br.com.sts.ddum.service.interfaces.ResponsavelService;
 
 @Controller
 @ViewScoped
-public class RepasseController extends BaseController {
+public class RepasseController extends BaseReportController {
 
 	private static final long serialVersionUID = -3922297442654647722L;
 
@@ -43,73 +52,134 @@ public class RepasseController extends BaseController {
 	private RepasseService repasseService;
 
 	@Autowired
+	private ResponsavelService responsavelService;
+
+	@Autowired
 	private ConnectionConfigService connectionConfigService;
 
 	private Unidade unidade;
 
 	private Repasse repasse;
 
+	private String numeroProcessoLabel;
+
 	private Statement createStatement;
 	private Connection conexaoBancoCGP;
 
+	private Media empenhoMedia;
+
 	@PostConstruct
 	public void init() {
+		empenhoMedia = new Media();
 		unidade = new Unidade();
 		repasse = new Repasse();
+		repasse.setDataEmissao(new Date());
+		setNumeroProcessoLabel("2.928");
 		conexaoBancoCGP = connectionConfigService.obterConexaoBancoCGP();
 		Ajax.update(":repasseTabView");
 	}
 
 	public void gerarRepasse() {
+		if (true) {
+			addErrorMessage("Esta funcionalidade ainda não está disponível!");
+			return;
+		}
 
-		// Responsavel credor = null;
-		// try {
-		// credor = obterCredor(repasse.getUnidade().getResponsavel());
-		// } catch (SQLException e) {
-		// e.printStackTrace();
-		// addErrorMessage("Não foi possível registrar o reponsável como credor!\n"
-		// + e.getLocalizedMessage());
-		// return;
-		// }
-
-		long proximoNumeroEmpenho = repasseService
-				.obterProximoNumeroEmpenho(repasse.getUnidade()
-						.getUnidadeContabil());
-		// int exercicio = repasse.getUnidade().getParametroRepasse()
-		// .getExercicio();
-		// String codConta = StringUtils.rightPad(repasse.getUnidade()
-		// .getParametroRepasse().getCodElementoDespesa(), 12, "0");
-		// BigDecimal valorEmpenho = getValorEmpenho(repasse.getUnidade()
-		// .getParametroRepasse().getValorRepasse());
-		// BigDecimal saldoDotacao = calculoSaldoDotacao(repasse.getUnidade(),
-		// repasse.getDataEmissao());
-
-		// if (valorEmpenho.compareTo(saldoDotacao) > 0) {
-		// addErrorMessage("Não foi possível gerar o Repasse. O valor do empenho é superior ao saldo da dotação");
-		// return;
-		// }
-
-		// repasse.setExercicio(exercicio);
-		// repasse.setCodAplicacao("100");
-		// repasse.setDataEmissao(new Date());
-		// repasse.setHistorico(DE_HISTORICO);
-		// repasse.setNaturezaEmpenho(NaturezaEmpenhoEnum.EMPENHO_SUPRIMENTO_FUNDO);
-		// repasse.setTipoCredito(TipoCreditoEnum.ORCAMENTARIO);
-		// repasse.setTipoEmpenho(TipoEmpenhoEnum.GLOBAL);
-		// repasse.setTipoMeta(TipoMetaEnum.OUTRAS);
-		// repasse.setValorEmpenho(valorEmpenho);
-		// repasse.setValorLiquidacao(repasse.getUnidade().getParametroRepasse()
-		// .getValorRepasse());
-		// repasse.setValorRepasse(repasse.getUnidade().getParametroRepasse()
-		// .getValorRepasse());
-
-		// repasse.setNumeroEmpenho(proximoNumeroEmpenho);
-
-		// gerarEmpenho(credor, proximoNumeroEmpenho, exercicio, codConta,
-		// valorEmpenho, saldoDotacao);
-		//
+		Responsavel credor = new Responsavel();
 		try {
-			repasseService.repasseAutomatico(repasse, proximoNumeroEmpenho);
+			createStatement = conexaoBancoCGP.createStatement();
+			credor = obterCredor(repasse.getUnidade().getResponsavel());
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			addErrorMessage("Não foi possível registrar o reponsável como credor!\n"
+					+ e.getLocalizedMessage());
+			return;
+		}
+
+		try {
+
+			long proximoNumeroEmpenho = repasseService
+					.obterProximoNumeroEmpenho(repasse.getUnidade()
+							.getParametroRepasse().getCodUnidade());
+			// int exercicio = repasse.getUnidade().getParametroRepasse()
+			// .getExercicio();
+			// String codConta = StringUtils.rightPad(repasse.getUnidade()
+			// .getParametroRepasse().getCodElementoDespesa(), 12, "0");
+			// BigDecimal valorEmpenho = getValorEmpenho(repasse.getUnidade()
+			// .getParametroRepasse().getValorRepasse());
+			// BigDecimal saldoDotacao =
+			// calculoSaldoDotacao(repasse.getUnidade(),
+			// repasse.getDataEmissao());
+
+			// if (valorEmpenho.compareTo(saldoDotacao) > 0) {
+			// addErrorMessage("Não foi possível gerar o Repasse. O valor do empenho é superior ao saldo da dotação");
+			// return;
+			// }
+
+			// repasse.setExercicio(exercicio);
+			// repasse.setCodAplicacao("100");
+			// repasse.setDataEmissao(new Date());
+			// repasse.setHistorico(DE_HISTORICO);
+			// repasse.setNaturezaEmpenho(NaturezaEmpenhoEnum.EMPENHO_SUPRIMENTO_FUNDO);
+			// repasse.setTipoCredito(TipoCreditoEnum.ORCAMENTARIO);
+			// repasse.setTipoEmpenho(TipoEmpenhoEnum.GLOBAL);
+			// repasse.setTipoMeta(TipoMetaEnum.OUTRAS);
+			// repasse.setValorEmpenho(valorEmpenho);
+			// repasse.setValorLiquidacao(repasse.getUnidade().getParametroRepasse()
+			// .getValorRepasse());
+			// repasse.setValorRepasse(repasse.getUnidade().getParametroRepasse()
+			// .getValorRepasse());
+
+			// repasse.setNumeroEmpenho(proximoNumeroEmpenho);
+
+			// gerarEmpenho(credor, proximoNumeroEmpenho, exercicio, codConta,
+			// valorEmpenho, saldoDotacao);
+			//
+			repasse.setNumeroProcesso(Long.parseLong(getNumeroProcessoLabel()
+					.replace(".", "")));
+			repasseService.repasseAutomatico(repasse, credor, repasse
+					.getUnidade().getParametroRepasse().getValorRepasse(),
+					proximoNumeroEmpenho, true);
+
+			addInfoMessage(String.format(
+					"Foi gerado um Empenho com o número ( %s )",
+					proximoNumeroEmpenho));
+
+			generateReportStream(repasse.getNumeroEmpenho(),
+					repasse.getDataEmissao(), repasse.getExercicio(),
+					repasse.getNumeroProcesso(),
+					UtilsModel.convertBigDecimalToString(repasse
+							.getValorEmpenho()), repasse.getTipoCredito()
+							.getDescricao(), repasse.getTipoMeta()
+							.getDescricao(), repasse.getTipoEmpenho()
+							.getDescricao(), repasse.getNaturezaEmpenho()
+							.getDescricao(), String.format("%s - %s", repasse
+							.getUnidade().getParametroRepasse()
+							.getCodElementoDespesa(), repasse.getUnidade()
+							.getUnidadeContabil().getAtividade()
+							.getContaContabil().getDescricao()), String.format(
+							"%s - %s",
+							repasse.getUnidade().getParametroRepasse()
+									.getCodFonteRecurso(), repasse.getUnidade()
+									.getUnidadeContabil().getAtividade()
+									.getContaContabil().getFonteRecurso()
+									.getDescricao()), String.format("%d - %s",
+							credor.getCodigoCredor(), credor.getNome()),
+					repasse.getCodAplicacao(), repasse.getHistorico());
+			getEmpenhoMedia().setValue(
+					File.separator.concat("reports").concat(
+							File.separator.concat("GuiaEmpenho.pdf")));
+
+			// credor =
+			// buildUpdateCredor(repasse.getUnidade().getResponsavel());
+			// Long id = credor.getId();
+			// Responsavel responsavel = responsavelService.carregar(repasse
+			// .getUnidade().getResponsavel().getId());
+			// responsavel.setCodigoCredor(repasse.getUnidade().getResponsavel()
+			// .getCodigoCredor());
+			// responsavelService.atualizar(responsavel);
+
 		} catch (IllegalArgumentException e) {
 			addErrorMessage(e.getMessage());
 			return;
@@ -117,12 +187,111 @@ public class RepasseController extends BaseController {
 			addErrorMessage(ResultMessages.ERROR_CRUD.getDescricao());
 			return;
 		}
-
+		responsavelService.salvar(repasse.getUnidade().getResponsavel());
 		init();
-		addInfoMessage(String.format(
-				"Foi gerado o número ( %s ) para o Empenho",
-				proximoNumeroEmpenho));
 
+	}
+
+	private Responsavel buildUpdateCredor(Responsavel credor) {
+		Responsavel responsavel = new Responsavel();
+		responsavel.setAtivo(repasse.getUnidade().getResponsavel().isAtivo());
+		responsavel
+				.setBairro(repasse.getUnidade().getResponsavel().getBairro());
+		responsavel.setCargo(repasse.getUnidade().getResponsavel().getCargo());
+		responsavel.setCidade(repasse.getUnidade().getResponsavel().getCargo());
+		responsavel.setCodigoCredor(credor.getCodigoCredor());
+		responsavel.setCodigoBanco(repasse.getUnidade().getResponsavel()
+				.getCodigoBanco());
+		responsavel.setCpf(repasse.getUnidade().getResponsavel().getCpf());
+		responsavel.setDataExpedicao(repasse.getUnidade().getResponsavel()
+				.getDataExpedicao());
+		responsavel.setDataInicial(repasse.getUnidade().getResponsavel()
+				.getDataInicial());
+		responsavel.setDataFinal(repasse.getUnidade().getResponsavel()
+				.getDataFinal());
+		responsavel.setDigitoAgencia(repasse.getUnidade().getResponsavel()
+				.getDigitoAgencia());
+		responsavel.setDigitoConta(repasse.getUnidade().getResponsavel()
+				.getDigitoAgencia());
+		responsavel.setEndereco(repasse.getUnidade().getResponsavel()
+				.getEndereco());
+		responsavel.setId(repasse.getUnidade().getResponsavel().getId());
+		responsavel.setIdCargo(repasse.getUnidade().getResponsavel()
+				.getCargoId());
+		responsavel.setIdExterno(repasse.getUnidade().getResponsavel()
+				.getExternoId());
+		responsavel.setMatriculaFuncional(repasse.getUnidade().getResponsavel()
+				.getMatriculaFuncional());
+		responsavel.setNome(repasse.getUnidade().getResponsavel().getNome());
+		responsavel.setNumeroAgencia(repasse.getUnidade().getResponsavel()
+				.getNumeroAgencia());
+		responsavel.setNumeroConta(repasse.getUnidade().getResponsavel()
+				.getNumeroConta());
+		responsavel.setOrgaoExpedidor(repasse.getUnidade().getResponsavel()
+				.getOrgaoExpedidor());
+		responsavel.setRg(repasse.getUnidade().getResponsavel().getRg());
+		responsavel.setTelefone(repasse.getUnidade().getResponsavel()
+				.getTelefone());
+		responsavel.setTipoConta(repasse.getUnidade().getResponsavel()
+				.getTipoConta());
+		responsavel.setUf(repasse.getUnidade().getResponsavel().getUf());
+
+		return responsavel;
+	}
+
+	private void generateReportStream(long numEmpenho, Date dataEmissao,
+			int exercicio, long numProcesso, String valorEmpenho,
+			String tipoCredito, String tipoMeta, String tipoEmpenho,
+			String naturezaEmpenho, String elemDespesa, String fonteRecurso,
+			String credor, String codAplicacao, String historico) {
+
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("numEmpenho", numEmpenho);
+		parameters.put("dataEmissao", sdf.format(dataEmissao));
+		parameters.put("exercicio", exercicio);
+		parameters.put("numProcesso", numProcesso);
+		parameters.put("valorEmpenho", valorEmpenho);
+		parameters.put("tipoCredito", tipoCredito);
+		parameters.put("tipoMeta", tipoMeta);
+		parameters.put("tipoEmpenho", tipoEmpenho);
+		parameters.put("naturezaEmpenho", naturezaEmpenho);
+		parameters.put("elemDespesa", elemDespesa);
+		parameters.put("fonteRecurso", fonteRecurso);
+		parameters.put("credor", credor);
+		parameters.put("codAplicacao",
+				String.format("%s - %s", codAplicacao, "Geral"));
+		parameters.put("historico", historico);
+		parameters.put("local", "Parnaíba - PI");
+
+		FacesContext context = FacesContext.getCurrentInstance();
+		ServletContext servletContext = (ServletContext) context
+				.getExternalContext().getContext();
+
+		generateStremedReport(servletContext.getRealPath(File.separator.concat(
+				"reports").concat(File.separator)), "GuiaEmpenho",
+				new ArrayList(), parameters);
+
+	}
+
+	public void carregarResponsavelAtivo() {
+		if (repasse.getUnidade().getResponsavel().getDataFinal() != null
+				&& new Date().after(repasse.getUnidade().getResponsavel()
+						.getDataFinal())) {
+			addErrorMessage(ResultMessages.ResponsavelMessage.INVALID_REPONSAVEL
+					.getDescricao());
+			return;
+		}
+	}
+
+	public void limparRelatorio() {
+		getEmpenhoMedia().setValue(null);
+		init();
+	}
+
+	public List<Repasse> buscar(Map<String, Object> params) {
+		return repasseService.buscar(params);
 	}
 
 	private void gerarEmpenho(Responsavel credor, long proximoNumeroEmpenho,
@@ -189,24 +358,44 @@ public class RepasseController extends BaseController {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		String queryBuscaCredor = String.format(
-				"SELECT * FROM cgp.credor WHERE cd_cpfcnpj LIKE '%s'",
+				"SELECT cd_credor FROM cgp.credor WHERE cd_cpfcnpj LIKE '%s'",
 				responsavel.getCpf());
-
-		createStatement = conexaoBancoCGP.createStatement();
 
 		result = createStatement.executeQuery(queryBuscaCredor);
 
 		while (result.next()) {
+			responsavel.setCodigoCredor(result.getLong(1));
 			result.close();
 			return responsavel;
 		}
 		String queryInseriCredor = String
-				.format("INSERT INTO cgp.credor(cd_credor, de_razao_social, cd_cpfcnpj, tp_credor, st_credor,de_endereco, de_bairro, de_cidade, cd_uf, dt_cadastro, cd_nivel_integracao, dt_registro) VALUES((SELECT MAX(c.cd_credor) + 1 FROM cgp.credor c), '%s', '%s', %d, %d, '%s', '%s', '%s', '%s', '%s', %d, '%s')",
-						responsavel.getNome(), responsavel.getCpf(), 0, 0,
-						responsavel.getEndereco(), responsavel.getBairro(),
-						responsavel.getCidade(), responsavel.getUf(),
-						sdf.format(new Date()), 1, sdf.format(new Date()));
+				.format("INSERT INTO cgp.credor(cd_credor, nu_rg, de_orgao_rg, dt_rg, de_razao_social, cd_cpfcnpj, tp_credor, st_credor,de_endereco, de_bairro, de_cidade, cd_uf, cd_cep, de_lotacao, dt_cadastro, cd_nivel_integracao, dt_registro) VALUES((SELECT MAX(c.cd_credor) + 1 FROM cgp.credor c), '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s', '%s', %d, '%s')",
+						responsavel.getRg(), responsavel.getOrgaoExpedidor(),
+						responsavel.getDataExpedicao(), responsavel.getNome(),
+						responsavel.getCpf(), 0, 0, responsavel.getEndereco(),
+						responsavel.getBairro(), responsavel.getCidade(),
+						responsavel.getUf(), responsavel.getCep(),
+						responsavel.getLotacao(), sdf.format(new Date()), 1,
+						sdf.format(new Date()));
 		createStatement.executeUpdate(queryInseriCredor);
+
+		String queryContaCredor = String
+				.format("INSERT INTO cgp.conta_credor(cd_credor, cd_banco, cd_agencia, dv_agencia, cd_conta, dv_conta, cd_operacao, dt_registro) VALUES ((SELECT MAX(c.cd_credor) FROM cgp.credor c WHERE c.cd_cpfcnpj = '%s'), '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
+						responsavel.getCpf(), responsavel.getCodigoBanco(),
+						responsavel.getNumeroAgencia(),
+						responsavel.getDigitoAgencia(),
+						responsavel.getNumeroConta(),
+						responsavel.getDigitoConta(),
+						responsavel.getOperacao(),
+						sdf.format(responsavel.getDataInicial()));
+		createStatement.executeQuery(queryContaCredor);
+
+		result = createStatement.executeQuery(queryBuscaCredor);
+		while (result.next()) {
+			responsavel.setCodigoCredor(result.getLong(1));
+			result.close();
+			return responsavel;
+		}
 		result.close();
 		return responsavel;
 	}
@@ -428,5 +617,29 @@ public class RepasseController extends BaseController {
 
 	public void setRepasse(Repasse repasse) {
 		this.repasse = repasse;
+	}
+
+	public String getNumeroProcessoLabel() {
+		return numeroProcessoLabel;
+	}
+
+	public void setNumeroProcessoLabel(String numeroProcessoLabel) {
+		this.numeroProcessoLabel = numeroProcessoLabel;
+	}
+
+	public Media getEmpenhoMedia() {
+		return empenhoMedia;
+	}
+
+	public void setEmpenhoMedia(Media empenhoMedia) {
+		this.empenhoMedia = empenhoMedia;
+	}
+
+	public ResponsavelService getResponsavelService() {
+		return responsavelService;
+	}
+
+	public void setResponsavelService(ResponsavelService responsavelService) {
+		this.responsavelService = responsavelService;
 	}
 }

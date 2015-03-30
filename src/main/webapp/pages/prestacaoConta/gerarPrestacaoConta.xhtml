@@ -1,97 +1,103 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:o="http://omnifaces.org/ui"
 	xmlns:of="http://omnifaces.org/functions"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 
-<div class="container_24">
+
+<div class="container">
 	<h:form id="prestacaoContaForm" prependId="false"
 		enctype="multipart/form-data">
-<!-- 		    <o:validateOne id="validateOne" components="foo bar baz" /> -->
+		<!-- 		    <o:validateOne id="validateOne" components="foo bar baz" /> -->
 		<p:messages id="messages" />
 		<p:panel header="#{wd['fieldset.data']}" toggleable="false"
-			styleClass="clearfix grid_24">
+			styleClass="clearfix">
 
-			<div class="grid_2" style="padding-top: 5px !important">
-				<p:outputLabel value="#{lb['prestacaoConta.dataPrestacao']}"
-					for="dataPrestacao" />
-			</div>
-			<div class="grid_5">
-				<p:calendar id="dataPrestacao"
-					value="#{prestacaoContaController.dataPrestacao}" pattern="dd/MM/yyyy" locale="pt" styleClass="fieldFullWidth"
-					navigator="true" effect="fadeIn" required="true" readonlyInput="true" showOn="false"/>
-			</div>
-			<div class="grid_3" style="padding-top: 5px !important">
-				<p:outputLabel value="#{lb['prestacaoConta.totalRepasse']}"
-					for="totalRepasse" />
-			</div>
-			<div class="grid_5">
-				<p:outputLabel id="totalRepasse"
-					value="#{prestacaoContaController.totalRepasse}"/>
-			</div>
-
-			<div class="grid_4" style="padding-top: 5px !important">
-				<p:outputLabel value="#{lb['prestacaoConta.saldoAberto']}"
-					for="saldoAberto" />
-			</div>
-			<div class="grid_5" style="padding-top: 5px !important">
-				<p:outputLabel id="saldoAberto"
-					value="#{prestacaoContaController.saldoAberto}" />
+			<div class="row">
+				<div class="col-md-2">
+					<p:outputLabel value="#{lb['prestacaoConta.dataPrestacao']}"
+						for="dataPrestacao" />
+				</div>
+				<div class="col-md-3">
+					<p:calendar id="dataPrestacao"
+						value="#{prestacaoContaController.dataPrestacao}"
+						pattern="dd/MM/yyyy" locale="pt" navigator="true" effect="fadeIn"
+						required="true" readonlyInput="true" showOn="false" />
+				</div>
+				<div class="col-md-4">
+					<p:outputLabel value="#{lb['prestacaoConta.totalRepasse']}"
+						for="totalRepasse" />
+				</div>
+				<div class="col-md-6" style="text-align: left;">
+					<p:outputLabel id="totalRepasse"
+						value="#{prestacaoContaController.totalRepasse}" />
+				</div>
+				<div class="col-md-3">
+					<p:outputLabel value="#{lb['prestacaoConta.saldoAberto']}"
+						for="saldoAberto" />
+				</div>
+				<div class="col-md-6" style="text-align: left;">
+					<p:outputLabel id="saldoAberto"
+						value="#{prestacaoContaController.saldoAberto}" />
+				</div>
 			</div>
 			<div class="clear" />
 			<fieldset>
 				<legend>Dados Documentos</legend>
-				<div class="grid_2" style="padding-top: 5px !important">
-					<p:outputLabel value="#{lb['prestacaoConta.tipoDoc']}"
-						for="tipoDoc" />
+				<div class="row">
+					<div class="col-md-2">
+						<p:outputLabel value="#{lb['prestacaoConta.tipoDoc']}"
+							for="tipoDoc" />
+					</div>
+					<div class="col-md-6">
+						<p:inputText id="tipoDoc"
+							value="#{prestacaoContaController.documento.tipo}"
+							required="true" immediate="true">
+							<!-- 					<f:convertNumber type="number" minFractionDigits="1" pattern="#0.000" minIntegerDigits="0" /> -->
+						</p:inputText>
+					</div>
+					<div class="col-md-2">
+						<p:outputLabel value="#{lb['prestacaoConta.numDoc']}" for="numDoc" />
+					</div>
+					<div class="col-md-6">
+						<p:inputText id="numDoc"
+							value="#{prestacaoContaController.documento.numero}"
+							required="false" immediate="true">
+						</p:inputText>
+					</div>
+					<div class="col-md-2">
+						<p:outputLabel value="#{lb['prestacaoConta.valorDoc']}"
+							for="valorDoc" />
+					</div>
+					<div class="col-md-6">
+						<p:inputText id="valorDoc"
+							value="#{prestacaoContaController.valorDoc}" required="true"
+							immediate="true" onkeypress="mascara(this,currency);">
+						</p:inputText>
+					</div>
 				</div>
-				<div class="grid_6">
-					<p:inputText id="tipoDoc"
-						value="#{prestacaoContaController.documento.tipo}" required="true"
-						immediate="true">
-						<!-- 					<f:convertNumber type="number" minFractionDigits="1" pattern="#0.000" minIntegerDigits="0" /> -->
-					</p:inputText>
-				</div>
-				<div class="grid_2" style="padding-top: 5px !important">
-					<p:outputLabel value="#{lb['prestacaoConta.numDoc']}" for="numDoc" />
-				</div>
-				<div class="grid_6">
-					<p:inputText id="numDoc"
-						value="#{prestacaoContaController.documento.numero}"
-						required="true" immediate="true">
-					</p:inputText>
-				</div>
-				<div class="grid_2" style="padding-top: 5px !important">
-					<p:outputLabel value="#{lb['prestacaoConta.valorDoc']}"
-						for="valorDoc" />
-				</div>
-				<div class="grid_6">
-					<p:inputText id="valorDoc"
-						value="#{prestacaoContaController.valorDoc}" required="true"
-						immediate="true" onkeypress="mascara(this,currency);">
-					</p:inputText>
-				</div>
-
-				<div class="grid_2" style="padding-top: 5px !important">
-					<p:outputLabel value="#{lb['prestacaoConta.arquivo']}"
-						for="arquivoNomeFileUpload" />
-				</div>
-				<div class="grid_12">
-					<p:inputText
-						value="#{prestacaoContaController.arquivoUploadFile != null ? prestacaoContaController.arquivoUploadFile.fileName : ''}"
-						disabled="false" readonly="true" id="arquivoNomeFileUpload"
-						required="true" onclick="clickUploadFile();"
-						binding="#{prestacaoContaController.arquivoNomeFileUpload}" />
-				</div>
-				<div class="grid_5" style="padding-top: 5px !important;">
-					<p:fileUpload id="arquivoFileUpload" label=" Selecionar Arquivo"
-						update="arquivoNomeFileUpload @this :prestacaoContaTabView:prestacaoContaForm:documentosDataTable :prestacaoContaTabView:prestacaoContaForm:messages"
-						styleClass="uploadFile" showButtons="true"
-						fileUploadListener="#{prestacaoContaController.uploadDoArquivoEvent}"
-						immediate="true" auto="true" allowTypes="/(\.|\/)(gif|jpe?g|png|pdf)$/"/>
-					<!-- 						widgetVar="arquivoFileUpload" -->
+				<div class="row">
+					<div class="col-md-2" style="margin-top: 10px;">
+						<p:outputLabel value="#{lb['prestacaoConta.arquivo']}"
+							for="arquivoNomeFileUpload" />
+					</div>
+					<div class="col-md-17" style="margin-top: 10px;">
+						<p:inputText
+							value="#{prestacaoContaController.arquivoUploadFile != null ? prestacaoContaController.arquivoUploadFile.fileName : ''}"
+							disabled="false" readonly="true" id="arquivoNomeFileUpload"
+							required="true" onclick="clickUploadFile();"
+							binding="#{prestacaoContaController.arquivoNomeFileUpload}" />
+					</div>
+					<div class="col-md-5" style="text-align: left; padding-left: 0px">
+						<p:fileUpload id="arquivoFileUpload" label=" Selecionar Arquivo"
+							update="arquivoNomeFileUpload @this :prestacaoContaTabView:prestacaoContaForm:documentosDataTable :prestacaoContaTabView:prestacaoContaForm:messages"
+							styleClass="uploadFile" showButtons="true"
+							fileUploadListener="#{prestacaoContaController.uploadDoArquivoEvent}"
+							immediate="true" auto="true"
+							allowTypes="/(\.|\/)(gif|jpe?g|png|pdf)$/" />
+					</div>
 				</div>
 				<div class="clear" />
 				<p:commandButton id="adicionarCommandButton"
@@ -100,76 +106,97 @@
 					update=":prestacaoContaTabView:prestacaoContaForm:saldoAberto, @form"
 					action="#{prestacaoContaController.adicionarArquivo}"
 					styleClass="w3 r8" style="margin: 5px 5px 5px 5px" />
-					<p:dataTable id="documentosDataTable" draggableColumns="true"
-						emptyMessage="#{wd['item.emptyAddTable']}"
-						value="#{prestacaoContaController.documentos}" var="item">
-						<p:column id="colunaOpcao"
-							headerText="#{wd['table.columns.options']}"
-							style="width:50px; ; text-align: center;">
-							<p:commandButton id="editarCommandButton" icon="ui-icon-pencil"
-								process="@this" action="#{prestacaoContaController.editarDoc}"
-								title="#{wds['table.columns.options.update.hint']}"
-								update=":prestacaoContaTabView:prestacaoContaForm" styleClass="icon">
-<!-- 								<f:setPropertyActionListener -->
-<!-- 									target="#{prestacaoContaController.documento}" value="#{item}" /> -->
-								<f:setPropertyActionListener
-									target="#{prestacaoContaController.documentoEdite}"
-									value="#{item}" />
-								<p:collector value="#{prestacaoContaController.documentoEdite}"
-									removeFrom="#{prestacaoContaController.documentos}" />
-							</p:commandButton>
+				<p:dataTable id="documentosDataTable" draggableColumns="true"
+					emptyMessage="#{wd['item.emptyAddTable']}"
+					value="#{prestacaoContaController.documentos}" var="item">
+					<p:column id="colunaOpcao"
+						headerText="#{wd['table.columns.options']}"
+						style="width:50px; ; text-align: center;">
+						<p:commandButton id="editarCommandButton" icon="ui-icon-pencil"
+							process="@this" action="#{prestacaoContaController.editarDoc}"
+							title="#{wds['table.columns.options.update.hint']}"
+							update=":prestacaoContaTabView:prestacaoContaForm"
+							styleClass="icon">
+							<!-- 								<f:setPropertyActionListener -->
+							<!-- 									target="#{prestacaoContaController.documento}" value="#{item}" /> -->
+							<f:setPropertyActionListener
+								target="#{prestacaoContaController.documentoEdite}"
+								value="#{item}" />
+							<p:collector value="#{prestacaoContaController.documentoEdite}"
+								removeFrom="#{prestacaoContaController.documentos}" />
+						</p:commandButton>
 
-							<p:commandButton id="removerCommandButton" icon="ui-icon-trash"
-								title="#{wd['table.columns.options.delete.hint']}"
-								onclick="removeConfirmDialog.show()" process="@this" styleClass="icon">
-								<f:setPropertyActionListener
-									target="#{prestacaoContaController.documentoRemove}"
-									value="#{item}" />
-							</p:commandButton>
-						</p:column>
+						<p:commandButton id="removerCommandButton" icon="ui-icon-trash"
+							title="#{wd['table.columns.options.delete.hint']}"
+							onclick="removeConfirmDialog.show()" process="@this"
+							styleClass="icon">
+							<f:setPropertyActionListener
+								target="#{prestacaoContaController.documentoRemove}"
+								value="#{item}" />
+						</p:commandButton>
 
-						<p:column id="colunaTipoDoc"
-							headerText="#{lb['prestacaoConta.tipoDoc']}">
-							<h:outputLabel value="#{item.tipo}" />
-						</p:column>
-						<p:column id="colunaNumDoc"
-							headerText="#{lb['prestacaoConta.numDoc']}">
-							<h:outputLabel value="#{item.numero}" />
-						</p:column>
-						<p:column id="colunaValorDoc"
-							headerText="#{lb['prestacaoConta.valorDoc']}">
-							<h:outputLabel value="#{item.valor}">
-								<f:convertNumber type="currency" currencyCode="BRL" />
+						<p:commandButton id="exibirCommandButton" icon="ui-icon-image"
+							title="#{wd['table.columns.options.show.hint']}" process="@this"
+							styleClass="icon"
+							action="#{prestacaoContaController.visualizarArquivo}"
+							update="@form">
+							<f:setPropertyActionListener
+								target="#{prestacaoContaController.documentoExibe}"
+								value="#{item}" />
+						</p:commandButton>
+
+					</p:column>
+
+					<p:column id="colunaTipoDoc"
+						headerText="#{lb['prestacaoConta.tipoDoc']}">
+						<h:outputLabel value="#{item.tipo}" />
+					</p:column>
+					<p:column id="colunaNumDoc"
+						headerText="#{lb['prestacaoConta.numDoc']}">
+						<h:outputLabel value="#{item.numero}" />
+					</p:column>
+					<p:column id="colunaValorDoc"
+						headerText="#{lb['prestacaoConta.valorDoc']}">
+						<h:outputLabel value="#{item.valor}">
+							<f:convertNumber type="currency" currencyCode="BRL" />
+						</h:outputLabel>
+					</p:column>
+					<p:column id="colunaArquivo"
+						headerText="#{lb['prestacaoConta.arquivo']}">
+						<h:outputLabel value="#{item.nome}" />
+					</p:column>
+					<f:facet name="footer">
+						<div style="text-align: left;">
+							<h:outputLabel
+								value="Valor Total: #{prestacaoContaController.valorTotal}">
+								<!-- 									<f:convertNumber type="currency" currencyCode="BRL" /> -->
 							</h:outputLabel>
-						</p:column>
-						<p:column id="colunaArquivo"
-							headerText="#{lb['prestacaoConta.arquivo']}">
-							<h:outputLabel value="#{item.nome}" />
-						</p:column>
-						<f:facet name="footer">
-							<div style="text-align: left;">
-								<h:outputLabel
-									value="Valor Total: #{prestacaoContaController.valorTotal}">
-									<f:convertNumber type="currency" currencyCode="BRL" />
-								</h:outputLabel>
-							</div>
-							<!--         In total there are #{fn:length(dtBasicView.cars)} cars. -->
-						</f:facet>
+						</div>
+						<!--         In total there are #{fn:length(dtBasicView.cars)} cars. -->
+					</f:facet>
 
-					</p:dataTable>
-<!-- 				</p:outputPanel> -->
+				</p:dataTable>
+				<!-- 				</p:outputPanel> -->
 			</fieldset>
 			<div class="clear" />
 
-			<p:commandButton value="Registrar" update="@form" process="@this :prestacaoContaTabView:prestacaoContaForm:dataPrestacao, :prestacaoContaTabView:prestacaoContaForm:totalRepasse, :prestacaoContaTabView:prestacaoContaForm:saldoAberto"
+			<p:commandButton value="Cadastrar" update=":prestacaoContaTabView"
+				process="@this :prestacaoContaTabView:prestacaoContaForm:dataPrestacao, :prestacaoContaTabView:prestacaoContaForm:totalRepasse, :prestacaoContaTabView:prestacaoContaForm:saldoAberto"
 				action="#{prestacaoContaController.registrar}"
-				styleClass="w4 r6" />
+				styleClass="col-md-4 r6" icon="ui-icon-disk" />
 			<p:commandButton id="limparCommandButton"
 				value="#{wd['button.clean']}" icon="ui-icon-arrowrefresh-1-w"
 				actionListener="#{prestacaoContaController.init}" update="@form"
-				process="@this" styleClass="w4 r7">
+				process="@this" styleClass="col-md-4 r7">
 			</p:commandButton>
 		</p:panel>
+
+		<fieldset>
+			<LEGEND>Observação:</LEGEND>
+			<DIV style="font-weight: bold; color: red;">
+				<h:outputLabel>Caso o documento possua numeração informe-o no campo número, caso não haja, o sistema gerará um número para o seu documento.</h:outputLabel>
+			</DIV>
+		</fieldset>
 
 		<p:confirmDialog id="removeConfirmDialog"
 			message="#{wd['dialog.deleteConfirmation.message']}"
@@ -185,6 +212,18 @@
 			<p:commandButton onclick="removeConfirmDialog.hide()" styleClass="r7"
 				icon="ui-icon-cancel" value="#{wd['dialog.optionNo']}" type="button" />
 		</p:confirmDialog>
+
+		<p:dialog widgetVar="imageStreamDialog" id="imageStreamDialog"
+			height="500px" width="800px" resizable="false">
+			<p:graphicImage value="#{prestacaoContaController.imageStream}"
+				height="500px" width="800px"
+				rendered="#{prestacaoContaController.imageStream eq null ? false : true}" />
+			<p:media id="pdfView" player="pdf"
+				binding="#{prestacaoContaController.pdfView}" height="500px"
+				width="800px"
+				rendered="#{prestacaoContaController.imageStream eq null ? true : false}" />
+			<!--     value="../images/#{imgBean.selectedBook.imagePath}.png" -->
+		</p:dialog>
 	</h:form>
 </div>
 </html>

@@ -4,109 +4,123 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 
-<h:form id="buscarResponsavelForm" prependId="false">
-<p:messages id="messages"/>
-	<p:confirmDialog message="#{wd['dialog.deleteConfirmation.message']}"
-		hideEffect="explode" header="#{wd['dialog.alert.header']}"
-		severity="alert" widgetVar="confirmation" modal="true"
-		appendToBody="true">
-		<p:commandButton id="btnSim" value="#{wd['dialog.optionYes']}"
-			oncomplete="confirmation.hide();" styleClass="r6"
-			action="#{buscarResponsavelController.remover}" process="@this"
-			update="buscarResponsavelTable" />
-		<p:commandButton id="btnNao" value="#{wd['dialog.optionNo']}"
-			onclick="confirmation.hide();" type="button" styleClass="r7" />
-	</p:confirmDialog>
+<div class="container">
+	<h:form id="buscarResponsavelForm" prependId="false">
+		<p:messages id="messages" />
+		<p:confirmDialog message="#{wd['dialog.deleteConfirmation.message']}"
+			hideEffect="explode" header="#{wd['dialog.alert.header']}"
+			severity="alert" widgetVar="confirmation" modal="true"
+			appendToBody="true">
+			<p:commandButton id="btnSim" value="#{wd['dialog.optionYes']}"
+				oncomplete="confirmation.hide();" styleClass="r6"
+				action="#{buscarResponsavelController.remover}" process="@this"
+				update="buscarResponsavelTable messages" />
+			<p:commandButton id="btnNao" value="#{wd['dialog.optionNo']}"
+				onclick="confirmation.hide();" type="button" styleClass="r7" />
+		</p:confirmDialog>
 
-	<f:validateBean disabled="true">
-		<p:panel header="#{wd['fieldset.filters']}" id="findPanel">
-			<p:outputLabel value="#{lb['responsavel.nome']}" for="buscarNome"
-				styleClass="w2" />
-			<p:inputText id="buscarNome" widgetVar="buscarNome" alt="nome"
-				value="#{buscarResponsavelController.responsavelBusca.nome}"
-				styleClass="w12" />
-
-			<p:outputLabel value="#{lb['responsavel.matricula']}"
-				for="respMatrFunc" styleClass="w2" />
-			<p:inputText id="respMatrFunc" widgetVar="respMatrFunc"
-				alt="matriculaFuncional"
-				value="#{buscarResponsavelController.responsavelBusca.matriculaFuncional}"
-				styleClass="w4" />
-
-			<p:outputLabel value="#{lb['responsavel.rg']}" for="respRG"
-				styleClass="w2" />
-			<p:inputText id="respRG" widgetVar="respRG" alt="rg"
-				value="#{buscarResponsavelController.responsavelBusca.rg}"
-				styleClass="w4" />
-
-			<p:outputLabel value="#{lb['responsavel.cpf']}" for="respCPF"
-				styleClass="w1" />
-			<p:inputText id="respCPF" widgetVar="respCPF" alt="cpf"
-				value="#{buscarResponsavelController.responsavelBusca.cpf}"
-				styleClass="w4" />
-
-			<p:outputLabel value="#{lb['responsavel.cargo']}" for="respCargo"
-				styleClass="w1" />
-
-			<p:inputText id="respCargo" widgetVar="respCargo" alt="cargo"
-				value="#{buscarResponsavelController.responsavelBusca.cargo}"
-				styleClass="w8" />
-			<!-- 			<p:spacer styleClass="w10" /> -->
-
-			<p:commandButton value="#{wd['button.search']}" process="findPanel"
-				styleClass="w4 r8" action="#{buscarResponsavelController.buscar}"
-				update="buscarResponsavelTable">
-			</p:commandButton>
-		</p:panel>
+		<f:validateBean disabled="true">
+			<p:panel header="#{wd['fieldset.filters']}" id="findPanel" styleClass="panel-slim">
+				<div class="row">
+					<div class="col-md-2">
+						<p:outputLabel value="#{lb['responsavel.nome']}" for="buscarNome" />
+					</div>
+					<div class="col-md-16">
+						<p:inputText id="buscarNome" widgetVar="buscarNome" alt="nome"
+							value="#{buscarResponsavelController.responsavelBusca.nome}" />
+					</div>
+					<div class="col-md-2">
+						<p:outputLabel value="#{lb['responsavel.matricula']}"
+							for="respMatrFunc" />
+					</div>
+					<div class="col-md-4">
+						<p:inputText id="respMatrFunc" widgetVar="respMatrFunc"
+							alt="matriculaFuncional"
+							value="#{buscarResponsavelController.responsavelBusca.matriculaFuncional}" />
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-2">
+						<p:outputLabel value="#{lb['responsavel.rg']}" for="respRG" />
+					</div>
+					<div class="col-md-4">
+						<p:inputText id="respRG" widgetVar="respRG" alt="rg"
+							value="#{buscarResponsavelController.responsavelBusca.rg}" />
+					</div>
+					<div class="col-md-1">
+						<p:outputLabel value="#{lb['responsavel.cpf']}" for="respCPF" />
+					</div>
+					<div class="col-md-6">
+						<p:inputText id="respCPF" widgetVar="respCPF" alt="cpf"
+							value="#{buscarResponsavelController.responsavelBusca.cpf}" />
+					</div>
+					<div class="col-md-1">
+						<p:outputLabel value="#{lb['responsavel.cargo']}" for="respCargo" />
+					</div>
+					<div class="col-md-10">
+						<p:inputText id="respCargo" widgetVar="respCargo" alt="cargo"
+							value="#{buscarResponsavelController.responsavelBusca.cargo}" />
+					</div>
+				</div>
+				<div class="clear" />
+			</p:panel>
 	  </f:validateBean>
 
-	<fieldset>
-		<legend>Resultados</legend>
-		<p:dataTable value="#{buscarResponsavelController.responsaveis}"
-			emptyMessage="#{wd['item.emptyFind']}" var="responsavel"
-			id="buscarResponsavelTable" paginator="true" rows="5"
-			paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-			>
+		<p:commandButton value="#{wd['button.search']}" process="@this findPanel"
+			styleClass="col-md-4 r8"
+			action="#{buscarResponsavelController.buscar}"
+			update="buscarResponsavelTable" icon="ui-icon-search">
+		</p:commandButton>
+		<div class="clear" />
+		<fieldset>
+			<legend>Resultados</legend>
+			<p:dataTable value="#{buscarResponsavelController.responsaveis}"
+				currentPageReportTemplate="{currentPage} de {totalPages}"
+				emptyMessage="#{wd['item.emptyFind']}" var="responsavel"
+				id="buscarResponsavelTable" paginator="true" rows="5"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
 
-			<p:column headerText="#{wd['table.columns.options']}"
-				style="width:50px; text-align: center;">
-				<p:commandButton icon="ui-icon-trash" onclick="confirmation.show()"
-					styleClass="icon"
-					title="#{wd['table.columns.options.delete.hint']}">
-					<f:setPropertyActionListener
-						target="#{buscarResponsavelController.responsavelRemove}"
-						value="#{responsavel}" />
-				</p:commandButton>
-				<p:commandButton icon="ui-icon-pencil" styleClass="icon"
-					action="#{buscarResponsavelController.carregar}"
-					process="@form" title="#{wd['table.columns.options.edit.hint']}">
-					<f:setPropertyActionListener
-						target="#{buscarResponsavelController.responsavelEdite}"
-						value="#{responsavel}" />
-				</p:commandButton>
-			</p:column>
+				<p:column headerText="#{wd['table.columns.options']}"
+					style="width:50px; text-align: center;">
+					<p:commandButton icon="ui-icon-trash" onclick="confirmation.show()"
+						styleClass="icon"
+						title="#{wd['table.columns.options.delete.hint']}">
+						<f:setPropertyActionListener
+							target="#{buscarResponsavelController.responsavelRemove}"
+							value="#{responsavel}" />
+					</p:commandButton>
+					<p:commandButton icon="ui-icon-pencil" styleClass="icon"
+						action="#{buscarResponsavelController.carregar}" process="@form"
+						title="#{wd['table.columns.options.edit.hint']}">
+						<f:setPropertyActionListener
+							target="#{buscarResponsavelController.responsavelEdite}"
+							value="#{responsavel}" />
+					</p:commandButton>
+				</p:column>
 
-			<p:column headerText="#{lb['responsavel.nome']}"
-				style="width: 150px; text-align: center;">
-				<h:outputText value="#{responsavel.nome}" style="font-weight:100"/>
-			</p:column>
-			<p:column headerText="#{lb['responsavel.matriculaFuncional']}"
-				style="width: 150px; text-align: center;">
-				<h:outputText value="#{responsavel.matriculaFuncional}" style="font-weight:100"/>
-			</p:column>
-			<p:column headerText="#{lb['responsavel.rg']}"
-				style="width: 150px; text-align: center;">
-				<h:outputText value="#{responsavel.rg}" style="font-weight:100"/>
-			</p:column>
-			<p:column headerText="#{lb['responsavel.cpf']}"
-				style="width: 150px; text-align: center;">
-				<h:outputText value="#{responsavel.cpf}" style="font-weight:100"/>
-			</p:column>
-			<p:column headerText="#{lb['responsavel.cargo']}"
-				style="width: 150px; text-align: center;">
-				<h:outputText value="#{responsavel.cargo}" style="font-weight:100" />
-			</p:column>
-		</p:dataTable>
-	</fieldset>
-</h:form>
+				<p:column headerText="#{lb['responsavel.nome']}"
+					style="width: 250px; text-align: center; white-space:normal !important;">
+					<h:outputText value="#{responsavel.nome}" style="font-weight:100" />
+				</p:column>
+				<p:column headerText="#{lb['responsavel.matricula']}"
+					style="width: 100px; text-align: center; white-space:normal !important;">
+					<h:outputText value="#{responsavel.matriculaFuncional}"
+						style="font-weight:100" />
+				</p:column>
+				<p:column headerText="#{lb['responsavel.rg']}"
+					style="width: 100px; text-align: center; white-space:normal !important;">
+					<h:outputText value="#{responsavel.rg}" style="font-weight:100" />
+				</p:column>
+				<p:column headerText="#{lb['responsavel.cpf']}"
+					style="width: 100px; text-align: center; white-space:normal !important;">
+					<h:outputText value="#{responsavel.cpf}" style="font-weight:100" />
+				</p:column>
+				<p:column headerText="#{lb['responsavel.cargo']}"
+					style="width: 200px; text-align: center; white-space:normal !important;">
+					<h:outputText value="#{responsavel.cargo}" style="font-weight:100" />
+				</p:column>
+			</p:dataTable>
+		</fieldset>
+	</h:form>
+</div>
 </html>

@@ -4,12 +4,16 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
 <h:head>
 	<h:outputStylesheet name="grid.css" library="css" />
 	<h:outputStylesheet name="ext_960gs.css" library="css" />
 	<h:outputStylesheet name="styleForPage.css" library="css" />
-<!-- 	<h:outputStylesheet name="layout.css" library="css" /> -->
+	<!-- 	<h:outputStylesheet name="bootstrap.css" library="css" /> -->
+	<!-- 	<h:outputStylesheet name="layout.css" library="css" /> -->
+	<h:outputScript name="utilsCommon.js" library="javascript" />
 
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
 	<title>DDUM - Dinheiro Direto nas Unidades Municipais</title>
@@ -22,81 +26,103 @@
 </h:head>
 
 <h:body style="font-size: 12px">
-	<p:layout fullPage="true" id="layout">
+	<pe:layout fullPage="true" id="layout" >
 
-		<!-- 		<p:layoutUnit id="layoutUnitNorth" position="north" header="DDUM" /> -->
-		<p:layoutUnit position="north" size="60">
-			<ui:include src="/sections/header.xhtml" />
-		</p:layoutUnit>
+			<!-- 		<p:layoutUnit id="layoutUnitNorth" position="north" header="DDUM" /> -->
+			<pe:layoutPane position="north" size="75">
+				<ui:include src="/sections/header.xhtml" />
+			</pe:layoutPane>
 
-		<p:layoutUnit id="layoutUnitWest" position="west" size="200"
-			header="Menu Principal">
-			<h:form id="form" prependId="false">
+			<pe:layoutPane id="layoutUnitWest" position="west" size="200"
+				header="Menu Principal">
 
-				<p:panelMenu id="panelMenu" style="width: 100%; ">
-					<p:submenu label="Cadastros Básicos" rendered="true"
-						id="menuCadastro">
-						<p:menuitem id="parametroRepasse" value="Parametro de Repasse"
-							styleClass="#{mainMenu.numIndex == 1 ? 'selectedMenu' : null}"
-							update=":centerContentPanel :form:panelMenu"
-							actionListener="#{parametroRepasseController.init}"
-							action="#{mainMenu.parametroRepasse}" icon="ui-icon-bookmark"
-							disabled="#{loginController.principalRole eq 'ADMIN' ? false : true}">
-						</p:menuitem>
-						<p:menuitem id="responsavel" value="Responsável"
-							styleClass="#{mainMenu.numIndex == 2 ? 'selectedMenu' : null}"
-							update=":centerContentPanel :form:panelMenu"
-							action="#{mainMenu.responsavel}" icon="ui-icon-bookmark"
-							actionListener="#{responsavelController.init}">
-						</p:menuitem>
+				<h:form id="form" prependId="false">
 
-						<p:menuitem id="unidade" value="Unidade"
-							styleClass="#{mainMenu.numIndex == 3 ? 'selectedMenu' : null}"
-							update=":centerContentPanel :form:panelMenu  @parent"
-							actionListener="#{unidadeController.init}"
-							action="#{mainMenu.unidade}" icon="ui-icon-bookmark" />
-						<p:menuitem id="user" value="Usuário"
-							styleClass="#{mainMenu.numIndex == 4 ? 'selectedMenu' : null}"
-							update=":centerContentPanel :form:panelMenu"
-							action="#{mainMenu.usuario}" icon="ui-icon-bookmark"
-							disabled="#{loginController.principalRole eq 'ADMIN' ? false : loginController.principalRole eq 'GESTOR' ? false : true}" />
-					</p:submenu>
-					<p:submenu label="Repasse" rendered="true" >
-						<p:menuitem id="repasse" value="Gerar Repasse"
-							update=":centerContentPanel :form:panelMenu"
-							action="#{mainMenu.gerarRepasse}"
-							styleClass="#{mainMenu.numIndex == 7 ? 'selectedMenu' : null}" disabled="#{loginController.principalRole eq 'FINANÇAS' ? false : loginController.principalRole eq 'ADMIN' ? false : true}"/>
-					</p:submenu>
-					<p:submenu label="Prestação de Conta" rendered="true">
-						<p:menuitem id="prestacao" value="Prestação de Contas"
-							update=":centerContentPanel :form:panelMenu"
-							action="#{mainMenu.prestacaoConta}" actionListener="#{prestacaoContaController.setRepasseSemPrestacaoConta()}"
-							styleClass="#{mainMenu.numIndex == 8 ? 'selectedMenu' : null}" />
-					</p:submenu>
-					<p:submenu label="Relatórios" rendered="true">
-						<p:menuitem id="report" value="Termo Compromisso"
-							styleClass="#{mainMenu.numIndex == 5 ? 'selectedMenu' : null}"
-							update=":centerContentPanel :form:panelMenu"
-							action="#{mainMenu.report}" icon="ui-icon-bookmark" />
-						<p:menuitem id="legislacaoReport" value="Legislação"
-							styleClass="#{mainMenu.numIndex == 6 ? 'selectedMenu' : null}"
-							update=":centerContentPanel :form:panelMenu"
-							action="#{mainMenu.legislacaoReport}" icon="ui-icon-bookmark" />
-					</p:submenu>
-				</p:panelMenu>
+					<p:panelMenu id="panelMenu" style="width: 100%; ">
+						<!-- 					<p:menubar id="panelMenu" style="width: 100%; "> -->
+						<p:submenu label="Cadastros Básicos" rendered="true"
+							id="menuCadastro">
+							<!-- 						<p:menuitem id="parametroModulo" value="Parametro do Módulo" -->
+							<!-- 							styleClass="#{mainMenu.numIndex == 1 ? 'selectedMenu' : null}" -->
+							<!-- 							update=":centerContentPanel :form:panelMenu" -->
+							<!-- 							actionListener="#{parametroModuloController.init}" -->
+							<!-- 							action="#{mainMenu.parametroModulo}" icon="ui-icon-bookmark" -->
+							<!-- 							disabled="#{loginController.principalRole eq 'ADMIN' ? false : true}"> -->
+							<!-- 						</p:menuitem> -->
+							<p:menuitem id="parametroRepasse" value="Parametro de Repasse"
+								styleClass="#{mainMenu.numIndex == 2 ? 'selectedMenu' : null}"
+								update=":centerContentPanel :form:panelMenu"
+								actionListener="#{parametroRepasseController.init}"
+								action="#{mainMenu.parametroRepasse}" icon="ui-icon-bookmark"
+								disabled="#{loginController.principalRole eq 'ADMIN' ? false : true}">
+							</p:menuitem>
+							<p:menuitem id="responsavel" value="Responsável"
+								styleClass="#{mainMenu.numIndex == 3 ? 'selectedMenu' : null}"
+								update=":centerContentPanel :form:panelMenu"
+								action="#{mainMenu.responsavel}" icon="ui-icon-person"
+								actionListener="#{responsavelController.init}">
+							</p:menuitem>
 
-				<p:remoteCommand name="logoutUser"
-					actionListener="#{loginController.logout(false)}" process="@this" />
-			</h:form>
-		</p:layoutUnit>
+							<p:menuitem id="unidade" value="Unidade Física"
+								styleClass="#{mainMenu.numIndex == 4 ? 'selectedMenu' : null}"
+								update=":centerContentPanel :form:panelMenu  @parent"
+								actionListener="#{unidadeController.init}"
+								action="#{mainMenu.unidade}" icon="ui-icon-home" />
+							<p:menuitem id="user" value="Usuário"
+								styleClass="#{mainMenu.numIndex == 5 ? 'selectedMenu' : null}"
+								update=":centerContentPanel :form:panelMenu"
+								action="#{mainMenu.usuario}" icon="ui-icon-person"
+								actionListener="#{userController.init}" />
+							<!-- 							disabled="#{loginController.principalRole eq 'ADMIN' ? false : loginController.principalRole eq 'GESTOR' ? false : true}" /> -->
+						</p:submenu>
+						<p:submenu label="Empenho" rendered="true">
+							<p:menuitem id="repasse" value="Gerar Empenho"
+								icon="ui-icon-calculator"
+								update=":centerContentPanel :form:panelMenu"
+								action="#{mainMenu.gerarRepasse}"
+								styleClass="#{mainMenu.numIndex == 6 ? 'selectedMenu' : null}"
+								disabled="#{loginController.principalRole eq 'GESTOR' ? false : loginController.principalRole eq 'ADMIN' ? false : true}"
+								actionListener="#{repasseController.limparRelatorio}" />
+						</p:submenu>
+						<p:submenu label="Prestação de Conta" rendered="true">
+							<p:menuitem id="prestacao" value="Prestação de Contas"
+								icon="ui-icon-note" update=":centerContentPanel :form:panelMenu"
+								action="#{mainMenu.prestacaoConta}"
+								actionListener="#{prestacaoContaController.setRepasseSemPrestacaoConta(true)}"
+								styleClass="#{mainMenu.numIndex == 7 ? 'selectedMenu' : null}"
+								disabled="#{loginController.principalRole eq 'RESPONSÁVEL' ? false : loginController.principalRole eq 'ADMIN' ? false : true}" />
+						</p:submenu>
+						<p:submenu label="Relatórios" rendered="true">
+							<p:menuitem id="report" value="Termo Compromisso"
+								styleClass="#{mainMenu.numIndex == 8 ? 'selectedMenu' : null}"
+								update=":centerContentPanel :form:panelMenu"
+								action="#{mainMenu.report}" icon="ui-icon-print"
+								actionListener="#{termoCompromissoReportController.limparRelatorio}" />
+							<p:menuitem id="legislacaoReport" value="Legislação"
+								styleClass="#{mainMenu.numIndex == 9 ? 'selectedMenu' : null}"
+								update=":centerContentPanel :form:panelMenu"
+								action="#{mainMenu.legislacaoReport}" icon="ui-icon-print" />
+							<p:menuitem id="pesquisaPrecoReport"
+								value="Consoli. Pesq. Preços"
+								styleClass="#{mainMenu.numIndex == 10 ? 'selectedMenu' : null}"
+								update=":centerContentPanel :form:panelMenu"
+								action="#{mainMenu.pesquisaPrecoReport}" icon="ui-icon-print" />
+						</p:submenu>
+						<!-- 					</p:menubar> -->
+					</p:panelMenu>
 
-		<p:layoutUnit id="layoutUnitCenter" position="center">
-			<h:panelGroup id="centerContentPanel">
-				<ui:include src="#{mainMenu.index}" />
-			</h:panelGroup>
-		</p:layoutUnit>
+					<p:remoteCommand name="logoutUser"
+						actionListener="#{loginController.logout(false)}" process="@this" />
+				</h:form>
+			</pe:layoutPane>
 
-	</p:layout>
+			<pe:layoutPane id="layoutUnitCenter" position="center">
+				<h:panelGroup id="centerContentPanel">
+					<ui:include src="#{mainMenu.index}" />
+				</h:panelGroup>
+			</pe:layoutPane>
+
+	</pe:layout>
 	<p:idleMonitor timeout="900000" onidle="idleDialog.show()" />
 
 	<p:dialog header="Expirou! " resizable="false" closable="false"

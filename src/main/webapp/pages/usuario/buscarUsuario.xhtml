@@ -4,9 +4,9 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 
-<div class="container_24">
+<div class="container">
 	<h:form id="buscarUsuarioForm" prependId="false">
-		<p:messages id="messagens" />
+		<p:messages id="messages" />
 
 		<p:confirmDialog message="#{wd['dialog.deleteConfirmation.message']}"
 			hideEffect="explode" header="#{wd['dialog.alert.header']}"
@@ -15,47 +15,67 @@
 			<p:commandButton id="btnSim" value="#{wd['dialog.optionYes']}"
 				oncomplete="confirmation.hide();" styleClass="r6"
 				action="#{buscarUserController.remover}" process="@this"
-				update="buscarUsuarioTable" />
+				update="buscarUsuarioTable messages" />
 			<p:commandButton id="btnNao" value="#{wd['dialog.optionNo']}"
 				onclick="confirmation.hide();" type="button" styleClass="r7" />
 		</p:confirmDialog>
 
-		<p:panel header="#{wds['fieldset.filters']}" toggleable="true"
-			id="filtersPanel" styleClass="clearfix columnRight">
+		<p:panel header="#{wd['fieldset.filters']}" toggleable="true"
+			id="filtersPanel" styleClass="clearfix">
 			<f:validateBean disabled="true">
 				<!-- linha -->
-				<div class="grid_3">
-					<p:outputLabel for="nameInputText" value="#{lb['userSystem.name']}" />
+				<div class="row">
+					<div class="col-md-2">
+						<p:outputLabel for="nameInputText"
+							value="#{lb['userSystem.name']}" />
+					</div>
+					<div class="col-md-6">
+						<p:inputText id="nameInputText"
+							value="#{buscarUserController.userBusca.name}" />
+					</div>
+					<div class="col-md-2">
+						<p:outputLabel for="loginInputText"
+							value="#{lb['userSystem.username']}" />
+					</div>
+					<div class="col-md-6">
+						<p:inputText id="loginInputText"
+							value="#{buscarUserController.userBusca.username}" />
+					</div>
+					<div class="col-md-2">
+						<p:outputLabel value="Perfil" for="roleEditeAC" />
+					</div>
+					<div class="col-md-6">
+						<p:autoComplete id="roleEditeAC"
+							value="#{buscarUserController.roleBusca}"
+							completeMethod="#{userController.autocompletarRole}"
+							converter="autocompleteConverter" var="var"
+							itemLabel="#{var.name}" itemValue="#{var}" dropdown="true"
+							scrollHeight="250">
+							<p:ajax event="itemSelect" process="@this"
+								disabled="#{loginController.principalRole eq 'ADMIN' ? false : true}" />
+							<f:attribute name="entityClass"
+								value="br.com.sts.ddum.model.springsecurity.entities.Role" />
+						</p:autoComplete>
+					</div>
 				</div>
-				<div class="grid_9">
-					<p:inputText id="nameInputText"
-						value="#{buscarUserController.userBusca.name}" />
-				</div>
-
-				<div class="grid_3">
-					<p:outputLabel for="loginInputText"
-						value="#{lb['userSystem.username']}" />
-				</div>
-				<div class="grid_9">
-					<p:inputText id="loginInputText"
-						value="#{buscarUserController.userBusca.username}" />
-				</div>
-
-
+				<div class="clear" />
 			</f:validateBean>
 		</p:panel>
 
-			<p:commandButton value="#{wd['button.search']}"
-				action="#{buscarUserController.buscar}" icon="ui-icon-search"
-				id="searchCommandButton" styleClass="w4 r7" update="buscarUsuarioTable"/>
-			<p:commandButton value="#{wd['button.clean']}"
-				action="#{buscarUsuarioController.init}" update="filtersPanel"
-				icon="ui-icon-arrowrefresh-1-w" id="clearCommandButton" styleClass="w4 r8">
-			</p:commandButton>
-
+		<p:commandButton value="#{wd['button.search']}"
+			action="#{buscarUserController.buscar}" icon="ui-icon-search"
+			id="searchCommandButton" styleClass="col-md-4 r6"
+			update="buscarUsuarioTable" process="@this"/>
+		<p:commandButton value="#{wd['button.clean']}" process="@this"
+			action="#{buscarUserController.init}" update="filtersPanel"
+			icon="ui-icon-arrowrefresh-1-w" id="clearCommandButton"
+			styleClass="col-md-4 r7">
+		</p:commandButton>
+		<div class="clear" />
 		<fieldset>
 			<legend>Resultados</legend>
 			<p:dataTable value="#{buscarUserController.usuarios}"
+				currentPageReportTemplate="{currentPage} de {totalPages}"
 				emptyMessage="#{wd['item.emptyFind']}" var="usuario"
 				id="buscarUsuarioTable" paginator="true" rows="5"
 				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
@@ -66,19 +86,18 @@
 						styleClass="icon"
 						title="#{wd['table.columns.options.delete.hint']}">
 						<f:setPropertyActionListener
-							target="#{buscarUserController.userRemove}" value="#{unidade}" />
+							target="#{buscarUserController.userRemove}" value="#{usuario}" />
 					</p:commandButton>
 					<p:commandButton icon="ui-icon-pencil" styleClass="icon"
-						action="#{buscarUserController.carregar}"
-						update=":usuarioTabView" process="@form"
-						title="#{wd['table.columns.options.edit.hint']}">
+						action="#{buscarUserController.carregar}" update=":usuarioTabView"
+						process="@form" title="#{wd['table.columns.options.edit.hint']}">
 						<f:setPropertyActionListener
 							target="#{buscarUserController.userEdite}" value="#{usuario}" />
 					</p:commandButton>
 				</p:column>
 
 				<p:column headerText="#{lb['userSystem.name']}"
-					style="width: 150px; text-align: center;">
+					style="width: 250px; text-align: center; white-space:normal !important;">
 					<h:outputText value="#{usuario.name}" />
 				</p:column>
 				<p:column headerText="#{lb['userSystem.username']}"
@@ -86,13 +105,14 @@
 					<h:outputText value="#{usuario.username}" />
 				</p:column>
 				<p:column headerText="Perfil"
-					style="width: 150px; text-align: center;">
-					<h:outputText value="#{usuario.getRoles().get(0).name}" />
+					style="width: 100px; text-align: center;">
+					<h:outputText value="#{usuario.getRoles().iterator().next().name}" />
 				</p:column>
 				<p:column headerText="#{lb['userSystem.createDate']}"
-					style="width: 150px; text-align: center;">
-					<h:outputText value="#{usuario.createdAt}" >
-					<f:convertDateTime locale="pt,BR" dateStyle="long" pattern="dd/MM/yyyy" />
+					style="width: 100px; text-align: center;">
+					<h:outputText value="#{usuario.createdAt}">
+						<f:convertDateTime locale="pt,BR" dateStyle="long"
+							pattern="dd/MM/yyyy" />
 					</h:outputText>
 				</p:column>
 			</p:dataTable>

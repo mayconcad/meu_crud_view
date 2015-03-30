@@ -1,0 +1,16 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<div class="container_24">
+	<h:form id="prestacaoContaReportForm" prependId="false">
+		<fieldset>
+			<p:media id="prestacaoContaMedia" 
+			height="450" width="100%" player="pdf" binding="#{prestacaoContaController.prestacaoContaMedia}">
+			</p:media>
+		</fieldset>
+	</h:form>
+</div>
+</html>

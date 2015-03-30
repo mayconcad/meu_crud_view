@@ -4,57 +4,68 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 
-<div class="container_24">
-	<h:form id="termoCompromissoReportForm" prependId="false"
-		target="_blank">
+<div class="container">
+	<!-- 	<h:form id="termoCompromissoReportForm" prependId="false" -->
+	<!-- 		target="_blank"> -->
+	<h:form id="termoCompromissoReportForm" prependId="false">
 		<p:messages id="messages" />
 
 		<p:inputText id="emptyReportField"
 			value="#{termoCompromissoReportController.emptyReport}" type="hidden" />
 		<f:validateBean disabled="true">
+			<!-- 		<div class="ui-grid-row"> -->
+			<p:panel id="reportPanel" header="Filtros" styleClass="clearfix"
+				toggleable="true">
+				<div class="row">
+					<div class="col-md-2">
+						<p:outputLabel value="#{lb['responsavel']}" for="responsavelAC" />
+					</div>
+					<div class="col-md-10">
+						<p:autoComplete id="responsavelAC"
+							value="#{termoCompromissoReportController.responsavel}"
+							label="#{lb['responsavel']}"
+							completeMethod="#{responsavelController.autocompletar}"
+							converter="autocompleteConverter" var="var"
+							itemLabel="#{var.nome}" itemValue="#{var}" dropdown="true"
+							required="true" scrollHeight="250">
+							<p:ajax event="itemSelect" process="@this" />
+							<f:attribute name="entityClass"
+								value="br.com.sts.ddum.model.entities.Responsavel" />
+						</p:autoComplete>
+					</div>
+					<div class="col-md-2">
+						<p:outputLabel value="#{lb['unidadeContabil']}"
+							for="unidadeContabil" />
+					</div>
+					<div class="col-md-10">
+						<p:autoComplete id="unidadeContabil" minQueryLength="3"
+							value="#{termoCompromissoReportController.unidade}"
+							label="#{lb['unidadeContabil']}" required="true"
+							completeMethod="#{termoCompromissoReportController.autocompletarUnidade}"
+							queryDelay="3" widgetVar="unidadeContabil" var="var"
+							itemLabel="#{var.nome}" itemValue="#{var}" process="@this"
+							dropdown="true" converter="autocompleteConverter"
+							forceSelection="true" scrollHeight="250">
+							<p:ajax event="itemSelect" process="@this" />
+							<f:attribute name="entityClass"
+								value="br.com.sts.ddum.model.entities.Unidade" />
+						</p:autoComplete>
+					</div>
 
-			<p:panel id="reportPanel" header="Filtros" styleClass="clearfix">
-
-				<div class="grid_2">
-					<p:outputLabel value="#{lb['responsavel']}" for="responsavelAC" />
-				</div>
-				<div class="grid_10">
-					<p:autoComplete id="responsavelAC"
-						value="#{termoCompromissoReportController.responsavel}"
-						label="#{lb['responsavel']}"
-						completeMethod="#{responsavelController.autocompletar}"
-						converter="autocompleteConverter" var="var"
-						itemLabel="#{var.nome}" itemValue="#{var}" dropdown="true"
-						required="true" scrollHeight="250">
-						<p:ajax event="itemSelect" process="@this" />
-						<f:attribute name="entityClass"
-							value="br.com.sts.ddum.model.entities.Responsavel" />
-					</p:autoComplete>
-				</div>
-				<div class="grid_3">
-					<p:outputLabel value="#{lb['unidadeContabil']}"
-						for="unidadeContabil" />
-				</div>
-				<div class="grid_9">
-					<p:autoComplete id="unidadeContabil" minQueryLength="3"
-						value="#{termoCompromissoReportController.unidade}"
-						label="#{lb['unidadeContabil']}" required="true"
-						completeMethod="#{unidadeController.autocompletar}" queryDelay="3"
-						widgetVar="unidadeContabil" var="var" itemLabel="#{var.nome}"
-						itemValue="#{var}" process="@this" dropdown="true"
-						converter="autocompleteConverter" forceSelection="true"
-						scrollHeight="250">
-						<p:ajax event="itemSelect" process="@this" />
-						<f:attribute name="entityClass"
-							value="br.com.sts.ddum.model.entities.Unidade" />
-					</p:autoComplete>
-				</div>
+					</div>
+					<div class="clear"/>
+					<p:commandButton value="Gerar Termo"
+						action="#{termoCompromissoReportController.generateReportByTemplate(null,null)}"
+						styleClass="col-md-4 r8" update="@form" icon="ui-icon-disk"
+						style="margin-top: 15px" />
 			</p:panel>
 		</f:validateBean>
-		<p:commandButton value="Gerar Termo"
-			action="#{termoCompromissoReportController.generateReportByTemplate(null,null)}"
-			styleClass="w3 r8" update="@form" ajax="false" />
-
+		<fieldset>
+			<p:media id="termoCompromissoMedia" height="450" width="100%"
+				player="pdf"
+				binding="#{termoCompromissoReportController.termoCompromissoMedia}">
+			</p:media>
+		</fieldset>
 	</h:form>
 </div>
 </html>

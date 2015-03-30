@@ -34,7 +34,7 @@ public class AutocompleteConverter implements Converter {
 					"entityClass");
 			Class<?> klass = null;
 			if (entityClass == null)
-				return null;
+				return "";
 			try {
 				klass = (Class<?>) (entityClass != null ? Thread
 						.currentThread().getContextClassLoader()
@@ -60,7 +60,7 @@ public class AutocompleteConverter implements Converter {
 			return object == null ? "" : object;
 
 		}
-		return null;
+		return "";
 	}
 
 	@Override

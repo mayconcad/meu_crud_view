@@ -4,66 +4,191 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 
-<div class="container_24">
+<div class="container">
 	<h:form id="termoCompromissoReportForm" prependId="false">
 		<p:messages id="messages" />
-		<p:panel header="#{wd['fieldset.data']}" toggleable="false"
-			styleClass="clearfix grid_24">
+		<p:panel header="#{wd['fieldset.data']}" toggleable="true"
+			styleClass="clearfix">
 
-			<div class="grid_2" style="padding-top: 5px !important">
-				<p:outputLabel value="#{lb['repasse.numeroEmpenho']}"
-					for="numeroEmpenho" />
-			</div>
-			<div class="grid_6" style="padding-top: 5px !important">
-				<p:outputLabel id="numeroEmpenho"
-					value="#{repasseController.repasse.numeroEmpenho}" />
-			</div>
-			<div class="grid_3" style="padding-top: 5px !important">
-				<p:outputLabel value="#{lb['repasse.numeroProcesso']}"
-					for="numeroProcesso" />
-			</div>
-			<div class="grid_5">
-				<p:inputText id="numeroProcesso"
-					value="#{repasseController.repasse.numeroProcesso}" required="true" onkeypress="mascara(this,number);"/>
-			</div>
-
-			<div class="grid_3" style="padding-top: 5px !important">
-				<p:outputLabel value="#{lb['repasse.dataEmissao']}"
-					for="dataEmissao" />
-			</div>
-			<div class="grid_5">
-				<p:calendar id="dataEmissao"
-					value="#{repasseController.repasse.dataEmissao}" showOn="button"
-					pattern="dd/MM/yyyy" locale="pt" styleClass="fieldFullWidth"
-					navigator="true" effect="fadeIn" />
-			</div>
-			<div class="clear" />
-			<div class="grid_2" style="padding-top: 5px !important">
-				<p:outputLabel value="#{lb['unidade']}" for="unidadeAC" />
-			</div>
-			<div class="grid_22" style="padding-top: 5px !important">
-				<p:autoComplete id="unidadeAC" minQueryLength="3"
-					value="#{repasseController.repasse.unidade}" required="true"
-					completeMethod="#{unidadeController.autocompletar}" queryDelay="3"
-					widgetVar="unidadeAC" var="var" itemLabel="#{var.nome}"
-					itemValue="#{var}" process="@this" dropdown="true"
-					converter="autocompleteConverter" forceSelection="true">
-					<f:attribute name="entityClass"
-								value="br.com.sts.ddum.model.entities.Unidade" />
-				</p:autoComplete>
+			<div class="row">
+				<div class="col-md-3">
+					<p:outputLabel value="#{lb['repasse.numeroProcesso']}"
+						for="numeroProcesso" />
+				</div>
+				<div class="col-md-1" style="text-align: left;">
+					<p:outputLabel id="numeroProcesso"
+						value="#{repasseController.numeroProcessoLabel}" />
+				</div>
+				<div class="col-md-3">
+					<p:outputLabel value="#{lb['repasse.dataEmissao']}"
+						for="dataEmissao" />
+				</div>
+				<div class="col-md-4">
+					<p:calendar id="dataEmissao"
+						value="#{repasseController.repasse.dataEmissao}"
+						pattern="dd/MM/yyyy" locale="pt" 
+						navigator="true" effect="fadeIn" required="true"
+						readonlyInput="true" showOn="false" />
+				</div>
+				<div class="col-md-3">
+					<p:outputLabel value="#{lb['unidade']}" for="unidadeAC" />
+				</div>
+				<div class="col-md-10">
+					<p:autoComplete id="unidadeAC" minQueryLength="3"
+						value="#{repasseController.repasse.unidade}" required="true"
+						completeMethod="#{unidadeController.autocompletar}" queryDelay="3"
+						widgetVar="unidadeAC" var="var" itemLabel="#{var.nome}"
+						itemValue="#{var}" process="@this" dropdown="true"
+						converter="autocompleteConverter" forceSelection="true">
+						<f:attribute name="entityClass"
+							value="br.com.sts.ddum.model.entities.Unidade" />
+						<p:ajax event="itemSelect"
+							listener="#{repasseController.carregarResponsavelAtivo()}"
+							process="@this" update="@form" />
+					</p:autoComplete>
+				</div>
 			</div>
 
 			<div class="clear" />
+			<fieldset>
+				<legend>Dados Responsável</legend>
+				<div class="row">
+					<div class="col-md-2">
+						<p:outputLabel value="#{lb['responsavel.matricula']}: "
+							for="responsavelMatr" />
+					</div>
+					<div class="col-md-2" style="text-align: left;">
+						<h:outputLabel id="responsavelMatr"
+							value="#{repasseController.repasse.unidade.responsavel.matriculaFuncional}" />
+					</div>
+					<div class="col-md-2">
+						<p:outputLabel value="#{lb['responsavel']}: "
+							for="responsavelNome" />
+					</div>
+					<div class="col-md-14" style="text-align: left;">
+						<h:outputLabel id="responsavelNome"
+							value="#{repasseController.repasse.unidade.responsavel.nome}" />
+					</div>
+				</div>
+				<div class="clear" />
+				<div class="row">
+					<div class="col-md-2">
+						<p:outputLabel value="#{lb['responsavel.cpf']}: "
+							for="responsavelCpf" />
+					</div>
+					<div class="col-md-3" style="text-align: left;">
+						<h:outputLabel id="responsavelCpf"
+							value="#{repasseController.repasse.unidade.responsavel.cpf}" />
+					</div>
+					<div class="col-md-1">
+						<p:outputLabel value="#{lb['responsavel.rg']}: "
+							for="responsavelRg" />
+					</div>
+					<div class="col-md-3" style="text-align: left;">
+						<h:outputLabel id="responsavelRg"
+							value="#{repasseController.repasse.unidade.responsavel.rg}" />
+					</div>
+					<div class="col-md-1">
+						<p:outputLabel value="#{lb['responsavel.cargo']}: "
+							for="responsavelCargo" />
+					</div>
+					<div class="col-md-4" style="text-align: left;">
+						<h:outputLabel id="responsavelCargo"
+							value="#{repasseController.repasse.unidade.responsavel.cargo}" />
+					</div>
+					<div class="col-md-3">
+						<p:outputLabel value="#{lb['responsavel.dataInicial']}: "
+							for="responsavelDtInicial" />
+					</div>
+					<div class="col-md-2" style="text-align: left;">
+						<h:outputLabel id="responsavelDtInicial"
+							value="#{repasseController.repasse.unidade.responsavel.dataInicial}">
+							<f:convertDateTime locale="pt,BR" dateStyle="long"
+								pattern="dd/MM/yyyy" />
 
-			<p:commandButton value="Gerar Repasse" update="@form"
+						</h:outputLabel>
+					</div>
+					<div class="col-md-3">
+						<p:outputLabel value="#{lb['responsavel.dataFinal']}: "
+							for="responsavelDtFinal" />
+					</div>
+					<div class="col-md-2" style="text-align: left;">
+						<h:outputLabel id="responsavelDtFinal"
+							value="#{repasseController.repasse.unidade.responsavel.dataFinal}">
+							<f:convertDateTime locale="pt,BR" dateStyle="long"
+								pattern="dd/MM/yyyy" />
+
+						</h:outputLabel>
+					</div>
+					</div>
+						<div class="clear" />
+				<div class="row">
+					<div class="col-md-2">
+						<p:outputLabel value="#{lb['responsavel.codigoBanco']}: "
+							for="codigoBanco" />
+					</div>
+					<div class="col-md-2" style="text-align: left;">
+						<h:outputLabel id="codigoBanco"
+							value="#{repasseController.repasse.unidade.responsavel.codigoBanco}" />
+					</div>
+					<div class="col-md-2">
+						<p:outputLabel value="#{lb['responsavel.numeroAgencia']}: "
+							for="numeroAgencia" />
+					</div>
+					<div class="col-md-3" style="text-align: left;">
+						<h:outputLabel id="numeroAgencia"
+							value="#{repasseController.repasse.unidade.responsavel.numeroAgencia}" />
+					</div>
+					<div class="col-md-2">
+						<p:outputLabel value="#{lb['responsavel.digitoAgencia']}: "
+							for="digitoAgencia" />
+					</div>
+					<div class="col-md-1" style="text-align: left;">
+						<h:outputLabel id="digitoAgencia"
+							value="#{repasseController.repasse.unidade.responsavel.digitoAgencia}" />
+					</div>
+					<div class="col-md-2">
+						<p:outputLabel value="#{lb['responsavel.numeroConta']}: "
+							for="numeroConta" />
+					</div>
+					<div class="col-md-2" style="text-align: left;">
+						<h:outputLabel id="numeroConta"
+							value="#{repasseController.repasse.unidade.responsavel.numeroConta}" />
+					</div>
+					<div class="col-md-2">
+						<p:outputLabel value="#{lb['responsavel.digitoConta']}: "
+							for="digitoConta" />
+					</div>
+					<div class="col-md-1" style="text-align: left;">
+						<h:outputLabel id="digitoConta"
+							value="#{repasseController.repasse.unidade.responsavel.digitoConta}" />
+					</div>
+					<div class="col-md-2">
+						<p:outputLabel value="#{lb['responsavel.tipoConta']}: "
+							for="tipoConta" />
+					</div>
+					<div class="col-md-3" style="text-align: left;">
+						<h:outputLabel id="tipoConta"
+							value="#{repasseController.repasse.unidade.responsavel.tipoConta}" />
+					</div>
+				</div>
+			</fieldset>
+
+			<p:commandButton value="Gerar Empenho" update="@form"
 				actionListener="#{repasseController.gerarRepasse}"
-				styleClass="w4 r6" />
+				styleClass="col-md-4 r6" icon="ui-icon-disk" />
 			<p:commandButton id="limparCommandButton"
 				value="#{wd['button.clean']}" icon="ui-icon-arrowrefresh-1-w"
 				actionListener="#{repasseController.init}" update="@form"
-				process="@this" styleClass="w4 r7">
+				process="@this" styleClass="col-md-4 r7">
 			</p:commandButton>
 		</p:panel>
+
+		<fieldset>
+			<p:media id="empenhoMedia" height="450" width="100%" player="pdf"
+				binding="#{repasseController.empenhoMedia}">
+			</p:media>
+		</fieldset>
 	</h:form>
 </div>
 </html>

@@ -2,16 +2,22 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
 <h:head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title>Dinheiro Direto nas Unidades</title>
+
+	<script src='https://www.google.com/recaptcha/api.js'></script>
 </h:head>
 <style type="text/css">
 .ui-widget-header {
 	background-color: #5CCCFA;
 	color: white;
 	text-shadow: none;
+}
+#messages{
+font-size: 0.8em;
 }
 </style>
 
@@ -55,9 +61,9 @@
 	<!-- 	</p:dialog> -->
 
 	<div class="container">
-		<p:dialog header="Login"
-			visible="true" closable="false" draggable="false" resizable="false"
-			width="420">
+		<p:dialog header="Login" visible="true" closable="false"
+			draggable="false" resizable="false" width="350">
+			<p:messages id="messages" rendered="#{loginBean.error eq true ? false : true}"/>
 			<h:form id="ddum_login_form" prependId="false">
 				<!-- 				<div class="imageLogo" style="text-align: right;"> -->
 				<!-- 					<h:graphicImage library="images" -->
@@ -70,43 +76,49 @@
 
 				<div style="text-align: center; margin-top: 5px">
 					<div class="div-menu-search" style="text-align: right;">
-<!-- 						<p:outputLabel id="username_label" for="usernameInputText" -->
-<!-- 							value="Usuário:" /> -->
+						<!-- 						<p:outputLabel id="username_label" for="usernameInputText" -->
+						<!-- 							value="Usuário:" /> -->
 						<p:inputText id="usernameInputText" required="true"
 							value="#{loginBean.userName}" label="#{wd['login.username']}"
-							title="#{wd['login.username']}" style="width:350px !important; background: url('..#{request.contextPath}/resources/icons/man-32.png') no-repeat center right !important;">
+							title="#{wd['login.username']}"
+							style="width:300px !important; background: url('..#{request.contextPath}/resources/icons/man-32.png') no-repeat center right !important;">
 						</p:inputText>
 
 						<p:watermark for="usernameInputText"
-							value="#{wd['login.username']}" >
-<!-- 							<p:graphicImage library="icons" name="man-32.png" /> -->
+							value="#{wd['login.username']}">
+							<!-- 							<p:graphicImage library="icons" name="man-32.png" /> -->
 						</p:watermark>
 
 					</div>
 				</div>
 				<div style="text-align: right; margin-top: 5px">
-<!-- 					<p:outputLabel id="password_label" for="passwordInputText" -->
-<!-- 						value="Senha:" /> -->
+					<!-- 					<p:outputLabel id="password_label" for="passwordInputText" -->
+					<!-- 						value="Senha:" /> -->
 					<p:password id="passwordInputText" required="true"
 						label="#{wd['login.password']}" title="#{wd['login.password']}"
 						value="#{loginBean.password}" feedback="false"
-						style="width:350px !important; background: url('..#{request.contextPath}/resources/icons/Lock-32.png') no-repeat center right !important; text-align:rigth;">
+						style="width:300px !important; background: url('..#{request.contextPath}/resources/icons/Lock-32.png') no-repeat center right !important; text-align:rigth;">
 
 					</p:password>
 					<p:watermark for="passwordInputText"
 						value="#{wd['login.password']}">
-<!-- 						<h:graphicImage library="icons" name="Lock-32.png" /> -->
 					</p:watermark>
 				</div>
+				<div style="text-align: center; margin-top: 5px;">
+					<p:captcha id="captch" label="Captcha" language="pt_BR" theme="white" validatorMessage="Captcha: Erro de Validação: O texto não confere!"/>
+				</div>
 
-				<div style="text-align: center; margin-top: 5px">
+<!-- 				<div class="g-recaptcha" data-sitekey="6LdjYwMTAAAAAM1Du_WUUp3CUfFu92jMe8JF4ul6"></div> -->
+				<div style="text-align: center; margin-top: 5px;">
 					<p:commandButton id="login_loginButton_button"
 						action="#{loginBean.login}" value="Logar" update="@form"
-						process="@form" style="height: 40px" icon="ui-icon-locked" />
+						process="@form" style="height: 35px" icon="ui-icon-locked"
+						ajax="false" actionListener="#{captchaBean.checar}"/>
 				</div>
 			</h:form>
-		</p:dialog> <br />
-		<br />
+
+		</p:dialog>
+		<br /> <br />
 	</div>
 </h:body>
 </html>

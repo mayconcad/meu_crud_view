@@ -6,7 +6,7 @@
 
 <h:outputScript name="utils.js" library="javascript" />
 <div class="selectedMenu">
-	<span class="headerTitle">Gerar Repasse</span>
+	<span class="headerTitle">Gerar Empenho</span>
 </div>
 
 <p:tabView id="repasseTabView">
@@ -14,7 +14,7 @@
 	<p:ajax event="tabClose" process="@all" />
 	<p:ajax event="tabChange" process="@all" />
 
-	<p:tab id="createTab" title="Repasse">
+	<p:tab id="createTab" title="Empenho">
 		<ui:include src="gerarRepasse.xhtml" />
 	</p:tab>
 </p:tabView>

@@ -28,19 +28,32 @@ public class LoginBean extends BaseController {
 
 	private boolean error = false;
 
-	public String login() {
+	public void login() {
 		boolean success = authenticationService.login(userName, password);
 		error = false;
+
+		FacesContext context = FacesContext.getCurrentInstance();
+		String url = context.getExternalContext().getRequestContextPath();
+
 		if (!success) {
 			this.error = true;
 
 			FacesMessage facesMessage = new FacesMessage(
 					FacesMessage.SEVERITY_ERROR, "", "Login ou senha inválidos");
 			FacesContext.getCurrentInstance().addMessage(null, facesMessage);
-			return "falhaLogin";
+			SecurityContextHolder.getContext().setAuthentication(null);
+			SecurityContextHolder.clearContext();
+			return;
+			// return "falhaLogin";
+		}
+		try {
+			context.getExternalContext().redirect(url + "/pages/index.xhtml");
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 
-		return "sucessoLogin";
+		return;
+		// return "sucessoLogin";
 	}
 
 	public void logout() throws IOException {
@@ -64,7 +77,7 @@ public class LoginBean extends BaseController {
 		Authentication auth = SecurityContextHolder.getContext()
 				.getAuthentication();
 		User user = (User) auth.getPrincipal();
-		return user.getRoles().get(0).getName();
+		return user.getRoles().iterator().next().getName();
 	}
 
 	public String getUserName() {

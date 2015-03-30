@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,14 +17,15 @@ import org.omnifaces.util.Ajax;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import br.com.sts.ddum.model.entities.ParametroRepasse;
 import br.com.sts.ddum.model.entities.Responsavel;
 import br.com.sts.ddum.model.enums.QueryEnum;
 import br.com.sts.ddum.model.enums.ResultMessages;
 import br.com.sts.ddum.model.enums.TipoContaEnum;
 import br.com.sts.ddum.model.utils.UtilsModel;
 import br.com.sts.ddum.service.interfaces.ConnectionConfigService;
+import br.com.sts.ddum.service.interfaces.ParametroRepasseService;
 import br.com.sts.ddum.service.interfaces.ResponsavelService;
-import br.com.sts.ddum.view.utils.UtilsView;
 import br.com.sts.ddum.view.utils.ValidateUtils;
 
 @Controller
@@ -49,11 +51,10 @@ public class ResponsavelController extends BaseController {
 	}
 
 	protected static final String FIREBIRD_DRIVER = "org.firebirdsql.jdbc.FBDriver";
-	protected static final String URL = String
-			.format(
-			// "jdbc:firebirdsql:192.10.0.10/3050:%shome%sfirebird%s",
-			"jdbc:firebirdsql:192.168.1.2/3050:%shome%sfirebird%sgcs-efetivos-phb.fdb",
-					File.separator, File.separator, File.separator);
+	protected static final String URL = String.format(
+			"jdbc:firebirdsql:192.10.0.10/3050:%shome%sfirebird%s",
+			// "jdbc:firebirdsql:192.168.1.2/3050:%shome%sfirebird%sgcs-efetivos-phb.fdb",
+			File.separator, File.separator, File.separator);
 	// "jdbc:firebirdsql:192.10.0.10/3050:%shome%sfirebird%s",
 	protected static final String SENHA = "masterkey";
 	protected static final String USUARIO = "SYSDBA";
@@ -62,6 +63,9 @@ public class ResponsavelController extends BaseController {
 
 	@Autowired
 	private ResponsavelService responsavelService;
+
+	@Autowired
+	private ParametroRepasseService parametroRepasseService;
 
 	@Autowired
 	private ConnectionConfigService connectionConfigService;
@@ -73,49 +77,61 @@ public class ResponsavelController extends BaseController {
 	private BancoFolhaEnum bancoFolha;
 	private BancoFolhaEnum conexaoAtualBancoFolha;
 
+	private boolean cadastroManual;
+
 	private Connection conexaoBanco = null;
 	private Statement createStatement = null;
 	private ResultSet result = null;
 
 	@PostConstruct
 	public void init() {
+		cadastroManual = false;
 		responsavel = new Responsavel();
 		setBancoFolha(BancoFolhaEnum.EFETIVOS);
 		setConexaoAtualBancoFolha(BancoFolhaEnum.EFETIVOS);
 		conexaoBanco = connectionConfigService.obterConexaoBancoFOLHA();
-		// obterConexaoBanco(FIREBIRD_DRIVER, URL,
-		// USUARIO, SENHA);
 		Ajax.update(":responsavelTabView");
 	}
 
 	public void criar() {
 		try {
-			LoginBean controllerInstance = UtilsView
-					.getControllerInstance(LoginBean.class);
-			if (controllerInstance.getPrincipalRole().equals("RESPONSÁVEL")) {
-				addErrorMessage("Usuário sem permissão para realizar a operação!");
+			if (usuarioSemPermissao())
 				return;
-			}
 			responsavel
 					.setCpf(UtilsModel.convertFormatCPF(responsavel.getCpf()));
 			if (!ValidateUtils.isValidCPF(responsavel.getCpf())) {
 				addErrorMessage(ResultMessages.INVALID_CPF.getDescricao());
 				return;
-			} else if (!"001".equals(responsavel.getCodigoBanco().trim())) {
-				addErrorMessage("Código do Banco deve ser 001 - Banco do Brasil!");
-				return;
+			} else {
+				List<ParametroRepasse> buscarTodos = parametroRepasseService
+						.buscarTodos();
+				if (buscarTodos != null
+						&& !buscarTodos.isEmpty()
+						&& !responsavel
+								.getCodigoBanco()
+								.trim()
+								.equals(buscarTodos.get(0).getCodBanco().trim())) {
+					ParametroRepasse parametroRepasse = buscarTodos.get(0);
+					addErrorMessage(String.format("%s%s - %s",
+							ResultMessages.INVALID_COD_BANK.getDescricao(),
+							parametroRepasse.getCodBanco(),
+							parametroRepasse.getDescricaoBanco()));
+					return;
+				}
 			}
 			responsavelService.salvar(responsavel);
 			addInfoMessage(ResultMessages.CREATE_SUCESS.getDescricao());
 			init();
 		} catch (Exception e) {
-			addErrorMessage(String.format("%s \nConsulte o Analista: %s",
+			addErrorMessage(String.format(
+					"%s \nConsulte o Suporte Técnico: %s",
 					ResultMessages.ERROR_CRUD.getDescricao(),
 					e.getLocalizedMessage()));
 		}
 	}
 
-	public List<Responsavel> autocompletarBDFolha(String valor) {
+	public List<Responsavel> autocompletarBDFolha(String valor)
+			throws ParseException {
 
 		responsaveis.clear();
 		String query = null;
@@ -159,6 +175,9 @@ public class ResponsavelController extends BaseController {
 				responsavel.setIdCargo(result.getInt(17));
 				responsavel.setCargo(result.getString(18));
 				responsavel.setNumeroAgencia(result.getString(19));
+				responsavel.setOperacao(result.getString(20));
+				responsavel.setCep(result.getString(21));
+				responsavel.setLotacao(result.getString(22));
 
 				responsaveis.add(responsavel);
 
@@ -299,6 +318,15 @@ public class ResponsavelController extends BaseController {
 		this.responsavelService = responsavelService;
 	}
 
+	public ParametroRepasseService getParametroRepasseService() {
+		return parametroRepasseService;
+	}
+
+	public void setParametroRepasseService(
+			ParametroRepasseService parametroRepasseService) {
+		this.parametroRepasseService = parametroRepasseService;
+	}
+
 	public Responsavel getResponsavel() {
 		return responsavel;
 	}
@@ -362,5 +390,13 @@ public class ResponsavelController extends BaseController {
 
 	public void setConexaoAtualBancoFolha(BancoFolhaEnum conexaoAtualBancoFolha) {
 		this.conexaoAtualBancoFolha = conexaoAtualBancoFolha;
+	}
+
+	public boolean isCadastroManual() {
+		return cadastroManual;
+	}
+
+	public void setCadastroManual(boolean cadastroManual) {
+		this.cadastroManual = cadastroManual;
 	}
 }

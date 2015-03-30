@@ -1,0 +1,91 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:form id="parametroRepasseEditeForm">
+	<p:messages id="messages" />
+
+	<p:panel header="#{wd['fieldset.data']}" id="editePanel">
+
+		<p:outputLabel value="#{lb['parametroRepasse.descricao']}"
+			for="parametroRepasseEditeNome" styleClass="w2" />
+		<p:inputText id="parametroRepasseEditeNome" required="true"
+			widgetVar="parametroRepasseEditeNome"
+			value="#{buscarParametroRepasseController.parametroRepasseEdite.descricao}"
+			styleClass="w8" />
+		<p:outputLabel value="#{lb['parametroRepasse.valorRepasse']}"
+			for="parametroRepasseValorRep" styleClass="w2" />
+		<p:inputText id="parametroRepasseValorRep"
+			value="#{buscarParametroRepasseController.valorRepasseEdite}"
+			styleClass="w3" onkeypress="mascara(this,currency);" required="true">
+		</p:inputText>
+
+		<p:outputLabel value="#{lb['parametroRepasse.segmento']}"
+			for="segmentoParametroRepasse" styleClass="w2" />
+		<div class="w2">
+			<p:selectOneMenu id="segmentoParametroRepasse"
+				itemLabel="#{wd['dialog.optionYes']}"
+				value="#{buscarParametroRepasseController.parametroRepasseEdite.segmento}">
+				<f:selectItems value="#{buscarParametroRepasseController.segmentos}" />
+			</p:selectOneMenu>
+		</div>
+
+		<div class="clear" />
+		<fieldset>
+			<LEGEND>Dotação Orçamentária</LEGEND>
+			<p:outputLabel value="#{lb['parametroRepasse.codUnidade']}"
+				for="pRepasseCodUnidade" styleClass="w2" />
+			<p:inputText id="pRepasseCodUnidade"
+				value="#{buscarParametroRepasseController.parametroRepasseEdite.codUnidade}"
+				styleClass="w2" required="true" />
+
+			<p:outputLabel value="#{lb['parametroRepasse.codAtividade']}"
+				for="pRepasseCodAtividade" styleClass="w2" />
+			<p:inputText id="pRepasseCodAtividade"
+				value="#{buscarParametroRepasseController.parametroRepasseEdite.codAtividade}"
+				styleClass="w2" required="true" />
+
+
+			<p:outputLabel value="#{lb['parametroRepasse.codElementoDespesa']}"
+				for="pRepasseCodElementoDespesa" styleClass="w2" />
+			<p:inputText id="pRepasseCodElementoDespesa"
+				value="#{buscarParametroRepasseController.parametroRepasseEdite.codElementoDespesa}"
+				styleClass="w2" required="true" />
+
+			<p:outputLabel value="#{lb['parametroRepasse.codFonteRecurso']}"
+				for="pRepasseCodFonteRecurso" styleClass="w2" />
+			<p:inputText id="pRepasseCodFonteRecurso"
+				value="#{buscarParametroRepasseController.parametroRepasseEdite.codFonteRecurso}"
+				styleClass="w2" required="true" />
+
+			<p:outputLabel value="#{lb['parametroRepasse.exercicio']}"
+				for="pRepasseExercicio" styleClass="w2" />
+			<p:inputMask id="pRepasseExercicio"
+				value="#{buscarParametroRepasseController.parametroRepasseEdite.exercicio}"
+				styleClass="w2" required="true" mask="9999"/>
+
+		</fieldset>
+
+		<p:commandButton value="#{wd['button.update']}"
+			update=":parametroRepasseTabView, messages"
+			actionListener="#{buscarParametroRepasseController.editar}"
+			styleClass="w4 r7" icon="ui-icon-disk"/>
+
+
+		<!-- 			<div class="buttonsAction"> -->
+		<!-- 				<p:commandButton id="salvarCommandButton" icon="ui-icon-disk" value="#{wds['button.update']}" -->
+		<!-- 					update="@form" action="#{controladorConsultarAtivo.salvar}" -->
+		<!-- 					process="@this :#{p:component('dadosAtualizarPanel')} :#{p:component('propriedadesAtualizarPanel')} :#{p:component('medidoresAtualizarDataTable')} :#{p:component('patrimonioAtualizarPanel')}" -->
+		<!-- 					onclick="javascript:window.location='#ativoTabView'" /> -->
+		<p:commandButton value="#{wd['button.cancel']}" type="reset"
+			icon="ui-icon-cancel"
+			onclick="parametroRepasseTabs.remove(parametroRepasseTabs.getActiveIndex())"
+			styleClass="w4 r8" />
+		<!-- 			</div> -->
+
+	</p:panel>
+
+</h:form>
+</html>

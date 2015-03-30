@@ -15,13 +15,13 @@ import javax.faces.event.ActionEvent;
 import org.primefaces.component.tabview.TabView;
 import org.primefaces.context.RequestContext;
 
+import br.com.sts.ddum.model.entities.ParametroRepasse;
 import br.com.sts.ddum.model.entities.Responsavel;
 import br.com.sts.ddum.model.enums.ResultMessages;
 import br.com.sts.ddum.model.enums.TipoContaEnum;
-import br.com.sts.ddum.model.springsecurity.entities.User;
 import br.com.sts.ddum.model.utils.UtilsModel;
+import br.com.sts.ddum.service.interfaces.ParametroRepasseService;
 import br.com.sts.ddum.service.interfaces.ResponsavelService;
-import br.com.sts.ddum.view.utils.UtilsView;
 import br.com.sts.ddum.view.utils.ValidateUtils;
 
 @ManagedBean
@@ -39,6 +39,9 @@ public class BuscarResponsavelController extends BaseController {
 
 	@ManagedProperty("#{responsavelService}")
 	private ResponsavelService responsavelService;
+
+	@ManagedProperty("#{parametroRepasseService}")
+	private ParametroRepasseService parametroRepasseService;
 
 	private ResponsavelController responsavelController;
 
@@ -59,11 +62,20 @@ public class BuscarResponsavelController extends BaseController {
 		responsaveis = responsavelService.buscar(params);
 	}
 
+	public List<Responsavel> buscar(Map<String, Object> params) {
+		return responsavelService.buscar(params);
+	}
+
 	public void remover() {
+
+		if (usuarioSemPermissao())
+			return;
+
 		try {
 			responsavelService.remover(responsavelRemove);
 		} catch (Exception e) {
-			addErrorMessage(String.format("%s \nConsulte o Analista: %s",
+			addErrorMessage(String.format(
+					"%s \nConsulte o Suporte Técnico: %s",
 					ResultMessages.ERROR_CRUD.getDescricao(), e.getMessage()));
 		}
 		buscar();
@@ -71,15 +83,29 @@ public class BuscarResponsavelController extends BaseController {
 	}
 
 	public void editar(ActionEvent actionEvent) {
+
 		try {
 			responsavelEdite.setCpf(UtilsModel
 					.convertFormatCPF(responsavelEdite.getCpf()));
 			if (!ValidateUtils.isValidCPF(responsavelEdite.getCpf())) {
 				addErrorMessage(ResultMessages.INVALID_CPF.getDescricao());
 				return;
-			} else if (!"001".equals(responsavelEdite.getCodigoBanco().trim())) {
-				addErrorMessage("Código do Banco deve ser 001 - Banco do Brasil!");
-				return;
+			} else {
+				List<ParametroRepasse> buscarTodos = parametroRepasseService
+						.buscarTodos();
+				if (buscarTodos != null
+						&& !buscarTodos.isEmpty()
+						&& !responsavelEdite
+								.getCodigoBanco()
+								.trim()
+								.equals(buscarTodos.get(0).getCodBanco().trim())) {
+					ParametroRepasse parametroRepasse = buscarTodos.get(0);
+					addErrorMessage(String.format("%s%s - %s",
+							ResultMessages.INVALID_COD_BANK.getDescricao(),
+							parametroRepasse.getCodBanco(),
+							parametroRepasse.getDescricaoBanco()));
+					return;
+				}
 			}
 			responsavelService.atualizar(responsavelEdite);
 			addInfoMessage(ResultMessages.UPDATE_SUCESS.getDescricao());
@@ -98,27 +124,19 @@ public class BuscarResponsavelController extends BaseController {
 	}
 
 	public void carregar() {
-		getEditTab().setRendered(false);
-		TabView parent = (TabView) getEditTab().getParent();
-		parent.setActiveIndex(1);
-		LoginBean controllerInstance = UtilsView
-				.getControllerInstance(LoginBean.class);
 
-		User currentUser = controllerInstance.getCurrentUser();
+		// getEditTab().setRendered(false);
+		// parent.setActiveIndex(1);
 
-		if (responsavelEdite.getUser() == null
-				|| (responsavelEdite.getUser() != null
-						&& responsavelEdite.getUser().getId().intValue() != currentUser
-								.getId().intValue() && !controllerInstance
-						.getPrincipalRole().equals("ADMIN"))) {
-			addErrorMessage(ResultMessages.PermissionsMessage.PERMISSION_NOT_EDIT
-					.permissaoUsuario(currentUser.getUsername()));
+		if (usuarioSemPermissao()) {
+
 			RequestContext.getCurrentInstance().update(
 					"responsavelTabView:buscarResponsavelForm");
-
 			return;
 		}
+
 		getEditTab().setRendered(true);
+		TabView parent = (TabView) getEditTab().getParent();
 		int editIndex = parent.getChildren().indexOf(getEditTab());
 		parent.setActiveIndex(editIndex);
 
@@ -187,6 +205,15 @@ public class BuscarResponsavelController extends BaseController {
 
 	public void setResponsavelService(ResponsavelService responsavelService) {
 		this.responsavelService = responsavelService;
+	}
+
+	public ParametroRepasseService getParametroRepasseService() {
+		return parametroRepasseService;
+	}
+
+	public void setParametroRepasseService(
+			ParametroRepasseService parametroRepasseService) {
+		this.parametroRepasseService = parametroRepasseService;
 	}
 
 	public Responsavel getResponsavelBusca() {

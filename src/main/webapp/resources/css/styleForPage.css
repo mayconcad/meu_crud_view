@@ -11,6 +11,13 @@ fieldset.fullLegend>div.ui-fieldset-content {
 	text-align: left;
 }
 
+.ui-panel .ui-panel-titlebar {
+	padding: 0.1em 0.1em 0.1em 0.1em !important;
+}
+
+.ui-tabs .ui-tabs-nav li a{
+	height: 12px;
+}
 .payClass {
 	background-image: url("../icons/cash_stack_add.png");
 }
@@ -138,21 +145,32 @@ div.selectedMenu {
 	background-origin: initial;
 	background-clip: initial;
 	background-color: #268CBB;
+	/* maycon */
+	text-align: center;
 }
 
 span.headerTitle {
-	color: #333;
+/* 	color: #333; */
+	color: #FFFFFF;
+	text-shadow: none !important;
 	font-weight: bold;
 	text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.7);
 	visibility: visible;
 	font-family: Arial, sans-serif;
-	font-size: 0.9em;
+	font-size: 1.1em;
 }
 
 label.ui-outputlabel {
-	text-align: right;
-	padding-right: 10px;
-	padding-bottom: 2px;
+	/* 	text-align: left; */
+	/* 	padding-right: 5px; */
+	/* 	padding-bottom: 2px; */
+	/* 		margin-top: 5px; */
+	/* 	vertical-align: bottom !important; */
+	
+}
+
+.ui-selectonemenu label.ui-selectonemenu-label {
+	text-align: left;
 }
 
 button.icon {
@@ -160,8 +178,11 @@ button.icon {
 	width: 18px;
 }
 
-input.ui-inputfield {
-	margin-top: 5px;
+/* input.ui-inputfield { */
+/* 	margin-top: 5px; */
+/* } */
+span.ui-autocomplete {
+	width: 100%;
 }
 
 span.ui-autocomplete>input.ui-autocomplete-input {
@@ -174,15 +195,23 @@ span.ui-autocomplete {
 	/* 	margin-right: 100%; */
 }
 
-span.ui-autocomplete>button.ui-button-icon-only, span[class^="w"]>button.ui-button-icon-only
+span.ui-autocomplete > button.ui-button-icon-only, span[class^="w"] > button.ui-button-icon-only
 	{
-	width: 8%;
+/* 	width: 8%; */
 	max-width: 28px;
 	min-width: 20px;
 	margin-top: 0px;
 	position: relative;
-	right: -2px;
 	top: 0px;
+	/*maycon */
+	/* 	right: -2px; */
+	/* 	max-width:none !important;	 */
+	/* 	right: 0px !important; */
+	margin-left: -1px;
+}
+
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+	margin-left: -2px;
 }
 
 table.ui-selectoneradio {
@@ -197,6 +226,9 @@ div.ui-radiobutton.ui-widget {
 
 td>label {
 	margin-right: 10px;
+	/* maycon */
+	/* 	padding-right: 10px; */
+	/* 	vertical-align: bottom !important; */
 }
 
 table.ui-selectoneradio tbody tr td {
@@ -328,6 +360,9 @@ span.w19, div.w19, .w19 {
 
 span.w20, div.w20, .w20 {
 	width: 99%
+}
+.hasDatepicker{
+	width: 100%;
 }
 
 span[class^="w"]>input.hasDatepicker {
@@ -536,15 +571,11 @@ span[class^="w"]>input.hasDatepicker {
 .columnRight {
 	text-align: right;
 	font-weight: bold;
-	!
-	important
 }
 
 .columnLeft {
 	text-align: left;
 	font-weight: bold;
-	!
-	important
 }
 
 .columnShow td {
@@ -555,8 +586,6 @@ span[class^="w"]>input.hasDatepicker {
 .columnShow label {
 	text-align: right;
 	font-weight: bold;
-	!
-	important
 }
 
 .noBorders tr, .noBorders td {
@@ -604,10 +633,8 @@ span[class^="w"]>input.hasDatepicker {
 }
 
 .required {
-	text-align: right; ! important;
+	text-align: right ! important;
 	color: red;
-	!
-	important
 }
 
 .panel {
@@ -658,8 +685,8 @@ span[class^="w"]>input.hasDatepicker {
 
 .ui-inputfield, .ui-widget-content .ui-inputfield, .ui-widget-header .ui-inputfield
 	{
-	/* 	box-shadow: none !important; */
-	
+	/* sombra maycon alterado dia 19-03-2015 */
+	box-shadow: none !important;
 }
 
 .ui-widget-header {
@@ -667,12 +694,8 @@ span[class^="w"]>input.hasDatepicker {
 	text-shadow: none;
 }
 
-span.headerTitle {
-	color: #FFFFFF;
-	text-shadow: none !important;
-}
 /*  botões de autocomplete */
-.container_24 .grid_6 .ui-autocomplete button{
+.container_24 .grid_6 .ui-autocomplete button {
 	margin-top: 5px !important;
 }
 /*
@@ -681,13 +704,24 @@ Remoção dos botões do componente de upload
 @autor maycon francis
 */
 .uploadFile .fileupload-buttonbar {
-	padding: 0px 0px !important;
+	padding: 0px 0px 0px 0px !important;
 	border: none;
+	/* 	width: 20.833333335%; */
+	background-color: white;
+	text-align: left;
+	display: unset;
+	/* 	margin-top: -5px; */
+}
+
+.ui-fileupload .ui-widget .uploadFile {
+	display: block;
+	/* 	position: static; */
+	float: inherit;
 }
 
 .fileupload-buttonbar {
 	font-size: 11px;
-	width: 69%;
+	/* 	width: 69%; */
 }
 
 .uploadFile table {
@@ -709,8 +743,10 @@ Remoção dos botões do componente de upload
 	margin-left: 5%;
 	margin-right: -1%;
 }
+
 .ui-outputlabel-rfi {
 	color: #ff0000 !important;
+	/* 	padding-right:1px; */
 }
 
 /* Foi adicionado o estilo para botões com a
@@ -724,4 +760,14 @@ funcionalidade de Adicionar itens em uma tabela
 
 .buttonsAddAction button {
 	margin: 0px 5px 5px 5px;
+}
+
+.ui-menu {
+	padding: 0em !important;
+}
+/* .ui-panelmenu-header{ */
+/* 	font-size: 1em; */
+/* } */
+.ui-selectonemenu .ui-selectonemenu-trigger {
+	width: 20px !important;
 }
