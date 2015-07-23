@@ -66,9 +66,10 @@ public class AutocompleteConverter implements Converter {
 	@Override
 	public String getAsString(FacesContext context, UIComponent component,
 			Object object) {
-		if (object != null)
-			return String.valueOf(((BaseEntity) object).getId());
-		else
+		if (object != null) {
+			Long id = ((BaseEntity) object).getId();
+			return id == null ? "" : String.valueOf(id);
+		} else
 			return null;
 	}
 

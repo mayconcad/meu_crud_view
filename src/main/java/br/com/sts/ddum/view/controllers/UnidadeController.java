@@ -1,5 +1,6 @@
 package br.com.sts.ddum.view.controllers;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -14,6 +15,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
 import org.omnifaces.util.Ajax;
+import org.primefaces.component.media.Media;
+import org.primefaces.component.tabview.TabView;
 import org.primefaces.context.RequestContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,10 +36,11 @@ import br.com.sts.ddum.model.utils.UtilsModel;
 import br.com.sts.ddum.service.interfaces.ConnectionConfigService;
 import br.com.sts.ddum.service.interfaces.ParametroRepasseService;
 import br.com.sts.ddum.service.interfaces.UnidadeService;
+import br.com.sts.ddum.view.utils.UtilsView;
 
 @Controller
 @ViewScoped
-public class UnidadeController extends BaseController {
+public class UnidadeController extends BaseReportController {
 
 	private static final long serialVersionUID = -4373225131597424442L;
 
@@ -89,9 +93,10 @@ public class UnidadeController extends BaseController {
 
 	private UIForm createUnidadeForm;
 
+	private Media termoCompromissoMedia = new Media();
+
 	@PostConstruct
 	public void init() {
-
 		responsavel = new Responsavel();
 		unidadeContabil = new UnidadeContabil();
 		atividadeContabil = new AtividadeContabil();
@@ -105,6 +110,14 @@ public class UnidadeController extends BaseController {
 		conexaoBanco = connectionConfigService.obterConexaoBancoCGP();
 		Ajax.update(":unidadeTabView");
 
+	}
+
+	public void limparDados() {
+		init();
+		BuscarUnidadeController controllerInstance = UtilsView
+				.getControllerInstance(BuscarUnidadeController.class);
+		if (controllerInstance != null)
+			controllerInstance.init();
 	}
 
 	public void gerarTermoCompromisso() {
@@ -146,7 +159,7 @@ public class UnidadeController extends BaseController {
 
 	public void criar(boolean gerarTermo) {
 
-		if (usuarioSemPermissao())
+		if (usuarioSemPermissao("GESTOR"))
 			return;
 
 		getFonteRecurso().setId(null);
@@ -172,14 +185,40 @@ public class UnidadeController extends BaseController {
 			return;
 		}
 		addInfoMessage(ResultMessages.CREATE_SUCESS.getDescricao());
-		// if (!gerarTermo)
+		if (gerarTermo) {
+			// FacesContext currentInstance = FacesContext.getCurrentInstance();
+			TermoCompromissoReportController reportController = UtilsView
+					.getControllerInstance(TermoCompromissoReportController.class);
+			// reportController = (TermoCompromissoReportController)
+			// currentInstance
+			// .getELContext()
+			// .getELResolver()
+			// .getValue(currentInstance.getELContext(), null,
+			// "termoCompromissoReportController");
+
+			reportController.generateReportByTemplate(unidade.getResponsavel(),
+					unidade);
+			getTermoCompromissoMedia().setValue(
+					File.separator.concat("reports").concat(File.separator)
+							.concat("TermoCompromisso.pdf"));
+			carregarReportTab();
+		}
 		init();
-		RequestContext.getCurrentInstance().reset(":unidadeTabView");
+		RequestContext.getCurrentInstance().update(":unidadeTabView");
+	}
+
+	public void carregarReportTab() {
+		getReportTab().setRendered(true);
+		TabView parent = (TabView) getReportTab().getParent();
+		int reportIndex = parent.getChildren().indexOf(getReportTab());
+		if (!getEditTab().isRendered())
+			--reportIndex;
+		parent.setActiveIndex(reportIndex);
 	}
 
 	public void showDialog(ActionEvent event) {
-		Ajax.update(":unidadeTabView:createUnidadeForm");
-		RequestContext.getCurrentInstance().execute("confirmationTermo.show()");
+		RequestContext.getCurrentInstance().execute(
+				"PF('confirmationTermo').show()");
 
 	}
 
@@ -613,6 +652,14 @@ public class UnidadeController extends BaseController {
 
 	public UIForm getCreateUnidadeForm() {
 		return createUnidadeForm;
+	}
+
+	public Media getTermoCompromissoMedia() {
+		return termoCompromissoMedia;
+	}
+
+	public void setTermoCompromissoMedia(Media termoCompromissoMedia) {
+		this.termoCompromissoMedia = termoCompromissoMedia;
 	}
 
 	public void setCreateUnidadeForm(UIForm createUnidadeForm) {

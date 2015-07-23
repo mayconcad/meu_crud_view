@@ -44,6 +44,7 @@ public class LoginController extends BaseController {
 	// }
 
 	public String login() {
+
 		try {
 			Authentication request = new UsernamePasswordAuthenticationToken(
 					getUserName(), getPassword());
@@ -88,6 +89,18 @@ public class LoginController extends BaseController {
 	public String getPrincipalRole() {
 		Authentication auth = SecurityContextHolder.getContext()
 				.getAuthentication();
+		if (auth == null) {
+			FacesContext context = FacesContext.getCurrentInstance();
+			String url = context.getExternalContext().getRequestContextPath();
+			try {
+				context.getExternalContext().redirect(
+						url + "/pages/index.xhtml");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return "";
+		}
+
 		User user = (User) auth.getPrincipal();
 		return user.getRoles().iterator().next().getName();
 	}

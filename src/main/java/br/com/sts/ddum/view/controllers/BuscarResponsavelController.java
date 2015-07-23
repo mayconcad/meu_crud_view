@@ -11,17 +11,21 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.persistence.EntityManager;
 
 import org.primefaces.component.tabview.TabView;
 import org.primefaces.context.RequestContext;
 
 import br.com.sts.ddum.model.entities.ParametroRepasse;
 import br.com.sts.ddum.model.entities.Responsavel;
+import br.com.sts.ddum.model.entities.Unidade;
 import br.com.sts.ddum.model.enums.ResultMessages;
 import br.com.sts.ddum.model.enums.TipoContaEnum;
+import br.com.sts.ddum.model.utils.JPAPersistence;
 import br.com.sts.ddum.model.utils.UtilsModel;
 import br.com.sts.ddum.service.interfaces.ParametroRepasseService;
 import br.com.sts.ddum.service.interfaces.ResponsavelService;
+import br.com.sts.ddum.service.interfaces.UnidadeService;
 import br.com.sts.ddum.view.utils.ValidateUtils;
 
 @ManagedBean
@@ -37,16 +41,22 @@ public class BuscarResponsavelController extends BaseController {
 	private Responsavel responsavelEdite;
 	private List<Responsavel> responsaveis;
 
+	private boolean desabilitaOperacao;
+
 	@ManagedProperty("#{responsavelService}")
 	private ResponsavelService responsavelService;
 
 	@ManagedProperty("#{parametroRepasseService}")
 	private ParametroRepasseService parametroRepasseService;
 
+	@ManagedProperty("#{unidadeService}")
+	private UnidadeService unidadeService;
+
 	private ResponsavelController responsavelController;
 
 	@PostConstruct
 	public void init() {
+		setDesabilitaOperacao(true);
 		responsavelBusca = responsavelEdite = responsavelRemove = new Responsavel();
 	}
 
@@ -68,15 +78,26 @@ public class BuscarResponsavelController extends BaseController {
 
 	public void remover() {
 
-		if (usuarioSemPermissao())
-			return;
-
 		try {
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("responsavel.id", responsavelRemove.getId());
+			List<Unidade> unidades = unidadeService.buscar(params);
+			if (!unidades.isEmpty()) {
+				addErrorMessage("O Responsável está associado a uma Unidade Física e não pode ser removido.");
+				return;
+			}
 			responsavelService.remover(responsavelRemove);
 		} catch (Exception e) {
-			addErrorMessage(String.format(
-					"%s \nConsulte o Suporte Técnico: %s",
-					ResultMessages.ERROR_CRUD.getDescricao(), e.getMessage()));
+			if (e.getMessage().contains("duplicate key")) {
+				EntityManager entityManager = JPAPersistence.getEntityManager();
+				entityManager.getTransaction().begin();
+				entityManager.remove(responsavelRemove);
+				entityManager.getTransaction().commit();
+			} else
+				addErrorMessage(String.format(
+						"%s \nConsulte o Suporte Técnico: %s",
+						ResultMessages.ERROR_CRUD.getDescricao(),
+						e.getMessage()));
 		}
 		buscar();
 		addInfoMessage(ResultMessages.DELETE_SUCESS.getDescricao());
@@ -116,6 +137,11 @@ public class BuscarResponsavelController extends BaseController {
 		loadToFind();
 	}
 
+	public void limparFiltroBusca() {
+		responsavelBusca = new Responsavel();
+
+	}
+
 	public void loadToFind() {
 		getEditTab().setRendered(false);
 		TabView parent = (TabView) getFindTab().getParent();
@@ -128,7 +154,7 @@ public class BuscarResponsavelController extends BaseController {
 		// getEditTab().setRendered(false);
 		// parent.setActiveIndex(1);
 
-		if (usuarioSemPermissao()) {
+		if (usuarioSemPermissao("GESTOR")) {
 
 			RequestContext.getCurrentInstance().update(
 					"responsavelTabView:buscarResponsavelForm");
@@ -137,7 +163,8 @@ public class BuscarResponsavelController extends BaseController {
 
 		getEditTab().setRendered(true);
 		TabView parent = (TabView) getEditTab().getParent();
-		int editIndex = parent.getChildren().indexOf(getEditTab());
+		int editIndex = parent == null ? 1 : parent.getChildren().indexOf(
+				getEditTab());
 		parent.setActiveIndex(editIndex);
 
 		FacesContext currentInstance = FacesContext.getCurrentInstance();
@@ -159,12 +186,28 @@ public class BuscarResponsavelController extends BaseController {
 		return TipoContaEnum.values();
 	}
 
+	public void desabilitarOperacao() {
+		if (responsavelEdite != null && responsavelEdite.getTipoConta() != null)
+			if (TipoContaEnum.POUPANCA.equals(responsavelEdite.getTipoConta()))
+				setDesabilitaOperacao(true);
+			else
+				setDesabilitaOperacao(false);
+	}
+
 	public String getNome() {
 		return nome;
 	}
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+
+	public boolean getDesabilitaOperacao() {
+		return desabilitaOperacao;
+	}
+
+	public void setDesabilitaOperacao(boolean desabilitaOperacao) {
+		this.desabilitaOperacao = desabilitaOperacao;
 	}
 
 	public String getMatriculaFuncional() {
@@ -214,6 +257,14 @@ public class BuscarResponsavelController extends BaseController {
 	public void setParametroRepasseService(
 			ParametroRepasseService parametroRepasseService) {
 		this.parametroRepasseService = parametroRepasseService;
+	}
+
+	public UnidadeService getUnidadeService() {
+		return unidadeService;
+	}
+
+	public void setUnidadeService(UnidadeService unidadeService) {
+		this.unidadeService = unidadeService;
 	}
 
 	public Responsavel getResponsavelBusca() {

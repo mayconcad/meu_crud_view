@@ -7,20 +7,21 @@
 <div class="container">
 	<h:form id="buscarResponsavelForm" prependId="false">
 		<p:messages id="messages" />
-		<p:confirmDialog message="#{wd['dialog.deleteConfirmation.message']}"
-			hideEffect="explode" header="#{wd['dialog.alert.header']}"
-			severity="alert" widgetVar="confirmation" modal="true"
-			appendToBody="true">
+		<p:confirmDialog severity="alert" widgetVar="confirmation"
+			global="true" header="#{wd['dialog.deleteConfirmation.header']}"
+							message="#{wd['dialog.deleteConfirmation.message']}">
 			<p:commandButton id="btnSim" value="#{wd['dialog.optionYes']}"
-				oncomplete="confirmation.hide();" styleClass="r6"
-				action="#{buscarResponsavelController.remover}" process="@this"
-				update="buscarResponsavelTable messages" />
+				oncomplete="PF('confirmation').hide();"
+				styleClass="r6" icon="ui-icon-check"
+				actionListener="#{buscarResponsavelController.remover}"
+				process="@this" update="buscarResponsavelTable messages" />
 			<p:commandButton id="btnNao" value="#{wd['dialog.optionNo']}"
-				onclick="confirmation.hide();" type="button" styleClass="r7" />
+				onclick="PF('confirmation').hide();" type="button"
+				styleClass="r6" icon="ui-icon-cancel"/>
 		</p:confirmDialog>
 
 		<f:validateBean disabled="true">
-			<p:panel header="#{wd['fieldset.filters']}" id="findPanel" styleClass="panel-slim">
+			<p:panel header="#{wd['fieldset.filters']}" id="findPanel">
 				<div class="row">
 					<div class="col-md-2">
 						<p:outputLabel value="#{lb['responsavel.nome']}" for="buscarNome" />
@@ -66,10 +67,20 @@
 			</p:panel>
 	  </f:validateBean>
 
-		<p:commandButton value="#{wd['button.search']}" process="@this findPanel"
-			styleClass="col-md-4 r8"
+		<p:commandButton value="#{wd['button.search']}"
+			process="@this findPanel" styleClass="col-md-4 r6"
 			action="#{buscarResponsavelController.buscar}"
-			update="buscarResponsavelTable" icon="ui-icon-search">
+			update="buscarResponsavelTable" icon="ui-icon-search" id="buscarResponsavel">
+			<p:blockUI block="buscarResponsavelTable" trigger="buscarResponsavel" >
+					<h:outputLabel value="#{wd['blockui.loading.text']}" />
+					<br />
+					<h:graphicImage library="images" name="#{wd['blockui.loading.img']}" />
+				</p:blockUI>
+		</p:commandButton>
+		<p:commandButton value="#{wd['button.clean']}" process="@this"
+			action="#{buscarResponsavelController.limparFiltroBusca}" update="findPanel"
+			icon="ui-icon-arrowrefresh-1-w" id="clearCommandButton"
+			styleClass="col-md-4 r7">
 		</p:commandButton>
 		<div class="clear" />
 		<fieldset>
@@ -79,24 +90,6 @@
 				emptyMessage="#{wd['item.emptyFind']}" var="responsavel"
 				id="buscarResponsavelTable" paginator="true" rows="5"
 				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
-
-				<p:column headerText="#{wd['table.columns.options']}"
-					style="width:50px; text-align: center;">
-					<p:commandButton icon="ui-icon-trash" onclick="confirmation.show()"
-						styleClass="icon"
-						title="#{wd['table.columns.options.delete.hint']}">
-						<f:setPropertyActionListener
-							target="#{buscarResponsavelController.responsavelRemove}"
-							value="#{responsavel}" />
-					</p:commandButton>
-					<p:commandButton icon="ui-icon-pencil" styleClass="icon"
-						action="#{buscarResponsavelController.carregar}" process="@form"
-						title="#{wd['table.columns.options.edit.hint']}">
-						<f:setPropertyActionListener
-							target="#{buscarResponsavelController.responsavelEdite}"
-							value="#{responsavel}" />
-					</p:commandButton>
-				</p:column>
 
 				<p:column headerText="#{lb['responsavel.nome']}"
 					style="width: 250px; text-align: center; white-space:normal !important;">
@@ -118,6 +111,25 @@
 				<p:column headerText="#{lb['responsavel.cargo']}"
 					style="width: 200px; text-align: center; white-space:normal !important;">
 					<h:outputText value="#{responsavel.cargo}" style="font-weight:100" />
+				</p:column>
+				<p:column headerText="#{wd['table.columns.options']}"
+					style="width:50px; text-align: center;">
+					<p:commandButton icon="ui-icon-trash"
+						action="#{buscarResponsavelController.verificarPermissao}"
+						styleClass="icon"
+						title="#{wd['table.columns.options.delete.hint']}" update="@form" process="@this">
+						<f:setPropertyActionListener
+							target="#{buscarResponsavelController.responsavelRemove}"
+							value="#{responsavel}" />
+						
+					</p:commandButton>
+					<p:commandButton icon="ui-icon-pencil" styleClass="icon"
+						action="#{buscarResponsavelController.carregar}" process="@form"
+						title="#{wd['table.columns.options.edit.hint']}">
+						<f:setPropertyActionListener
+							target="#{buscarResponsavelController.responsavelEdite}"
+							value="#{responsavel}" />
+					</p:commandButton>
 				</p:column>
 			</p:dataTable>
 		</fieldset>

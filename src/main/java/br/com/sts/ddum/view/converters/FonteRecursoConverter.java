@@ -36,9 +36,10 @@ public class FonteRecursoConverter implements Converter {
 	@Override
 	public String getAsString(FacesContext context, UIComponent component,
 			Object value) {
-		if (value != null)
-			return String.valueOf(((BaseEntity) value).getId());
-		else
+		if (value != null) {
+			Long id = ((BaseEntity) value).getId();
+			return id == null ? "" : String.valueOf(id);
+		} else
 			return null;
 	}
 

@@ -23,5 +23,9 @@
 		binding="#{buscarUnidadeController.editTab}" closable="true">
 		<ui:include src="editarUnidade.xhtml" />
 	</p:tab>
+	<p:tab id="reportTab" title="Termo Compromisso" rendered="false"
+		binding="#{unidadeController.reportTab}" closable="true">
+		<ui:include src="termoCompromissoReport.xhtml" />
+	</p:tab>
 </p:tabView>
 </html>

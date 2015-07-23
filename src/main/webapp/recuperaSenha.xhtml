@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Dinheiro Direto nas Unidades</title>
+
+<!-- 	<script src='https://www.google.com/recaptcha/api.js'></script> -->
+</h:head>
+<style type="text/css">
+.ui-widget-header {
+	background-color: #5CCCFA;
+	color: white;
+	text-shadow: none;
+}
+
+#messages {
+	font-size: 0.8em;
+}
+</style>
+
+<h:body id="bodyId"
+	style="background: url('..#{request.contextPath}/resources/images/fundo_azul.jpg') no-repeat center center !important; "
+	onload="limparCampos()">
+
+	<div class="container">
+		<p:dialog header="Recuperação de Senha" visible="true"
+			closable="false" draggable="false" resizable="false" width="350">
+			<p:messages id="messages"
+				rendered="#{recuperaSenhaController.EmailInvalido() eq true ? false : true}" />
+<!-- 				<p:growl id="messageGrowl" rendered="#{recuperaSenhaController.EmailInvalido() eq true ? false : true}"/> -->
+			<h:form id="ddum_recupera_senha_form" prependId="false">
+
+				<div style="text-align: center;">
+					<h:outputText
+						value="O Email deve ser o mesmo cadastrado para seu usuário!"
+						rendered="#{recuperaSenhaController.EmailInvalido()}"
+						style="color: darkred" />
+				</div>
+
+				<div style="text-align: center; margin-top: 5px">
+					<div style="text-align: center;">
+						<h:outputText
+							value="Será gerada uma nova senha, recomenda-se alterá-la em seguida!"
+							style="color: darkred" rendered="#{recuperaSenhaController.EmailInvalido() eq true ? false : true}"/>
+					</div>
+					<br />
+					<div class="div-menu-search">
+						<!-- 					<p:outputLabel value="Informe Email cadastrado para seu usuário"/> -->
+						<p:inputText id="emailText" required="true"
+							label="#{lb['userSystem.email']}" title="#{wd['login.username']}"
+							value="#{recuperaSenhaController.email}" style="width:300px !important;">
+						</p:inputText>
+						<p:watermark for="emailText" value="#{lb['userSystem.email']}">
+						</p:watermark>
+					</div>
+				</div>
+
+				<div style="text-align: center; margin-top: 10px;">
+					<p:commandButton id="recuperaSenhaButton"
+						action="#{recuperaSenhaController.recuperarSenha}" value="Enviar"
+						update="@form" process="@form"
+						style="height: 35px; font-size: 0.8em" icon="ui-icon-mail-closed"
+						ajax="false" actionListener="#{captchaBean.init}"/>
+					<p:spacer width="10" />
+					<p:commandButton alt="#{wd['button.cancel']}"
+						title="#{wd['button.cancel']}" value="#{wd['button.cancel']}"
+						actionListener="#{loginBean.logout}" icon="ui-icon-cancel"
+						style="height:35px; font-size: 0.8em" process="@this" />
+				</div>
+				<p:remoteCommand name="limparCamposRemote"
+					actionListener="#{recuperaSenhaController.init}" process="@this" />
+			</h:form>
+		</p:dialog>
+		<br /> <br />
+	</div>
+</h:body>
+<script type="text/javascript">
+	function limparCampos() {
+		limparCamposRemote();
+	}
+</script>
+</html>

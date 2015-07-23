@@ -48,8 +48,8 @@ public class TermoCompromissoReportController extends BaseReportController {
 	public void init() {
 		termoCompromissoMedia = new Media();
 		reportStream = new DefaultStreamedContent();
-		responsavel = new Responsavel();
 		unidade = new Unidade();
+		responsavel = new Responsavel();
 	}
 
 	public TermoCompromissoReportController() {
@@ -91,9 +91,11 @@ public class TermoCompromissoReportController extends BaseReportController {
 				.getExternalContext().getContext();
 		generateStremedReport(servletContext.getRealPath(File.separator.concat(
 				"reports").concat(File.separator)), "TermoCompromisso",
-				new ArrayList(), parameters);
+				"TermoCompromisso", new ArrayList(), parameters);
 
-		getTermoCompromissoMedia().setValue("/reports/TermoCompromisso.pdf");
+		getTermoCompromissoMedia().setValue(
+				File.separator.concat("reports").concat(File.separator)
+						.concat("TermoCompromisso.pdf"));
 		// if (session != null) {
 		// session.setAttribute("reportInline", reportInline);
 		// session.setAttribute("reportType", getReportType());

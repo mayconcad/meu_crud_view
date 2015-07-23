@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="GuiaEmpenho" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.zoom" value="3.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="480"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="numEmpenho" class="java.lang.Long"/>
-	<parameter name="local" class="java.lang.String"/>
 	<parameter name="dataEmissao" class="java.lang.String"/>
 	<parameter name="exercicio" class="java.lang.Integer"/>
 	<parameter name="numProcesso" class="java.lang.Long"/>
@@ -18,6 +17,12 @@
 	<parameter name="credor" class="java.lang.String"/>
 	<parameter name="codAplicacao" class="java.lang.String"/>
 	<parameter name="historico" class="java.lang.String"/>
+	<parameter name="logo" class="java.io.InputStream"/>
+	<parameter name="prefeitura" class="java.lang.String"/>
+	<parameter name="unidade" class="java.lang.String"/>
+	<parameter name="atividade" class="java.lang.String"/>
+	<parameter name="unidadeFisica" class="java.lang.String"/>
+	<parameter name="gestor" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -27,70 +32,32 @@
 				<reportElement x="0" y="0" width="555" height="769"/>
 			</rectangle>
 			<rectangle radius="10">
-				<reportElement x="5" y="133" width="545" height="197" backcolor="#FFFFFF"/>
+				<reportElement x="5" y="133" width="545" height="171" backcolor="#FFFFFF"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="0" y="37" width="555" height="28"/>
+				<reportElement x="0" y="20" width="555" height="20"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="13" isBold="true" isStrikeThrough="false"/>
+					<font size="12" isBold="true" isStrikeThrough="false"/>
 				</textElement>
-				<text><![CDATA[Guia de Empenho]]></text>
+				<text><![CDATA[Demonstrativo de Registro de Empenho]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="0" y="608" width="555" height="20"/>
-				<textElement textAlignment="Center" verticalAlignment="Bottom" markup="none">
-					<font size="12"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{local}+",___/___/_______"]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement x="355" y="195" width="100" height="20"/>
-				<textElement verticalAlignment="Middle">
-					<font size="11"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{dataEmissao}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="355" y="175" width="100" height="20"/>
-				<textElement verticalAlignment="Middle">
-					<font size="11" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Data Emissão]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="455" y="175" width="95" height="20"/>
-				<textElement verticalAlignment="Middle">
-					<font size="11" isBold="true"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom" markup="none">
+					<font size="12" isBold="true"/>
 					<paragraph rightIndent="5"/>
 				</textElement>
-				<text><![CDATA[Exercício]]></text>
-			</staticText>
-			<textField isStretchWithOverflow="true">
-				<reportElement x="5" y="195" width="151" height="20"/>
-				<textElement verticalAlignment="Middle">
-					<font size="11"/>
-					<paragraph leftIndent="5"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{numEmpenho}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="5" y="175" width="151" height="20"/>
-				<textElement verticalAlignment="Middle">
-					<font size="11" isBold="true"/>
-					<paragraph leftIndent="5"/>
-				</textElement>
-				<text><![CDATA[Número do Empenho]]></text>
-			</staticText>
-			<textField isStretchWithOverflow="true">
-				<reportElement x="455" y="195" width="95" height="20"/>
-				<textElement verticalAlignment="Middle">
-					<font size="11"/>
-					<paragraph rightIndent="5"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{exercicio}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Gestor: "+$P{gestor}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="5" y="238" width="151" height="20"/>
+				<reportElement x="0" y="40" width="555" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Data de Emissão: " + $P{dataEmissao}+", Exercício: "+$P{exercicio}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="5" y="181" width="151" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font size="11"/>
 					<paragraph leftIndent="5"/>
@@ -98,7 +65,7 @@
 				<textFieldExpression><![CDATA[$P{numProcesso}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="5" y="218" width="151" height="20"/>
+				<reportElement x="5" y="161" width="151" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font size="11" isBold="true"/>
 					<paragraph leftIndent="5"/>
@@ -106,26 +73,26 @@
 				<text><![CDATA[Número do Processo]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="355" y="238" width="195" height="20"/>
+				<reportElement x="5" y="221" width="151" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font size="11"/>
-					<paragraph rightIndent="5"/>
+					<paragraph leftIndent="5" rightIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{valorEmpenho}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="355" y="218" width="195" height="20"/>
+				<reportElement x="5" y="201" width="151" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font size="11" isBold="true"/>
-					<paragraph rightIndent="5"/>
+					<paragraph leftIndent="5" rightIndent="5"/>
 				</textElement>
 				<text><![CDATA[Valor Empenho]]></text>
 			</staticText>
 			<rectangle radius="10">
-				<reportElement x="5" y="330" width="545" height="147" backcolor="#FFFFFF"/>
+				<reportElement x="5" y="304" width="545" height="173" backcolor="#FFFFFF"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="5" y="330" width="545" height="20"/>
+				<reportElement x="5" y="304" width="545" height="20"/>
 				<box>
 					<bottomPen lineWidth="1.0" lineColor="#A69A9A"/>
 				</box>
@@ -136,7 +103,7 @@
 				<text><![CDATA[Dotação]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="5" y="285" width="130" height="20"/>
+				<reportElement x="5" y="272" width="130" height="20"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="11"/>
 					<paragraph leftIndent="5"/>
@@ -144,7 +111,7 @@
 				<textFieldExpression><![CDATA[$P{tipoCredito}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="5" y="265" width="130" height="20"/>
+				<reportElement x="5" y="252" width="130" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font size="11" isBold="true"/>
 					<paragraph leftIndent="5"/>
@@ -152,7 +119,7 @@
 				<text><![CDATA[Tipo de Crédito]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="135" y="265" width="125" height="20"/>
+				<reportElement x="135" y="252" width="125" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font size="11" isBold="true"/>
 					<paragraph leftIndent="5"/>
@@ -160,7 +127,7 @@
 				<text><![CDATA[Tipo de Meta]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="260" y="265" width="130" height="20"/>
+				<reportElement x="260" y="252" width="130" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font size="11" isBold="true"/>
 					<paragraph leftIndent="5"/>
@@ -168,7 +135,7 @@
 				<text><![CDATA[Tipo de Empenho]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="390" y="265" width="160" height="20"/>
+				<reportElement x="390" y="252" width="160" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font size="11" isBold="true"/>
 					<paragraph leftIndent="5" rightIndent="5"/>
@@ -176,7 +143,7 @@
 				<text><![CDATA[Natureza do Empenho]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="135" y="285" width="125" height="20"/>
+				<reportElement x="135" y="272" width="125" height="20"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="11"/>
 					<paragraph leftIndent="5"/>
@@ -184,7 +151,7 @@
 				<textFieldExpression><![CDATA[$P{tipoMeta}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="260" y="285" width="130" height="20"/>
+				<reportElement x="260" y="272" width="130" height="20"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="11"/>
 					<paragraph leftIndent="5"/>
@@ -192,7 +159,7 @@
 				<textFieldExpression><![CDATA[$P{tipoEmpenho}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="390" y="285" width="160" height="20"/>
+				<reportElement x="390" y="272" width="160" height="20"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="11"/>
 					<paragraph leftIndent="5" rightIndent="5"/>
@@ -200,14 +167,14 @@
 				<textFieldExpression><![CDATA[$P{naturezaEmpenho}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="5" y="384" width="265" height="20"/>
-				<textElement>
+				<reportElement x="5" y="404" width="265" height="20"/>
+				<textElement verticalAlignment="Middle">
 					<paragraph leftIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{elemDespesa}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="5" y="364" width="265" height="20"/>
+				<reportElement x="5" y="384" width="265" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font size="11" isBold="true"/>
 					<paragraph leftIndent="5"/>
@@ -215,49 +182,34 @@
 				<text><![CDATA[Código - Nome (Elemento de Despesa)]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="295" y="384" width="255" height="20"/>
-				<textElement>
+				<reportElement x="295" y="354" width="255" height="20"/>
+				<textElement verticalAlignment="Middle">
 					<paragraph rightIndent="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{fonteRecurso}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{atividade}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="5" y="440" width="265" height="20"/>
-				<textElement>
+				<reportElement x="5" y="450" width="265" height="20"/>
+				<textElement verticalAlignment="Middle">
 					<paragraph leftIndent="5"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{credor}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement x="295" y="440" width="255" height="20"/>
-				<textElement>
-					<paragraph rightIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{codAplicacao}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="295" y="364" width="255" height="20"/>
+				<reportElement x="295" y="334" width="255" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font size="11" isBold="true"/>
 					<paragraph rightIndent="5"/>
 				</textElement>
-				<text><![CDATA[Código - Nome (Fonte de Recurso)]]></text>
+				<text><![CDATA[Código - Nome (Atividade)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="295" y="420" width="255" height="20"/>
-				<textElement verticalAlignment="Middle">
-					<font size="11" isBold="true"/>
-					<paragraph rightIndent="5"/>
-				</textElement>
-				<text><![CDATA[Código - Nome (Código da Aplicação)]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="5" y="420" width="265" height="20"/>
+				<reportElement x="5" y="430" width="265" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font size="11" isBold="true"/>
 					<paragraph leftIndent="5"/>
 				</textElement>
-				<text><![CDATA[Código - Nome (Credor)]]></text>
+				<text><![CDATA[Código - Nome (Código da Aplicação)]]></text>
 			</staticText>
 			<rectangle radius="10">
 				<reportElement x="5" y="477" width="545" height="83" backcolor="#FFFFFF"/>
@@ -289,7 +241,7 @@
 					<font size="11" isBold="true"/>
 					<paragraph leftIndent="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Nº Prox.Empenho: "+($P{numEmpenho}.longValue()+1)+""]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Número Empenho: "+$P{numEmpenho}+""]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="5" y="133" width="545" height="20"/>
@@ -301,6 +253,79 @@
 					<paragraph leftIndent="5"/>
 				</textElement>
 				<text><![CDATA[Dados]]></text>
+			</staticText>
+			<image>
+				<reportElement x="2" y="2" width="119" height="52"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="0" y="0" width="555" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font size="12" isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{prefeitura}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="176" y="181" width="374" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{unidadeFisica}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="176" y="161" width="374" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Unidade Física]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="176" y="201" width="374" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Código - Nome (Credor)]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="176" y="221" width="374" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{credor}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="5" y="354" width="265" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{unidade}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="5" y="334" width="265" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Código - Nome (Unidade)]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="295" y="404" width="255" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<paragraph rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{fonteRecurso}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="295" y="384" width="255" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+					<paragraph rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[Código - Nome (Fonte de Recurso)]]></text>
 			</staticText>
 		</band>
 	</detail>

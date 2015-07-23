@@ -7,6 +7,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ViewScoped;
 
+import org.omnifaces.util.Ajax;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -52,7 +53,8 @@ public class UserController extends BaseController {
 		responsavel = new Responsavel();
 		role = new Role();
 		user = new User();
-		login = senha = new String();
+		login = "";
+		senha = "";
 	}
 
 	@PostConstruct
@@ -61,6 +63,15 @@ public class UserController extends BaseController {
 		role = new Role();
 		user = new User();
 		login = senha = new String();
+		Ajax.update(":usuarioTabView");
+	}
+
+	public void limparDados() {
+		init();
+		BuscarUserController controllerInstance = UtilsView
+				.getControllerInstance(BuscarUserController.class);
+		if (controllerInstance != null)
+			controllerInstance.init();
 	}
 
 	public void save() {
@@ -80,17 +91,17 @@ public class UserController extends BaseController {
 		List<Role> roles = new ArrayList<Role>();
 		roles.add(role);
 		this.user.setRoles(Sets.newHashSet(roles));
-		if (possuiResponsavel) {
-			this.user.setName(responsavel.getNome());
-			List<Responsavel> responsaveis = new ArrayList<Responsavel>();
-			responsaveis.add(responsavel);
-			this.user.setResponsaveis(Sets.newHashSet(responsaveis));
-		}
 		this.user.setUsername(getLogin());
 		this.user.setPassword(getSenha());
 		this.user.setCreatedAt(new Date());
 		this.user.setAtivo(true);
 		this.user.setId(null);
+		if (possuiResponsavel) {
+			this.user.setName(responsavel.getNome());
+			List<Responsavel> responsaveis = new ArrayList<Responsavel>();
+			responsaveis.add(responsavel);
+			this.user.setResponsavel(responsavel);
+		}
 		try {
 			userService.save(this.user);
 		} catch (Exception e) {
@@ -99,7 +110,27 @@ public class UserController extends BaseController {
 				addErrorMessage(ResultMessages.ERROR_CRUD.getDescricao()
 						+ " O item já existe!");
 				return;
+			} else if (e.getMessage() != null
+					&& e.getMessage().contains("user_username_key")) {
+				User userInativo = userService.loadByUsername(getLogin());
+				userInativo.setUsername(getLogin());
+				userInativo.setPassword(getSenha());
+				userInativo.setCreatedAt(new Date());
+				userInativo.setEmail(user.getEmail());
+				userInativo.setName(user.getName());
+				userInativo.setRoles(Sets.newHashSet(getRole()));
+				userInativo.setAtivo(true);
+				if (responsavel != null && responsavel.getId() != null
+						&& responsavel.getId() > 0) {
+					userInativo.setName(responsavel.getNome());
+					this.user.setResponsavel(responsavel);
+				}
+				userService.edite(userInativo);
+				addInfoMessage(ResultMessages.CREATE_SUCESS.getDescricao());
+				init();
+				return;
 			}
+
 			addErrorMessage(ResultMessages.ERROR_CRUD.getDescricao()
 					+ e.getLocalizedMessage());
 			return;

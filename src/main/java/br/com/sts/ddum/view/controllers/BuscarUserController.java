@@ -80,8 +80,8 @@ public class BuscarUserController extends BaseController {
 		this.userEdite.setUsername(getUsernameEdite());
 		this.userEdite.setPassword(getPasswordEdite());
 		this.userEdite.setAtivo(true);
-		List<Responsavel> responsaveis = new ArrayList<Responsavel>();
-		this.userEdite.setResponsaveis(Sets.newHashSet(responsaveis));
+		// List<Responsavel> responsaveis = new ArrayList<Responsavel>();
+		// this.userEdite.setResponsaveis(Sets.newHashSet(responsaveis));
 		try {
 			userService.edite(this.userEdite);
 		} catch (Exception e) {
@@ -110,7 +110,8 @@ public class BuscarUserController extends BaseController {
 			params.put("dataFinal", getDataFinal());
 		String principalRole = UtilsView.getControllerInstance(
 				LoginController.class).getPrincipalRole();
-		if (principalRole != null && !principalRole.equals("ADMIN"))
+		if (principalRole != null && !principalRole.equals("ADMIN")
+				&& !principalRole.equals("GESTOR"))
 			params.put("principalRole",
 					UtilsView.getControllerInstance(LoginController.class)
 							.getPrincipalRole());
@@ -159,12 +160,12 @@ public class BuscarUserController extends BaseController {
 
 	public void remover() {
 
-		if (usuarioSemPermissao()) {
-
-			RequestContext.getCurrentInstance().update(
-					"usuarioTabView:buscarUsuarioForm");
-			return;
-		}
+		// if (usuarioSemPermissao()) {
+		//
+		// RequestContext.getCurrentInstance().update(
+		// "usuarioTabView:buscarUsuarioForm");
+		// return;
+		// }
 
 		BuscarResponsavelController controllerInstance = UtilsView
 				.getControllerInstance(BuscarResponsavelController.class);
@@ -181,10 +182,12 @@ public class BuscarUserController extends BaseController {
 						&& e.getMessage().contains("user_username_ativo_key")) {
 					userService.forceRemove(userRemove);
 					buscar();
+					addInfoMessage(ResultMessages.DELETE_SUCESS.getDescricao());
 					return;
 				}
 			}
 			buscar();
+			addInfoMessage(ResultMessages.DELETE_SUCESS.getDescricao());
 			return;
 		}
 

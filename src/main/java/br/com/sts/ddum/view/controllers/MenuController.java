@@ -5,6 +5,8 @@ import java.io.Serializable;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import br.com.sts.ddum.view.utils.UtilsView;
+
 @ManagedBean(name = "mainMenu")
 @SessionScoped
 // @RequestScoped
@@ -24,26 +26,49 @@ public class MenuController implements Serializable {
 	public void parametroModulo() {
 		setNumIndex(1);
 		setIndex("/pages/parametroModulo/parametroModulo.xhtml");
+
 	}
 
 	public void parametroRepasse() {
 		setNumIndex(2);
 		setIndex("/pages/parametroRepasse/parametroRepasse.xhtml");
+
+		BuscarParametroRepasseController parametroRepasseController = UtilsView
+				.getControllerInstance(BuscarParametroRepasseController.class);
+		if (parametroRepasseController != null)
+			parametroRepasseController.init();
+
 	}
 
 	public void responsavel() {
 		setNumIndex(3);
 		setIndex("/pages/responsavel/responsavel.xhtml");
+
+		BuscarResponsavelController buscarResponsavelController = UtilsView
+				.getControllerInstance(BuscarResponsavelController.class);
+		if (buscarResponsavelController != null)
+			buscarResponsavelController.init();
 	}
 
 	public void unidade() {
 		setNumIndex(4);
 		setIndex("/pages/unidade/unidade.xhtml");
+
+		BuscarUnidadeController buscarUnidadeController = UtilsView
+				.getControllerInstance(BuscarUnidadeController.class);
+		if (buscarUnidadeController != null)
+			buscarUnidadeController.init();
 	}
 
 	public void usuario() {
 		setNumIndex(5);
 		setIndex("/pages/usuario/usuario.xhtml");
+
+		BuscarUserController buscarUserController = UtilsView
+				.getControllerInstance(BuscarUserController.class);
+		if (buscarUserController != null)
+			buscarUserController.init();
+
 	}
 
 	public void gerarRepasse() {
@@ -71,8 +96,23 @@ public class MenuController implements Serializable {
 		setIndex("/pages/reports/legislacao/pesquisaPreco.xhtml");
 	}
 
-	public void style() {
+	public void feriado() {
 		setNumIndex(11);
+		setIndex("/pages/feriado/feriado.xhtml");
+	}
+
+	public void auditoria() {
+		setNumIndex(12);
+		setIndex("/pages/auditoria/auditoria.xhtml");
+	}
+
+	public void guiaEmpenhoReport() {
+		setNumIndex(13);
+		setIndex("/pages/reports/guiaEmpenho/report.xhtml");
+	}
+
+	public void style() {
+		setNumIndex(14);
 		setIndex("/pages/style.xhtml");
 	}
 
@@ -91,5 +131,4 @@ public class MenuController implements Serializable {
 	public void setNumIndex(int numIndex) {
 		this.numIndex = numIndex;
 	}
-
 }

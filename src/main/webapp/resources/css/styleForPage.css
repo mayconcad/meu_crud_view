@@ -23,7 +23,7 @@ fieldset.fullLegend>div.ui-fieldset-content {
 }
 
 .ui-panelmenu .ui-panelmenu-header a {
-	font-size: 0.8em;
+/* 	font-size: 0.8em; */
 }
 
 span>input.ui-inputfield {
@@ -135,8 +135,9 @@ div.selectedMenu {
 	visibility: visible;
 	font-family: Arial, sans-serif;
 	font-size: 1.1em;
-	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255, 255, 255,
-		0.796875)), to(rgba(255, 255, 255, 0)));
+	background-image: blue;
+/* 	-webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255, 255, 255, */
+/* 		0.796875)), to(rgba(255, 255, 255, 0))); */
 	background-repeat-x: initial;
 	background-repeat-y: initial;
 	background-attachment: initial;
@@ -209,9 +210,9 @@ span.ui-autocomplete > button.ui-button-icon-only, span[class^="w"] > button.ui-
 	/* 	right: 0px !important; */
 	margin-left: -1px;
 }
-
+/* dá um espaçamento entre os botões das opções das tabelas */
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
-	margin-left: -2px;
+/* 	margin-left: -2px; */
 }
 
 table.ui-selectoneradio {
@@ -225,7 +226,7 @@ div.ui-radiobutton.ui-widget {
 }
 
 td>label {
-	margin-right: 10px;
+/* 	margin-right: 10px; */
 	/* maycon */
 	/* 	padding-right: 10px; */
 	/* 	vertical-align: bottom !important; */
@@ -678,9 +679,7 @@ span[class^="w"]>input.hasDatepicker {
 }
 
 .ui-widget-header {
-	background-color: #268CBB;
-	!
-	important;
+/* 	background-color: #268CBB; !important;*/
 }
 
 .ui-inputfield, .ui-widget-content .ui-inputfield, .ui-widget-header .ui-inputfield
@@ -711,6 +710,13 @@ Remoção dos botões do componente de upload
 	text-align: left;
 	display: unset;
 	/* 	margin-top: -5px; */
+}
+.ui-fileupload-buttonbar {
+	padding: 0px 0px 0px 0px !important;
+	border: none;
+	background-color: white;
+	text-align: left;
+	display: unset;
 }
 
 .ui-fileupload .ui-widget .uploadFile {

@@ -14,6 +14,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 
@@ -29,6 +30,9 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.engine.util.JRLoader;
 
+import org.omnifaces.util.Ajax;
+import org.primefaces.component.tabview.Tab;
+import org.primefaces.component.tabview.TabView;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
@@ -47,6 +51,7 @@ public class BaseReportController extends BaseController {
 	protected String reportPath = "";
 	protected String logoPath = "";
 	protected HttpSession session = null;
+	private Tab reportTab;
 
 	public BaseReportController() {
 		FacesContext context = FacesContext.getCurrentInstance();
@@ -67,8 +72,20 @@ public class BaseReportController extends BaseController {
 	public void construct() {
 	}
 
+	public void closeReportTab(ActionEvent actionEvent) {
+		if (getReportTab() != null) {
+			getReportTab().setRendered(false);
+			TabView parent = (TabView) getReportTab().getParent();
+			int reportIndex = parent.getChildren().indexOf(getReportTab());
+			// parent.getChildren().remove(editIndex);
+			parent.setActiveIndex(reportIndex - 1);
+			Ajax.update(parent.getId());
+		}
+	}
+
 	public StreamedContent generateStremedReport(String reportFilePath,
-			String reportFileName, List list, Map<String, Object> params) {
+			String reportFileName, String reportJasperName, List list,
+			Map<String, Object> params) {
 
 		JasperReport jasperReport = null;
 		JRExporter exporter = new JRPdfExporter();
@@ -80,7 +97,7 @@ public class BaseReportController extends BaseController {
 		try {
 			jasperReport = (JasperReport) JRLoader
 					.loadObjectFromFile(reportFilePath.concat(File.separator)
-							.concat(reportFileName.concat(".jasper")));
+							.concat(reportJasperName.concat(".jasper")));
 			JRBeanCollectionDataSource dataSource = DataValidatorUtils
 					.hasValue(list) ? new JRBeanCollectionDataSource(list)
 					: null;
@@ -162,4 +179,13 @@ public class BaseReportController extends BaseController {
 	public void setLogoPath(String logoPath) {
 		this.logoPath = logoPath;
 	}
+
+	public Tab getReportTab() {
+		return reportTab;
+	}
+
+	public void setReportTab(Tab reportTab) {
+		this.reportTab = reportTab;
+	}
+
 }

@@ -57,13 +57,13 @@
 <!-- 						rendered="#{responsavelController.cadastroManual}" /> -->
 						
 					<p:autoComplete id="responsavelAC" minQueryLength="3"
-						rendered="#{responsavelController.cadastroManual eq true ? false : true}"
+						rendered="#{responsavelController.cadastroManual eq true ? false : true}" requiredMessage="Campo Nome O item deve ser selecionado."
 						label="#{lb['responsavel.nome']}" required="true"
 						completeMethod="#{responsavelController.autocompletarBDFolha}"
 						queryDelay="3" widgetVar="responsavelAC" var="var"
-						itemLabel="#{var.nome eq null ? '' : var.nome}" itemValue="#{var}"
+						itemLabel="#{var.nome}" itemValue="#{var}"
 						process="@this" value="#{responsavelController.responsavel}"
-						dropdown="true" converter="responsavelConverter"
+						dropdown="true" converter="responsavelConverter" forceSelection="true"
 						scrollHeight="250">
 						<p:ajax event="itemSelect" process="@this" update="@form" />
 						<!-- 					<p:ajax event="change"  listener="#{responsavelController.limparDependencias()}" -->
@@ -206,7 +206,7 @@
 					<div class="col-md-4">
 						<p:inputMask id="responsavelTelefone"
 							value="#{responsavelController.responsavel.telefone}"
-							mask="(999)9999-9999" />
+							mask="(99)9999-9999" />
 					</div>
 				</div>
 			</fieldset>
@@ -271,7 +271,19 @@
 							value="#{responsavelController.responsavel.tipoConta}"
 							required="true" onkeydown="javascript: if(event.keyCode == 13) event.keyCode = 9;">
 							<f:selectItems value="#{responsavelController.tipoContas()}" />
+							<p:ajax event="change"
+							listener="#{responsavelController.desabilitarOperacao()}"
+							process="@this"
+							update=":responsavelTabView:createResponsavelForm:operacao" />
 						</p:selectOneMenu>
+					</div>
+					<div class="col-md-2">
+						<p:outputLabel value="Cód. Operação" rendered="#{responsavelController.desabilitaOperacao}"
+							for="operacao" />
+					</div>
+					<div class="col-md-2">
+						<p:inputText id="operacao" rendered="#{responsavelController.desabilitaOperacao}"
+							value="#{responsavelController.responsavel.operacao}"/>
 					</div>
 				</div>
 			</fieldset>

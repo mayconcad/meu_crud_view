@@ -48,7 +48,7 @@ function ignoreField(focusable, obj) {
 	// autocomplete e
 	if (next.length
 			&& nextField != null
-			&& (nextField.className == 'ui-button ui-widget ui-state-default ui-corner-right ui-button-icon-only')) {
+			&& (nextField.className == 'ui-button ui-widget ui-state-default ui-corner-right ui-button-icon-only') || (nextField.className == '')) {
 //		código para pegar os combobox, pois estes possuem o nodevalue abaixo
 //		nextField.offsetParent.attributes[0].nodeValue == 'ui-helper-hidden-accessible' || 
 		ignoreField(focusable, next);
@@ -70,4 +70,7 @@ $(document).ready(function() {
 //		next.value
 
 	});
+	
+	//Remove as classes listadas abaixo do componente que possui a classe .ui-fileupload-content
+//	$(".ui-fileupload-content").removeClass("ui-fileupload-content ui-widget-content ui-corner-bottom");
 });

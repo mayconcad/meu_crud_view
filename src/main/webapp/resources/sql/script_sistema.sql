@@ -16,5 +16,5 @@ ALTER TABLE public.unidade ADD CONSTRAINT unidade_nome_ativo_key UNIQUE (nome,at
 --ADIÇÃO DE NOVAS COLUNAS PARA A TABELA DE RESPONSÁVEL
 ALTER TABLE public.responsavel ADD COLUMN cep varchar(10);
 ALTER TABLE public.responsavel ADD COLUMN operacao varchar(10);
-ALTER TABLE public.responsavel ADD COLUMN datacadastrogcs date;
+--ALTER TABLE public.responsavel ADD COLUMN datacadastrogcs date;
 

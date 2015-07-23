@@ -1,0 +1,93 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<div class="container">
+	<h:form id="guiaEmpenhoReportForm" prependId="false">
+		<p:messages id="messages" />
+
+		<p:inputText id="emptyReportField"
+			value="#{guiaEmpenhoReportController.emptyReport}" type="hidden" />
+		<p:panel id="reportPanel" header="Filtros" styleClass="clearfix"
+			toggleable="true">
+			<div class="row">
+				<div class="col-md-2">
+					<p:outputLabel value="#{lb['responsavel']}" for="responsavelAC" />
+				</div>
+				<div class="col-md-7">
+					<p:autoComplete id="responsavelAC" minQueryLength="3"
+						value="#{guiaEmpenhoReportController.responsavel}"
+						label="#{lb['responsavel']}"
+						completeMethod="#{responsavelController.autocompletar}"
+						converter="autocompleteConverter" var="var"
+						itemLabel="#{var.nome}" itemValue="#{var}" dropdown="true"
+						required="true" scrollHeight="250"
+						requiredMessage="Campo Responsável: O item deve ser selecionado.">
+						<f:attribute name="entityClass"
+							value="br.com.sts.ddum.model.entities.Responsavel" />
+						<p:ajax event="itemSelect" process="@this" />
+					</p:autoComplete>
+				</div>
+				<div class="col-md-3">
+					<p:outputLabel value="#{lb['unidadeContabil']}"
+						for="unidadeContabil" />
+				</div>
+				<div class="col-md-7">
+					<p:autoComplete id="unidadeContabil" minQueryLength="3"
+						value="#{guiaEmpenhoReportController.unidade}"
+						label="#{lb['unidade']}" required="true"
+						completeMethod="#{guiaEmpenhoReportController.autocompletarUnidade}"
+						queryDelay="3" widgetVar="unidadeContabil" var="var"
+						itemLabel="#{var.nome}" itemValue="#{var}" process="@this"
+						dropdown="true" converter="autocompleteConverter"
+						forceSelection="true" scrollHeight="250"
+						requiredMessage="Campo Unidade Física: O item deve ser selecionado.">
+						<p:ajax event="itemSelect" process="@this" />
+						<f:attribute name="entityClass"
+							value="br.com.sts.ddum.model.entities.Unidade" />
+					</p:autoComplete>
+				</div>
+				<div class="col-md-2">
+					<p:outputLabel for="exercicio" value="Exercício" />
+				</div>
+				<div class="col-md-3">
+					<p:selectOneMenu id="exercicio"
+						itemLabel="#{wd['dialog.optionYes']}"
+						value="#{guiaEmpenhoReportController.exercicio}" rendered="true"
+						height="200">
+						<f:selectItems value="#{guiaEmpenhoReportController.exercicios}" />
+					</p:selectOneMenu>
+				</div>
+
+
+			</div>
+			<div class="clear" />
+			<p:commandButton id="gerarGuiaCommandButton"
+				widgetVar="gerarGuiaCommandButton" value="Gerar"
+				action="#{guiaEmpenhoReportController.generateReportByTemplate}"
+				styleClass="col-md-4 r6" update="@form" icon="ui-icon-disk"
+				style="margin-top: 15px" onclick="PF('guiaEmpenhoBlock').show()" oncomplete="PF('guiaEmpenhoBlock').hide()">
+
+			</p:commandButton>
+			<p:commandButton id="limparCommandButton"
+				value="#{wd['button.clean']}" icon="ui-icon-arrowrefresh-1-w"
+				actionListener="#{guiaEmpenhoReportController.init}" update="@form"
+				process="@this" styleClass="col-md-4 r7" style="margin-top: 15px">
+			</p:commandButton>
+		</p:panel>
+		<p:blockUI block="guiaEmpenhoReportForm"
+			trigger="gerarGuiaCommandButton" widgetVar="guiaEmpenhoBlock">
+			<h:outputLabel value="#{wd['blockui.loading.text']}" />
+			<br />
+			<h:graphicImage library="images" name="#{wd['blockui.loading.img']}" />
+		</p:blockUI>
+		<fieldset>
+			<p:media id="guiaEmpenhoMedia" height="450" width="100%" player="pdf"
+				binding="#{guiaEmpenhoReportController.guiaEmpenhoMedia}">
+			</p:media>
+		</fieldset>
+	</h:form>
+</div>
+</html>

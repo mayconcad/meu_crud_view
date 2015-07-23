@@ -49,7 +49,7 @@
 						queryDelay="3" converter="autocompleteConverter"
 						widgetVar="responsavelEditeAC" var="var" itemLabel="#{var.nome}"
 						itemValue="#{var}" process="@this" dropdown="true"
-						forceSelection="true" scrollHeight="250">
+						forceSelection="true" scrollHeight="250" requiredMessage="Campo Responsável: O item deve ser selecionado.">
 						<f:attribute name="entityClass"
 							value="br.com.sts.ddum.model.entities.Responsavel" />
 					</p:autoComplete>
@@ -72,7 +72,7 @@
 							queryDelay="3" converter="autocompleteConverter"
 							widgetVar="parametroRepasseEditeAC" var="var"
 							itemLabel="#{var.descricao}" itemValue="#{var}" process="@this"
-							dropdown="true" forceSelection="true" scrollHeight="250">
+							dropdown="true" forceSelection="true" scrollHeight="250" requiredMessage="Campo Parâmetro Repasse: O item deve ser selecionado.">
 							<f:attribute name="entityClass"
 								value="br.com.sts.ddum.model.entities.ParametroRepasse" />
 							<p:ajax event="itemSelect" process="@this, unidadeTipoEdite"
@@ -203,10 +203,10 @@
 				update=":unidadeTabView, messages"
 				actionListener="#{buscarUnidadeController.editar}"
 				styleClass="col-md-4 r6" icon="ui-icon-disk" />
-			<p:commandButton value="#{wd['button.cancel']}" type="reset"
+			<p:commandButton value="#{wd['button.cancel']}"
 				icon="ui-icon-cancel"
-				onclick="unidadeTabs.remove(unidadeTabs.getActiveIndex())"
-				styleClass="col-md-4 r7" />
+				actionListener="#{buscarUnidadeController.closeEditTab}"
+				styleClass="col-md-4 r7" process="@this"/>
 			<div class="clear" />
 		</p:panel>
 	</h:form>

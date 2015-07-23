@@ -7,7 +7,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -26,6 +28,7 @@ import br.com.sts.ddum.model.utils.UtilsModel;
 import br.com.sts.ddum.service.interfaces.ConnectionConfigService;
 import br.com.sts.ddum.service.interfaces.ParametroRepasseService;
 import br.com.sts.ddum.service.interfaces.ResponsavelService;
+import br.com.sts.ddum.view.utils.UtilsView;
 import br.com.sts.ddum.view.utils.ValidateUtils;
 
 @Controller
@@ -51,11 +54,20 @@ public class ResponsavelController extends BaseController {
 	}
 
 	protected static final String FIREBIRD_DRIVER = "org.firebirdsql.jdbc.FBDriver";
-	protected static final String URL = String.format(
-			"jdbc:firebirdsql:192.10.0.10/3050:%shome%sfirebird%s",
-			// "jdbc:firebirdsql:192.168.1.2/3050:%shome%sfirebird%sgcs-efetivos-phb.fdb",
-			File.separator, File.separator, File.separator);
-	// "jdbc:firebirdsql:192.10.0.10/3050:%shome%sfirebird%s",
+	protected static final String URL = String
+			.format(
+			// "jdbc:firebirdsql:192.10.0.10/3050:%shome%sfirebird%s",
+			"jdbc:firebirdsql:192.168.1.2/3050:%shome%sfirebird%sgcs-efetivos-phb.fdb",
+					File.separator, File.separator, File.separator);
+	protected static final String URL_FOLHA_LOCAL = String
+			.format("jdbc:firebirdsql:localhost%s3050:%shome%sdeveloper%sprojetos%sGCS%sgcs.fdb",
+					File.separator, File.separator, File.separator,
+					File.separator, File.separator, File.separator);
+	protected static final String URL_BANCO_FOLHA = String
+			// .format("jdbc:firebirdsql:192.10.0.10/3050:%shome%sfirebird%sefetivos%sgcs.fdb",
+			.format("jdbc:firebirdsql:127.0.0.1/3050:%shome%sfirebird%sgcs%sgcs.fdb",
+					File.separator, File.separator, File.separator,
+					File.separator);
 	protected static final String SENHA = "masterkey";
 	protected static final String USUARIO = "SYSDBA";
 
@@ -78,24 +90,35 @@ public class ResponsavelController extends BaseController {
 	private BancoFolhaEnum conexaoAtualBancoFolha;
 
 	private boolean cadastroManual;
+	private boolean desabilitaOperacao;
 
 	private Connection conexaoBanco = null;
 	private Statement createStatement = null;
 	private ResultSet result = null;
 
+	private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
 	@PostConstruct
 	public void init() {
+		setDesabilitaOperacao(true);
 		cadastroManual = false;
 		responsavel = new Responsavel();
 		setBancoFolha(BancoFolhaEnum.EFETIVOS);
 		setConexaoAtualBancoFolha(BancoFolhaEnum.EFETIVOS);
-		conexaoBanco = connectionConfigService.obterConexaoBancoFOLHA();
 		Ajax.update(":responsavelTabView");
+	}
+
+	public void limparDados() {
+		init();
+		BuscarResponsavelController controllerInstance = UtilsView
+				.getControllerInstance(BuscarResponsavelController.class);
+		if (controllerInstance != null)
+			controllerInstance.init();
 	}
 
 	public void criar() {
 		try {
-			if (usuarioSemPermissao())
+			if (usuarioSemPermissao("GESTOR"))
 				return;
 			responsavel
 					.setCpf(UtilsModel.convertFormatCPF(responsavel.getCpf()));
@@ -132,10 +155,13 @@ public class ResponsavelController extends BaseController {
 
 	public List<Responsavel> autocompletarBDFolha(String valor)
 			throws ParseException {
-
-		responsaveis.clear();
+		if (!responsaveis.isEmpty())
+			responsaveis.clear();
 		String query = null;
 		try {
+			if (getConexaoBanco() == null)
+				setConexaoBanco(connectionConfigService
+						.obterConexaoBancoFOLHA());
 			createStatement = getConexaoBanco().createStatement();
 
 			if (valor != null && !"".equals(valor)) {
@@ -159,7 +185,9 @@ public class ResponsavelController extends BaseController {
 				responsavel.setCpf(result.getString(3));
 				responsavel.setRg(result.getString(4));
 				responsavel.setOrgaoExpedidor(result.getString(5));
-				responsavel.setDataExpedicao(result.getString(6));
+				responsavel.setDataExpedicao(result.getString(6).matches(
+						"\\/d{2}\\/d{2}\\/d{4}") ? result.getString(6) : sdf
+						.format(new Date()));
 				responsavel.setNome(result.getString(7));
 				responsavel.setCodigoBanco(result.getString(8));
 				responsavel.setNumeroConta(result.getString(9));
@@ -177,7 +205,8 @@ public class ResponsavelController extends BaseController {
 				responsavel.setNumeroAgencia(result.getString(19));
 				responsavel.setOperacao(result.getString(20));
 				responsavel.setCep(result.getString(21));
-				responsavel.setLotacao(result.getString(22));
+				responsavel.setLotacao(UtilsModel.pegarPrimeirosCaracteres(
+						result.getString(22), 30));
 
 				responsaveis.add(responsavel);
 
@@ -186,6 +215,13 @@ public class ResponsavelController extends BaseController {
 			createStatement.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
+			if (getConexaoBanco() == null && connectionConfigService != null)
+				setConexaoBanco(connectionConfigService
+						.obterConexaoBancoFOLHA());
+		} catch (UnsupportedOperationException ux) {
+			ux.printStackTrace();
+			setConexaoBanco(connectionConfigService.obterConexaoBancoFOLHA());
+			autocompletarBDFolha(valor);
 		}
 
 		return responsaveis;
@@ -205,9 +241,11 @@ public class ResponsavelController extends BaseController {
 					getConexaoBanco().close();
 
 				Class.forName(FIREBIRD_DRIVER);
-				setConexaoBanco(DriverManager.getConnection(String.format(
-						"%sefetivos%sgcs.fdb", URL, File.separator), USUARIO,
-						SENHA));
+				// setConexaoBanco(DriverManager.getConnection(String.format(
+				// "%sefetivos%sgcs.fdb", URL, File.separator), USUARIO,
+				// SENHA));
+				setConexaoBanco(DriverManager.getConnection(URL_FOLHA_LOCAL,
+						USUARIO, SENHA));
 			} catch (SQLException e) {
 				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
@@ -228,9 +266,11 @@ public class ResponsavelController extends BaseController {
 					getConexaoBanco().close();
 
 				Class.forName(FIREBIRD_DRIVER);
-				setConexaoBanco(DriverManager.getConnection(String.format(
-						"%sportaria%sgcs.fdb", URL, File.separator), USUARIO,
-						SENHA));
+				// setConexaoBanco(DriverManager.getConnection(String.format(
+				// "%sportaria%sgcs.fdb", URL, File.separator), USUARIO,
+				// SENHA));
+				setConexaoBanco(DriverManager.getConnection(URL_FOLHA_LOCAL,
+						USUARIO, SENHA));
 			} catch (SQLException e) {
 				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
@@ -250,9 +290,11 @@ public class ResponsavelController extends BaseController {
 					getConexaoBanco().close();
 
 				Class.forName(FIREBIRD_DRIVER);
-				setConexaoBanco(DriverManager.getConnection(String.format(
-						"%sagentes%sgcs.fdb", URL, File.separator), USUARIO,
-						SENHA));
+				// setConexaoBanco(DriverManager.getConnection(String.format(
+				// "%sagentes%sgcs.fdb", URL, File.separator), USUARIO,
+				// SENHA));
+				setConexaoBanco(DriverManager.getConnection(URL_FOLHA_LOCAL,
+						USUARIO, SENHA));
 			} catch (SQLException e) {
 				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
@@ -304,6 +346,22 @@ public class ResponsavelController extends BaseController {
 
 	public TipoContaEnum[] tipoContas() {
 		return TipoContaEnum.values();
+	}
+
+	public void desabilitarOperacao() {
+		if (responsavel != null && responsavel.getTipoConta() != null)
+			if (TipoContaEnum.POUPANCA.equals(responsavel.getTipoConta()))
+				setDesabilitaOperacao(true);
+			else
+				setDesabilitaOperacao(false);
+	}
+
+	public boolean getDesabilitaOperacao() {
+		return desabilitaOperacao;
+	}
+
+	public void setDesabilitaOperacao(boolean desabilitaOperacao) {
+		this.desabilitaOperacao = desabilitaOperacao;
 	}
 
 	public List<Responsavel> autocompletar(String valor) {

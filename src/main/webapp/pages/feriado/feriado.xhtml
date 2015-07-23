@@ -4,24 +4,25 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 
+<h:outputScript name="utils.js" library="javascript" />
 <div class="selectedMenu">
-	<span class="headerTitle">Segmento</span>
+	<span class="headerTitle">Feriado</span>
 </div>
 
-<p:tabView id="segmentoTabView">
+<p:tabView id="feriadoTabView" widgetVar="feriadoTabs">
 	<p:ajax event="tabClose" process="@all" />
 	<p:ajax event="tabChange" process="@all" />
 
 	<p:tab id="createTab" title="Cadastrar">
-		<ui:include src="criarSegmento.xhtml" />
+		<ui:include src="criarFeriado.xhtml" />
 	</p:tab>
 	<p:tab id="findTab" title="#{wd['tab.search']}"
-		binding="#{buscarSegmentoController.findTab}">
-		<ui:include src="buscarSegmento.xhtml" />
+		binding="#{buscarFeriadoController.findTab}">
+		<ui:include src="buscarFeriado.xhtml" />
 	</p:tab>
 	<p:tab id="editTab" title="#{wd['tab.change']}" rendered="false"
-		binding="#{buscarSegmentoController.editTab}" closable="true">
-		<ui:include src="editarSegmento.xhtml" />
+		binding="#{buscarFeriadoController.editTab}" closable="true">
+		<ui:include src="editarFeriado.xhtml" />
 	</p:tab>
 </p:tabView>
 </html>

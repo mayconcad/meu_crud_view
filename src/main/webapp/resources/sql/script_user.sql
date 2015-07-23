@@ -28,11 +28,14 @@ CREATE TABLE public.user_role (
 INSERT INTO public.user (id, ativo, createdat, email, name, password, username) VALUES (1, true, '2015-03-25', 'admin@gmail.com', 'Administrador', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3','admin');
 INSERT INTO public.user (id, ativo, createdat, email, name, password, username) VALUES (2,true, '2015-03-25', 'gestor@gmail.com', 'Gestor','0834c2d60725ac5902257b3b78dd161ad26d1c0290dbf1e47cc14add5b8c8142','gestor');  
 INSERT INTO public.user (id, ativo, createdat, email, name, password, username) VALUES (3,true, '2015-03-25', 'responsavel@gmail.com', 'Responsável','8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92','responsavel');
+INSERT INTO public.user (id, ativo, createdat, email, name, password, username) VALUES (4,true, '2015-06-23', 'auditor@gmail.com', 'Auditor','8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92','auditor');
 
 INSERT INTO public.role (id, ativo, name) VALUES (1,true, 'ADMIN');
 INSERT INTO public.role (id, ativo, name) VALUES (2,true, 'GESTOR');
-INSERT INTO public.role (id, ativo, name) VALUES (3,true, 'RESPONSAVEL');
+INSERT INTO public.role (id, ativo, name) VALUES (3,true, 'RESPONSÁVEL');
+INSERT INTO public.role (id, ativo, name) VALUES (4,true, 'AUDITOR');
 
 INSERT INTO public.user_role (User_id, roles_id) VALUES (1,1);
 INSERT INTO public.user_role (User_id, roles_id) VALUES (2,2);
 INSERT INTO public.user_role (User_id, roles_id) VALUES (3,3);
+INSERT INTO public.user_role (User_id, roles_id) VALUES (4,4);

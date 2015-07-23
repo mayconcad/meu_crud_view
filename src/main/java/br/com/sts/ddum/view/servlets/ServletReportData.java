@@ -51,6 +51,9 @@ public class ServletReportData extends HttpServlet {
 	protected void processRequest(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 
+		// teste para o contexto da aplicação
+		String realPath = getServletContext().getRealPath("/");
+
 		ServletOutputStream outputStream = null;
 
 		try {

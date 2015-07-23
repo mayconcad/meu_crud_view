@@ -7,115 +7,1294 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 
 
-<div class="container">
+<style type="text/css">
+.backRed {
+	/* cor salmão */
+	background-color: #FA8072 !important;
+}
+
+.backGreen {
+	background-color: #66CDAA !important;
+}
+
+.backBlue {
+	background-color: #D8E9F7 !important;
+}
+/* span>input.ui-inputfield { */
+/* 	margin-top: 5px; */
+/* } */
+
+/* .container_24 .grid_10 .ui-autocomplete button { */
+/* 	margin-top: 5px; */
+/* } */
+</style>
+<div class="container" id="container">
 	<h:form id="prestacaoContaForm" prependId="false"
 		enctype="multipart/form-data">
 		<!-- 		    <o:validateOne id="validateOne" components="foo bar baz" /> -->
-		<p:messages id="messages" />
 		<p:panel header="#{wd['fieldset.data']}" toggleable="false"
-			styleClass="clearfix">
+			styleClass="clearfix" id="dadosPanel">
+			<a name="topoMessage"></a>
 
-			<div class="row">
-				<div class="col-md-2">
-					<p:outputLabel value="#{lb['prestacaoConta.dataPrestacao']}"
-						for="dataPrestacao" />
+			
+			<!-- 			<div class="row"> -->
+
+			<!-- 			<div class="col-md-24"> -->
+			<!-- 				<h:panelGrid columns="6" border="1" -->
+			<!-- 					style="width:100%; text-align:center" -->
+			<!-- 					rendered="#{prestacaoContaController.possuiEmpenho}"> -->
+			<FIELDSET>
+				<LEGEND>Histórico Transações</LEGEND>
+				<div class="col-md-24" style="text-align: left;">
+					<p:dataTable id="empenhosDataTable" draggableColumns="true"
+						emptyMessage="#{wd['item.emptyAddTable']}"
+						value="#{prestacaoContaController.empenhos}" var="item"
+						rendered="#{prestacaoContaController.possuiEmpenho}" reflow="true">
+
+						<p:column id="colunaNumEmp" headerText="Nº Empenho"
+							style="text-align:center">
+							<h:outputLabel value="#{item.numero}" />
+						</p:column>
+						<p:column id="colunaDataEmp" headerText="#{lb['empenho.data']}"
+							style="text-align:center">
+							<h:outputText value="#{item.data}">
+								<f:convertDateTime locale="pt,BR" dateStyle="long"
+									pattern="dd/MM/yyyy" />
+							</h:outputText>
+						</p:column>
+						<p:column id="colunaValorEmp" headerText="Valor"
+							style="text-align:center">
+							<h:outputLabel value="#{item.valor}" />
+						</p:column>
+						<p:column id="colunaValorTotRepasse"
+							headerText="Valor Total  Liquidação" style="text-align:center">
+							<h:outputLabel value="#{item.valorTotalRepasse}" />
+						</p:column>
+						<p:column id="colunaValorTotPagto"
+							headerText="Valor Total  Pagamento" style="text-align:center">
+							<h:outputLabel value="#{item.valorTotalPagamento}" />
+						</p:column>
+						<p:column id="colunaValorTotPrestConta"
+							headerText="Valor Total  Prest.Contas" style="text-align:center">
+							<h:outputLabel value="#{item.valorTotalPrestConta}" />
+						</p:column>
+						<p:column id="colunaSaldo" headerText="Saldo a Prestar Contas"
+							style="text-align:center">
+							<h:outputLabel value="#{item.saldo}" />
+						</p:column>
+
+					</p:dataTable>
 				</div>
-				<div class="col-md-3">
-					<p:calendar id="dataPrestacao"
-						value="#{prestacaoContaController.dataPrestacao}"
-						pattern="dd/MM/yyyy" locale="pt" navigator="true" effect="fadeIn"
-						required="true" readonlyInput="true" showOn="false" />
+
+				<div class="col-md-24" style="text-align: left;">
+					<p:panelGrid title="Tabela" styleClass="ui-responsive"
+						style="width:100%"
+						rendered="#{prestacaoContaController.prestContaTable.size() gt 0}">
+						<f:facet name="header">
+							<p:row>
+								<p:column style="width:10%">
+									<p:outputLabel value="Item"></p:outputLabel>
+								</p:column>
+								<p:column style="width:7%">
+									<p:outputLabel value="Jan"></p:outputLabel>
+								</p:column>
+								<p:column style="width:7%">
+									<p:outputLabel value="Fev"></p:outputLabel>
+								</p:column>
+								<p:column style="width:7%">
+									<p:outputLabel value="Mar"></p:outputLabel>
+								</p:column>
+								<p:column style="width:7%">
+									<p:outputLabel value="Abr"></p:outputLabel>
+								</p:column>
+								<p:column style="width:7%">
+									<p:outputLabel value="Mai"></p:outputLabel>
+								</p:column>
+								<p:column style="width:7%">
+									<p:outputLabel value="Jun"></p:outputLabel>
+								</p:column>
+								<p:column style="width:7%">
+									<p:outputLabel value="Jul"></p:outputLabel>
+								</p:column>
+								<p:column style="width:7%">
+									<p:outputLabel value="Ago"></p:outputLabel>
+								</p:column>
+								<p:column style="width:7%">
+									<p:outputLabel value="Set"></p:outputLabel>
+								</p:column>
+								<p:column style="width:7%">
+									<p:outputLabel value="Out"></p:outputLabel>
+								</p:column>
+								<p:column style="width:7%">
+									<p:outputLabel value="Nov"></p:outputLabel>
+								</p:column>
+								<p:column style="width:7%">
+									<p:outputLabel value="Dez"></p:outputLabel>
+								</p:column>
+								<p:column style="width:7%" rendered="false">
+									<p:outputLabel value="Detalhe"></p:outputLabel>
+								</p:column>
+							</p:row>
+						</f:facet>
+						<div>
+							<p:row>
+								<p:column>
+									<p:outputLabel value="Liquidação" style="font-weight: bold" />
+								</p:column>
+								<p:column>
+									<p:commandButton id="commandButOneLiq"
+										rendered="#{(prestacaoContaController.prestContaTable.get(0).getItens().get(0) != null) and (prestacaoContaController.prestContaTable.get(0).getItens().get(0).getMesOrdinal() == 0)}"
+										action="#{prestacaoContaController.showDialogLiq(0)}"
+										process="@this" update="@form"
+										styleClass="#{prestacaoContaController.getLiqStyle(0)}"
+										value="#{prestacaoContaController.prestContaTable.get(0).getItens().get(0) == null ? 0 : prestacaoContaController.prestContaTable.get(0).getItens().get(0).getNumero()}" />
+									<h:outputLabel id="olZeroLiq"
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(0) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<p:commandButton id="cbLiqUm"
+										action="#{prestacaoContaController.showDialogLiq(1)}"
+										process="@this" update="@form"
+										styleClass="#{prestacaoContaController.getLiqStyle(1)}"
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(1) != null and prestacaoContaController.prestContaTable.get(0).getItens().get(1).getMesOrdinal() == 1}"
+										value="#{prestacaoContaController.prestContaTable.get(0).getItens().get(1) != null ? prestacaoContaController.prestContaTable.get(0).getItens().get(1).getNumero() : null}" />
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(1) == null}"
+										value=" - " />
+
+								</p:column>
+								<p:column>
+									<p:commandButton
+										action="#{prestacaoContaController.showDialogLiq(2)}"
+										process="@this" update="@form"
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(2) != null and prestacaoContaController.prestContaTable.get(0).getItens().get(2).getMesOrdinal() == 2}"
+										styleClass="#{prestacaoContaController.getLiqStyle(2)}"
+										value="#{prestacaoContaController.prestContaTable.get(0).getItens().get(2) != null ? prestacaoContaController.prestContaTable.get(0).getItens().get(2).getNumero() : null}" />
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(2) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<p:commandButton
+										action="#{prestacaoContaController.showDialogLiq(3)}"
+										process="@this" update="@form"
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(3) != null and prestacaoContaController.prestContaTable.get(0).getItens().get(3).getMesOrdinal() == 3}"
+										styleClass="#{prestacaoContaController.getLiqStyle(3)}"
+										value="#{prestacaoContaController.prestContaTable.get(0).getItens().get(3) != null ? prestacaoContaController.prestContaTable.get(0).getItens().get(3).getNumero() : null}" />
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(3) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<p:commandButton
+										action="#{prestacaoContaController.showDialogLiq(4)}"
+										process="@this" update="@form"
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(4) != null and prestacaoContaController.prestContaTable.get(0).getItens().get(4).getMesOrdinal() == 4}"
+										styleClass="#{prestacaoContaController.getLiqStyle(4)}"
+										value="#{prestacaoContaController.prestContaTable.get(0).getItens().get(4) != null ? prestacaoContaController.prestContaTable.get(0).getItens().get(4).getNumero() : null}" />
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(4) == null}"
+										value=" - " />
+
+								</p:column>
+								<p:column>
+									<p:commandButton style="background: none"
+										action="#{prestacaoContaController.showDialogLiq(5)}"
+										process="@this" update="@form"
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(5) != null and prestacaoContaController.prestContaTable.get(0).getItens().get(5).getMesOrdinal() == 5}"
+										styleClass="#{prestacaoContaController.getLiqStyle(5)}"
+										value="#{prestacaoContaController.prestContaTable.get(0).getItens().get(5) != null ? prestacaoContaController.prestContaTable.get(0).getItens().get(5).getNumero() : null}" />
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(5) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+
+									<p:commandButton id="removeBackground"
+										action="#{prestacaoContaController.showDialogLiq(6)}"
+										process="@this" update="@form"
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(6) != null and prestacaoContaController.prestContaTable.get(0).getItens().get(6).getMesOrdinal() == 6}"
+										styleClass="#{prestacaoContaController.getLiqStyle(6)}"
+										style="background: none;"
+										value="#{prestacaoContaController.prestContaTable.get(0).getItens().get(6) != null ? prestacaoContaController.prestContaTable.get(0).getItens().get(6).getNumero() : null}" />
+
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(6) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<p:commandButton id="cbLiqSete"
+										action="#{prestacaoContaController.showDialogLiq(7)}"
+										process="@this" update="@form"
+										styleClass="#{prestacaoContaController.getLiqStyle(7)}"
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(7) != null and prestacaoContaController.prestContaTable.get(0).getItens().get(7).getMesOrdinal() == 7}"
+										value="#{prestacaoContaController.prestContaTable.get(0).getItens().get(7) != null ? prestacaoContaController.prestContaTable.get(0).getItens().get(7).getNumero() : null}" />
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(7) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<p:commandButton
+										action="#{prestacaoContaController.showDialogLiq(8)}"
+										process="@this" update="@form"
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(8) != null and prestacaoContaController.prestContaTable.get(0).getItens().get(8).getMesOrdinal() == 8}"
+										styleClass="#{prestacaoContaController.getLiqStyle(8)}"
+										value="#{prestacaoContaController.prestContaTable.get(0).getItens().get(8) != null ? prestacaoContaController.prestContaTable.get(0).getItens().get(8).getNumero() : null}" />
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(8) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<p:commandButton
+										action="#{prestacaoContaController.showDialogLiq(9)}"
+										process="@this" update="@form"
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(9) != null and prestacaoContaController.prestContaTable.get(0).getItens().get(9).getMesOrdinal() == 9}"
+										styleClass="#{prestacaoContaController.getLiqStyle(9)}"
+										value="#{prestacaoContaController.prestContaTable.get(0).getItens().get(9) != null ? prestacaoContaController.prestContaTable.get(0).getItens().get(9).getNumero() : null}" />
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(9) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<p:commandButton
+										action="#{prestacaoContaController.showDialogLiq(10)}"
+										process="@this" update="@form"
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(10) != null and prestacaoContaController.prestContaTable.get(0).getItens().get(10).getMesOrdinal() == 10}"
+										styleClass="#{prestacaoContaController.getLiqStyle(10)}"
+										value="#{prestacaoContaController.prestContaTable.get(0).getItens().get(10) != null ? prestacaoContaController.prestContaTable.get(0).getItens().get(10).getNumero() : null}" />
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(10) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<p:commandButton
+										action="#{prestacaoContaController.showDialogLiq(11)}"
+										process="@this" update="@form"
+										styleClass="#{prestacaoContaController.getLiqStyle(11)}"
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(11) != null and prestacaoContaController.prestContaTable.get(0).getItens().get(11).getMesOrdinal() == 11}"
+										value="#{prestacaoContaController.prestContaTable.get(0).getItens().get(11) != null ? prestacaoContaController.prestContaTable.get(0).getItens().get(11).getNumero() : null}" />
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(11) == null}"
+										value=" - " />
+								</p:column>
+
+								<p:column rendered="false">
+									<p:commandButton id="cbExibirLiq" icon="ui-icon-zoomin"
+										title="#{wd['table.columns.options.show.hint']}"
+										process="@this" styleClass="icon"
+										action="#{prestacaoContaController.visualizarDetalhe(0)}"
+										update="@form"
+										rendered="#{!prestacaoContaController.renderedLiq}">
+										<!-- 							<f:setPropertyActionListener -->
+										<!-- 								target="#{prestacaoContaController.documentoExibe}" -->
+										<!-- 								value="#{item}" /> -->
+									</p:commandButton>
+									<p:commandButton id="cbFecharLiq" icon="ui-icon-zoomout"
+										title="#{wd['table.columns.options.close.hint']}"
+										process="@this" styleClass="icon"
+										action="#{prestacaoContaController.fecharDetalhe(0)}"
+										update="@form"
+										rendered="#{prestacaoContaController.renderedLiq}">
+									</p:commandButton>
+								</p:column>
+
+							</p:row>
+							<!-- DETALHES DO VALORES DAS LIQUIDAÇÕES -->
+							<p:row rendered="#{!prestacaoContaController.renderedLiq}">
+								<p:column>
+									<p:outputLabel value="  Valores (R$)" />
+								</p:column>
+								<p:column>
+									<!-- 									styleClass="#{prestacaoContaController.getLiqStyle(0)}" -->
+									<h:outputLabel
+										rendered="#{(prestacaoContaController.prestContaTable.get(0).getItens().get(0) != null) and (prestacaoContaController.prestContaTable.get(0).getItens().get(0).getMesOrdinal() == 0)}"
+										value="#{prestacaoContaController.prestContaTable.get(0).getItens().get(0) == null ? 0 : prestacaoContaController.prestContaTable.get(0).getItens().get(0).getValor()}">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(0) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(1) != null and prestacaoContaController.prestContaTable.get(0).getItens().get(1).getMesOrdinal() == 1}"
+										value="#{prestacaoContaController.prestContaTable.get(0).getItens().get(1) != null ? prestacaoContaController.prestContaTable.get(0).getItens().get(1).getValor() : null}">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(1) == null}"
+										value=" - " />
+
+								</p:column>
+								<p:column>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(2) != null and prestacaoContaController.prestContaTable.get(0).getItens().get(2).getMesOrdinal() == 2}"
+										value="#{prestacaoContaController.prestContaTable.get(0).getItens().get(2) != null ? prestacaoContaController.prestContaTable.get(0).getItens().get(2).getValor() : null}">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(2) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(3) != null and prestacaoContaController.prestContaTable.get(0).getItens().get(3).getMesOrdinal() == 3}"
+										value="#{prestacaoContaController.prestContaTable.get(0).getItens().get(3) != null ? prestacaoContaController.prestContaTable.get(0).getItens().get(3).getValor() : null}">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(3) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(4) != null and prestacaoContaController.prestContaTable.get(0).getItens().get(4).getMesOrdinal() == 4}"
+										value="#{prestacaoContaController.prestContaTable.get(0).getItens().get(4) != null ? prestacaoContaController.prestContaTable.get(0).getItens().get(4).getValor() : null}">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(4) == null}"
+										value=" - " />
+
+								</p:column>
+								<p:column>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(5) != null and prestacaoContaController.prestContaTable.get(0).getItens().get(5).getMesOrdinal() == 5}"
+										value="#{prestacaoContaController.prestContaTable.get(0).getItens().get(5) != null ? prestacaoContaController.prestContaTable.get(0).getItens().get(5).getValor() : null}">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(5) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(6) != null and prestacaoContaController.prestContaTable.get(0).getItens().get(6).getMesOrdinal() == 6}"
+										value="#{prestacaoContaController.prestContaTable.get(0).getItens().get(6) != null ? prestacaoContaController.prestContaTable.get(0).getItens().get(6).getValor() : null}">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(6) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(7) != null and prestacaoContaController.prestContaTable.get(0).getItens().get(7).getMesOrdinal() == 7}"
+										value="#{prestacaoContaController.prestContaTable.get(0).getItens().get(7) != null ? prestacaoContaController.prestContaTable.get(0).getItens().get(7).getValor() : null}">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(7) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(8) != null and prestacaoContaController.prestContaTable.get(0).getItens().get(8).getMesOrdinal() == 8}"
+										value="#{prestacaoContaController.prestContaTable.get(0).getItens().get(8) != null ? prestacaoContaController.prestContaTable.get(0).getItens().get(8).getValor() : null}">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(8) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(9) != null and prestacaoContaController.prestContaTable.get(0).getItens().get(9).getMesOrdinal() == 9}"
+										value="#{prestacaoContaController.prestContaTable.get(0).getItens().get(9) != null ? prestacaoContaController.prestContaTable.get(0).getItens().get(9).getValor() : null}">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(9) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(10) != null and prestacaoContaController.prestContaTable.get(0).getItens().get(10).getMesOrdinal() == 10}"
+										value="#{prestacaoContaController.prestContaTable.get(0).getItens().get(10) != null ? prestacaoContaController.prestContaTable.get(0).getItens().get(10).getValor() : null}">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(10) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(11) != null and prestacaoContaController.prestContaTable.get(0).getItens().get(11).getMesOrdinal() == 11}"
+										value="#{prestacaoContaController.prestContaTable.get(0).getItens().get(11) != null ? prestacaoContaController.prestContaTable.get(0).getItens().get(11).getValor() : null}">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestContaTable.get(0).getItens().get(11) == null}"
+										value=" - " />
+								</p:column>
+
+							</p:row>
+							<!-- PAGAMENTO -Numero -->
+
+							<p:row rendered="true">
+								<p:column>
+									<p:outputLabel value="Pagamento" style="font-weight: bold" />
+								</p:column>
+								<p:column>
+									<p:commandButton id="commandButOnePag"
+										rendered="#{(prestacaoContaController.pagamentos.get(0) != null) and (prestacaoContaController.pagamentos.get(0).getMesOrdinal() == 0)}"
+										action="#{prestacaoContaController.showDialogPag(0)}"
+										process="@this" update="@form"
+										styleClass="#{prestacaoContaController.getLiqStyle(0)}"
+										value="#{prestacaoContaController.pagamentos.get(0) == null ? 0 : prestacaoContaController.pagamentos.get(0).getNumero()}" />
+									<h:outputLabel id="olZeroPag"
+										rendered="#{prestacaoContaController.pagamentos.get(0) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<p:commandButton id="cbPagUm"
+										action="#{prestacaoContaController.showDialogPag(1)}"
+										process="@this" update="@form"
+										styleClass="#{prestacaoContaController.getLiqStyle(1)}"
+										rendered="#{prestacaoContaController.pagamentos.get(1) != null and prestacaoContaController.pagamentos.get(1).getMesOrdinal() == 1}"
+										value="#{prestacaoContaController.pagamentos.get(1) != null ? prestacaoContaController.pagamentos.get(1).getNumero() : null}" />
+									<h:outputLabel
+										rendered="#{prestacaoContaController.pagamentos.get(1) == null}"
+										value=" - " />
+
+								</p:column>
+								<p:column>
+									<p:commandButton
+										action="#{prestacaoContaController.showDialogPag(2)}"
+										process="@this" update="@form"
+										rendered="#{prestacaoContaController.pagamentos.get(2) != null and prestacaoContaController.pagamentos.get(2).getMesOrdinal() == 2}"
+										styleClass="#{prestacaoContaController.getLiqStyle(2)}"
+										value="#{prestacaoContaController.pagamentos.get(2) != null ? prestacaoContaController.pagamentos.get(2).getNumero() : null}" />
+									<h:outputLabel
+										rendered="#{prestacaoContaController.pagamentos.get(2) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<p:commandButton
+										action="#{prestacaoContaController.showDialogPag(3)}"
+										process="@this" update="@form"
+										rendered="#{prestacaoContaController.pagamentos.get(3) != null and prestacaoContaController.pagamentos.get(3).getMesOrdinal() == 3}"
+										styleClass="#{prestacaoContaController.getLiqStyle(3)}"
+										value="#{prestacaoContaController.pagamentos.get(3) != null ? prestacaoContaController.pagamentos.get(3).getNumero() : null}" />
+									<h:outputLabel
+										rendered="#{prestacaoContaController.pagamentos.get(3) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<p:commandButton
+										action="#{prestacaoContaController.showDialogPag(4)}"
+										process="@this" update="@form"
+										rendered="#{prestacaoContaController.pagamentos.get(4) != null and prestacaoContaController.pagamentos.get(4).getMesOrdinal() == 4}"
+										styleClass="#{prestacaoContaController.getLiqStyle(4)}"
+										value="#{prestacaoContaController.pagamentos.get(4) != null ? prestacaoContaController.pagamentos.get(4).getNumero() : null}" />
+									<h:outputLabel
+										rendered="#{prestacaoContaController.pagamentos.get(4) == null}"
+										value=" - " />
+
+								</p:column>
+								<p:column>
+									<p:commandButton
+										action="#{prestacaoContaController.showDialogPag(5)}"
+										process="@this" update="@form"
+										rendered="#{prestacaoContaController.pagamentos.get(5) != null and prestacaoContaController.pagamentos.get(5).getMesOrdinal() == 5}"
+										styleClass="#{prestacaoContaController.getLiqStyle(5)}"
+										value="#{prestacaoContaController.pagamentos.get(5) != null ? prestacaoContaController.pagamentos.get(5).getNumero() : null}" />
+									<h:outputLabel
+										rendered="#{prestacaoContaController.pagamentos.get(5) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<p:commandButton
+										action="#{prestacaoContaController.showDialogPag(6)}"
+										process="@this" update="@form"
+										rendered="#{prestacaoContaController.pagamentos.get(6) != null and prestacaoContaController.pagamentos.get(6).getMesOrdinal() == 6}"
+										styleClass="#{prestacaoContaController.getLiqStyle(6)}"
+										value="#{prestacaoContaController.pagamentos.get(6) != null ? prestacaoContaController.pagamentos.get(6).getNumero() : null}" />
+									<h:outputLabel
+										rendered="#{prestacaoContaController.pagamentos.get(6) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<p:commandButton id="cbPagSete"
+										action="#{prestacaoContaController.showDialogPag(7)}"
+										process="@this" update="@form"
+										styleClass="#{prestacaoContaController.getLiqStyle(7)}"
+										rendered="#{prestacaoContaController.pagamentos.get(7) != null and prestacaoContaController.pagamentos.get(7).getMesOrdinal() == 7}"
+										value="#{prestacaoContaController.pagamentos.get(7) != null ? prestacaoContaController.pagamentos.get(7).getNumero() : null}" />
+									<h:outputLabel
+										rendered="#{prestacaoContaController.pagamentos.get(7) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<p:commandButton
+										action="#{prestacaoContaController.showDialogPag(8)}"
+										process="@this" update="@form"
+										rendered="#{prestacaoContaController.pagamentos.get(8) != null and prestacaoContaController.pagamentos.get(8).getMesOrdinal() == 8}"
+										styleClass="#{prestacaoContaController.getLiqStyle(8)}"
+										value="#{prestacaoContaController.pagamentos.get(8) != null ? prestacaoContaController.pagamentos.get(8).getNumero() : null}" />
+									<h:outputLabel
+										rendered="#{prestacaoContaController.pagamentos.get(8) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<p:commandButton
+										action="#{prestacaoContaController.showDialogPag(9)}"
+										process="@this" update="@form"
+										rendered="#{prestacaoContaController.pagamentos.get(9) != null and prestacaoContaController.pagamentos.get(9).getMesOrdinal() == 9}"
+										styleClass="#{prestacaoContaController.getLiqStyle(9)}"
+										value="#{prestacaoContaController.pagamentos.get(9) != null ? prestacaoContaController.pagamentos.get(9).getNumero() : null}" />
+									<h:outputLabel
+										rendered="#{prestacaoContaController.pagamentos.get(9) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<p:commandButton
+										action="#{prestacaoContaController.showDialogPag(10)}"
+										process="@this" update="@form"
+										rendered="#{prestacaoContaController.pagamentos.get(10) != null and prestacaoContaController.pagamentos.get(10).getMesOrdinal() == 10}"
+										styleClass="#{prestacaoContaController.getLiqStyle(10)}"
+										value="#{prestacaoContaController.pagamentos.get(10) != null ? prestacaoContaController.pagamentos.get(10).getNumero() : null}" />
+									<h:outputLabel
+										rendered="#{prestacaoContaController.pagamentos.get(10) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<p:commandButton
+										action="#{prestacaoContaController.showDialogPag(11)}"
+										process="@this" update="@form"
+										styleClass="#{prestacaoContaController.getLiqStyle(11)}"
+										rendered="#{prestacaoContaController.pagamentos.get(11) != null and prestacaoContaController.pagamentos.get(11).getMesOrdinal() == 11}"
+										value="#{prestacaoContaController.pagamentos.get(11) != null ? prestacaoContaController.pagamentos.get(11).getNumero() : null}" />
+									<h:outputLabel
+										rendered="#{prestacaoContaController.pagamentos.get(11) == null}"
+										value=" - " />
+								</p:column>
+
+								<p:column rendered="false">
+									<p:commandButton id="cbExibirPag" icon="ui-icon-zoomin"
+										title="#{wd['table.columns.options.show.hint']}"
+										process="@this" styleClass="icon"
+										action="#{prestacaoContaController.visualizarDetalhe(1)}"
+										update="@form"
+										rendered="#{!prestacaoContaController.renderedPag}">
+									</p:commandButton>
+									<p:commandButton id="cbFecharPag" icon="ui-icon-zoomout"
+										title="#{wd['table.columns.options.close.hint']}"
+										process="@this" styleClass="icon"
+										action="#{prestacaoContaController.fecharDetalhe(1)}"
+										update="@form"
+										rendered="#{prestacaoContaController.renderedPag}">
+									</p:commandButton>
+								</p:column>
+
+							</p:row>
+
+							<!-- DETALHES DO VALORES DOS PAGAMENTO -->
+							<p:row rendered="#{!prestacaoContaController.renderedPag}">
+								<p:column>
+									<p:outputLabel value="  Valores (R$)" />
+								</p:column>
+								<p:column>
+									<h:outputLabel
+										rendered="#{(prestacaoContaController.pagamentos.get(0) != null) and (prestacaoContaController.pagamentos.get(0).getMesOrdinal() == 0)}"
+										value="#{prestacaoContaController.pagamentos.get(0) == null ? 0 : prestacaoContaController.pagamentos.get(0).getValor()}">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.pagamentos.get(0) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.pagamentos.get(1) != null and prestacaoContaController.pagamentos.get(1).getMesOrdinal() == 1}"
+										value="#{prestacaoContaController.pagamentos.get(1) != null ? prestacaoContaController.pagamentos.get(1).getValor() : null}">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.pagamentos.get(1) == null}"
+										value=" - " />
+
+								</p:column>
+								<p:column>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.pagamentos.get(2) != null and prestacaoContaController.pagamentos.get(2).getMesOrdinal() == 2}"
+										value="#{prestacaoContaController.pagamentos.get(2) != null ? prestacaoContaController.pagamentos.get(2).getValor() : null}">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.pagamentos.get(2) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.pagamentos.get(3) != null and prestacaoContaController.pagamentos.get(3).getMesOrdinal() == 3}"
+										value="#{prestacaoContaController.pagamentos.get(3) != null ? prestacaoContaController.pagamentos.get(3).getValor() : null}">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.pagamentos.get(3) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.pagamentos.get(4) != null and prestacaoContaController.pagamentos.get(4).getMesOrdinal() == 4}"
+										value="#{prestacaoContaController.pagamentos.get(4) != null ? prestacaoContaController.pagamentos.get(4).getValor() : null}">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.pagamentos.get(4) == null}"
+										value=" - " />
+
+								</p:column>
+								<p:column>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.pagamentos.get(5) != null and prestacaoContaController.pagamentos.get(5).getMesOrdinal() == 5}"
+										value="#{prestacaoContaController.pagamentos.get(5) != null ? prestacaoContaController.pagamentos.get(5).getValor() : null}">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.pagamentos.get(5) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.pagamentos.get(6) != null and prestacaoContaController.pagamentos.get(6).getMesOrdinal() == 6}"
+										value="#{prestacaoContaController.pagamentos.get(6) != null ? prestacaoContaController.pagamentos.get(6).getValor() : null}">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.pagamentos.get(6) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.pagamentos.get(7) != null and prestacaoContaController.pagamentos.get(7).getMesOrdinal() == 7}"
+										value="#{prestacaoContaController.pagamentos.get(7) != null ? prestacaoContaController.pagamentos.get(7).getValor() : null}">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.pagamentos.get(7) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.pagamentos.get(8) != null and prestacaoContaController.pagamentos.get(8).getMesOrdinal() == 8}"
+										value="#{prestacaoContaController.pagamentos.get(8) != null ? prestacaoContaController.pagamentos.get(8).getValor() : null}">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.pagamentos.get(8) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.pagamentos.get(9) != null and prestacaoContaController.pagamentos.get(9).getMesOrdinal() == 9}"
+										value="#{prestacaoContaController.pagamentos.get(9) != null ? prestacaoContaController.pagamentos.get(9).getValor() : null}">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.pagamentos.get(9) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.pagamentos.get(10) != null and prestacaoContaController.pagamentos.get(10).getMesOrdinal() == 10}"
+										value="#{prestacaoContaController.pagamentos.get(10) != null ? prestacaoContaController.pagamentos.get(10).getValor() : null}">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.pagamentos.get(10) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.pagamentos.get(11) != null and prestacaoContaController.pagamentos.get(11).getMesOrdinal() == 11}"
+										value="#{prestacaoContaController.pagamentos.get(11) != null ? prestacaoContaController.pagamentos.get(11).getValor() : null}">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.pagamentos.get(11) == null}"
+										value=" - " />
+								</p:column>
+							</p:row>
+
+							<!-- PRESTAÇÃO DE CONTAS -->
+
+							<p:row>
+								<p:column>
+									<p:outputLabel value="Prest. Contas" style="font-weight: bold" />
+								</p:column>
+								<p:column>
+									<p:commandButton id="commandButOneConta"
+										rendered="#{(prestacaoContaController.prestacaoContas.get(0) != null) and (prestacaoContaController.prestacaoContas.get(0).getMesOrdinal() == 0)}"
+										action="#{prestacaoContaController.showDialogPrest(0)}"
+										process="@this" update="@form"
+										styleClass="#{prestacaoContaController.getPrestStyle(0)}"
+										value="#{prestacaoContaController.prestacaoContas.get(0) == null ? 0 : prestacaoContaController.prestacaoContas.get(0).repasse.getNumeroLiquidacao()}" />
+									<h:outputLabel id="olZeroConta"
+										rendered="#{prestacaoContaController.prestacaoContas.get(0) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<p:commandButton id="commandButOneConta2"
+										rendered="#{(prestacaoContaController.prestacaoContas.get(0) != null) and (prestacaoContaController.prestacaoContas.get(0).getMesOrdinal() == 1)}"
+										action="#{prestacaoContaController.showDialogPrest(0)}"
+										process="@this" update="@form"
+										styleClass="#{prestacaoContaController.getPrestStyle(0)}"
+										value="#{prestacaoContaController.prestacaoContas.get(0) == null ? 0 : prestacaoContaController.prestacaoContas.get(0).repasse.getNumeroLiquidacao()}" />
+
+									<p:commandButton id="cbContaUm"
+										action="#{prestacaoContaController.showDialogPrest(1)}"
+										process="@this" update="@form"
+										styleClass="#{prestacaoContaController.getPrestStyle(1)}"
+										rendered="#{prestacaoContaController.prestacaoContas.get(1) != null and prestacaoContaController.prestacaoContas.get(1).getMesOrdinal() == 1}"
+										value="#{prestacaoContaController.prestacaoContas.get(1) != null ? prestacaoContaController.prestacaoContas.get(1).repasse.getNumeroLiquidacao() : null}" />
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestacaoContas.get(1) == null}"
+										value=" - " />
+
+								</p:column>
+								<p:column>
+									<p:commandButton id="cbContaUm2"
+										action="#{prestacaoContaController.showDialogPrest(1)}"
+										process="@this" update="@form"
+										styleClass="#{prestacaoContaController.getPrestStyle(1)}"
+										rendered="#{prestacaoContaController.prestacaoContas.get(1) != null and prestacaoContaController.prestacaoContas.get(1).getMesOrdinal() == 2}"
+										value="#{prestacaoContaController.prestacaoContas.get(1) != null ? prestacaoContaController.prestacaoContas.get(1).repasse.getNumeroLiquidacao() : null}" />
+
+									<p:commandButton
+										action="#{prestacaoContaController.showDialogPrest(2)}"
+										process="@this" update="@form"
+										rendered="#{prestacaoContaController.prestacaoContas.get(2) != null and prestacaoContaController.prestacaoContas.get(2).getMesOrdinal() == 2}"
+										styleClass="#{prestacaoContaController.getPrestStyle(2)}"
+										value="#{prestacaoContaController.prestacaoContas.get(2) != null ? prestacaoContaController.prestacaoContas.get(2).repasse.getNumeroLiquidacao() : null}" />
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestacaoContas.get(2) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<p:commandButton
+										action="#{prestacaoContaController.showDialogPrest(2)}"
+										process="@this" update="@form"
+										rendered="#{prestacaoContaController.prestacaoContas.get(2) != null and prestacaoContaController.prestacaoContas.get(2).getMesOrdinal() == 3}"
+										styleClass="#{prestacaoContaController.getPrestStyle(2)}"
+										value="#{prestacaoContaController.prestacaoContas.get(2) != null ? prestacaoContaController.prestacaoContas.get(2).repasse.getNumeroLiquidacao() : null}" />
+
+
+									<p:commandButton
+										action="#{prestacaoContaController.showDialogPrest(3)}"
+										process="@this" update="@form"
+										rendered="#{prestacaoContaController.prestacaoContas.get(3) != null and prestacaoContaController.prestacaoContas.get(3).getMesOrdinal() == 3}"
+										styleClass="#{prestacaoContaController.getPrestStyle(3)}"
+										value="#{prestacaoContaController.prestacaoContas.get(3) != null ? prestacaoContaController.prestacaoContas.get(3).repasse.getNumeroLiquidacao() : null}" />
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestacaoContas.get(3) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<p:commandButton
+										action="#{prestacaoContaController.showDialogPrest(3)}"
+										process="@this" update="@form"
+										rendered="#{prestacaoContaController.prestacaoContas.get(3) != null and prestacaoContaController.prestacaoContas.get(3).getMesOrdinal() == 4}"
+										styleClass="#{prestacaoContaController.getPrestStyle(3)}"
+										value="#{prestacaoContaController.prestacaoContas.get(3) != null ? prestacaoContaController.prestacaoContas.get(3).repasse.getNumeroLiquidacao() : null}" />
+
+
+									<p:commandButton
+										action="#{prestacaoContaController.showDialogPrest(4)}"
+										process="@this" update="@form"
+										rendered="#{prestacaoContaController.prestacaoContas.get(4) != null and prestacaoContaController.prestacaoContas.get(4).getMesOrdinal() == 4}"
+										styleClass="#{prestacaoContaController.getPrestStyle(4)}"
+										value="#{prestacaoContaController.prestacaoContas.get(4) != null ? prestacaoContaController.prestacaoContas.get(4).repasse.getNumeroLiquidacao() : null}" />
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestacaoContas.get(4) == null}"
+										value=" - " />
+
+								</p:column>
+								<p:column>
+									<p:commandButton
+										action="#{prestacaoContaController.showDialogPrest(4)}"
+										process="@this" update="@form"
+										rendered="#{prestacaoContaController.prestacaoContas.get(4) != null and prestacaoContaController.prestacaoContas.get(4).getMesOrdinal() == 5}"
+										styleClass="#{prestacaoContaController.getPrestStyle(4)}"
+										value="#{prestacaoContaController.prestacaoContas.get(4) != null ? prestacaoContaController.prestacaoContas.get(4).repasse.getNumeroLiquidacao() : null}" />
+
+
+									<p:commandButton
+										action="#{prestacaoContaController.showDialogPrest(5)}"
+										process="@this" update="@form"
+										rendered="#{prestacaoContaController.prestacaoContas.get(5) != null and prestacaoContaController.prestacaoContas.get(5).getMesOrdinal() == 5}"
+										styleClass="#{prestacaoContaController.getPrestStyle(5)}"
+										value="#{prestacaoContaController.prestacaoContas.get(5) != null ? prestacaoContaController.prestacaoContas.get(5).repasse.getNumeroLiquidacao() : null}" />
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestacaoContas.get(5) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<p:commandButton
+										action="#{prestacaoContaController.showDialogPrest(5)}"
+										process="@this" update="@form"
+										rendered="#{prestacaoContaController.prestacaoContas.get(5) != null and prestacaoContaController.prestacaoContas.get(5).getMesOrdinal() == 6}"
+										styleClass="#{prestacaoContaController.getPrestStyle(5)}"
+										value="#{prestacaoContaController.prestacaoContas.get(5) != null ? prestacaoContaController.prestacaoContas.get(5).repasse.getNumeroLiquidacao() : null}" />
+
+
+									<p:commandButton
+										action="#{prestacaoContaController.showDialogPrest(6)}"
+										process="@this" update="@form"
+										rendered="#{prestacaoContaController.prestacaoContas.get(6) != null and prestacaoContaController.prestacaoContas.get(6).getMesOrdinal() == 6}"
+										styleClass="#{prestacaoContaController.getPrestStyle(6)}"
+										value="#{prestacaoContaController.prestacaoContas.get(6) != null ? prestacaoContaController.prestacaoContas.get(6).repasse.getNumeroLiquidacao() : null}" />
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestacaoContas.get(6) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<p:commandButton
+										action="#{prestacaoContaController.showDialogPrest(6)}"
+										process="@this" update="@form"
+										rendered="#{prestacaoContaController.prestacaoContas.get(6) != null and prestacaoContaController.prestacaoContas.get(6).getMesOrdinal() == 7}"
+										styleClass="#{prestacaoContaController.getPrestStyle(6)}"
+										value="#{prestacaoContaController.prestacaoContas.get(6) != null ? prestacaoContaController.prestacaoContas.get(6).repasse.getNumeroLiquidacao() : null}" />
+
+
+									<p:commandButton id="cbContaSete"
+										action="#{prestacaoContaController.showDialogPrest(7)}"
+										process="@this" update="@form"
+										styleClass="#{prestacaoContaController.getPrestStyle(7)}"
+										rendered="#{prestacaoContaController.prestacaoContas.get(7) != null and prestacaoContaController.prestacaoContas.get(7).getMesOrdinal() == 7}"
+										value="#{prestacaoContaController.prestacaoContas.get(7) != null ? prestacaoContaController.prestacaoContas.get(7).repasse.getNumeroLiquidacao() : null}" />
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestacaoContas.get(7) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<p:commandButton id="cbContaSete2"
+										action="#{prestacaoContaController.showDialogPrest(7)}"
+										process="@this" update="@form"
+										styleClass="#{prestacaoContaController.getPrestStyle(7)}"
+										rendered="#{prestacaoContaController.prestacaoContas.get(7) != null and prestacaoContaController.prestacaoContas.get(7).getMesOrdinal() == 8}"
+										value="#{prestacaoContaController.prestacaoContas.get(7) != null ? prestacaoContaController.prestacaoContas.get(7).repasse.getNumeroLiquidacao() : null}" />
+
+
+									<p:commandButton
+										action="#{prestacaoContaController.showDialogPrest(8)}"
+										process="@this" update="@form"
+										rendered="#{prestacaoContaController.prestacaoContas.get(8) != null and prestacaoContaController.prestacaoContas.get(8).getMesOrdinal() == 8}"
+										styleClass="#{prestacaoContaController.getPrestStyle(8)}"
+										value="#{prestacaoContaController.prestacaoContas.get(8) != null ? prestacaoContaController.prestacaoContas.get(8).repasse.getNumeroLiquidacao() : null}" />
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestacaoContas.get(8) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<p:commandButton
+										action="#{prestacaoContaController.showDialogPrest(8)}"
+										process="@this" update="@form"
+										rendered="#{prestacaoContaController.prestacaoContas.get(8) != null and prestacaoContaController.prestacaoContas.get(8).getMesOrdinal() == 9}"
+										styleClass="#{prestacaoContaController.getPrestStyle(8)}"
+										value="#{prestacaoContaController.prestacaoContas.get(8) != null ? prestacaoContaController.prestacaoContas.get(8).repasse.getNumeroLiquidacao() : null}" />
+
+
+									<p:commandButton
+										action="#{prestacaoContaController.showDialogPrest(9)}"
+										process="@this" update="@form"
+										rendered="#{prestacaoContaController.prestacaoContas.get(9) != null and prestacaoContaController.prestacaoContas.get(9).getMesOrdinal() == 9}"
+										styleClass="#{prestacaoContaController.getPrestStyle(9)}"
+										value="#{prestacaoContaController.prestacaoContas.get(9) != null ? prestacaoContaController.prestacaoContas.get(9).repasse.getNumeroLiquidacao() : null}" />
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestacaoContas.get(9) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<p:commandButton
+										action="#{prestacaoContaController.showDialogPrest(9)}"
+										process="@this" update="@form"
+										rendered="#{prestacaoContaController.prestacaoContas.get(9) != null and prestacaoContaController.prestacaoContas.get(9).getMesOrdinal() == 10}"
+										styleClass="#{prestacaoContaController.getPrestStyle(9)}"
+										value="#{prestacaoContaController.prestacaoContas.get(9) != null ? prestacaoContaController.prestacaoContas.get(9).repasse.getNumeroLiquidacao() : null}" />
+
+
+									<p:commandButton
+										action="#{prestacaoContaController.showDialogPrest(10)}"
+										process="@this" update="@form"
+										rendered="#{prestacaoContaController.prestacaoContas.get(10) != null and prestacaoContaController.prestacaoContas.get(10).getMesOrdinal() == 10}"
+										styleClass="#{prestacaoContaController.getPrestStyle(10)}"
+										value="#{prestacaoContaController.prestacaoContas.get(10) != null ? prestacaoContaController.prestacaoContas.get(10).repasse.getNumeroLiquidacao() : null}" />
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestacaoContas.get(10) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<p:commandButton
+										action="#{prestacaoContaController.showDialogPrest(10)}"
+										process="@this" update="@form"
+										rendered="#{prestacaoContaController.prestacaoContas.get(10) != null and prestacaoContaController.prestacaoContas.get(10).getMesOrdinal() == 11}"
+										styleClass="#{prestacaoContaController.getPrestStyle(10)}"
+										value="#{prestacaoContaController.prestacaoContas.get(10) != null ? prestacaoContaController.prestacaoContas.get(10).repasse.getNumeroLiquidacao() : null}" />
+
+
+									<p:commandButton
+										action="#{prestacaoContaController.showDialogPrest(11)}"
+										process="@this" update="@form"
+										styleClass="#{prestacaoContaController.getPrestStyle(11)}"
+										rendered="#{prestacaoContaController.prestacaoContas.get(11) != null and prestacaoContaController.prestacaoContas.get(11).getMesOrdinal() == 11}"
+										value="#{prestacaoContaController.prestacaoContas.get(11) != null ? prestacaoContaController.prestacaoContas.get(11).repasse.getNumeroLiquidacao() : null}" />
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestacaoContas.get(11) == null}"
+										value=" - " />
+								</p:column>
+
+								<p:column rendered="false">
+									<p:commandButton id="cbExibirConta" icon="ui-icon-zoomin"
+										title="#{wd['table.columns.options.show.hint']}"
+										process="@this" styleClass="icon"
+										action="#{prestacaoContaController.visualizarDetalhe(2)}"
+										update="@form"
+										rendered="#{!prestacaoContaController.renderedPrest}">
+									</p:commandButton>
+									<p:commandButton id="cbFecharConta" icon="ui-icon-zoomout"
+										title="#{wd['table.columns.options.close.hint']}"
+										process="@this" styleClass="icon"
+										action="#{prestacaoContaController.fecharDetalhe(2)}"
+										update="@form"
+										rendered="#{prestacaoContaController.renderedPrest}">
+									</p:commandButton>
+								</p:column>
+
+							</p:row>
+							<!-- DETALHES DO VALORES DAS PRESTAÇÕES DE CONTA -->
+							<p:row rendered="#{!prestacaoContaController.renderedPrest}">
+								<p:column>
+									<p:outputLabel value="  Valores (R$)" />
+								</p:column>
+								<p:column>
+									<h:outputLabel
+										rendered="#{(prestacaoContaController.prestacaoContas.get(0) != null) and (prestacaoContaController.prestacaoContas.get(0).getMesOrdinal() == 0)}"
+										value="#{prestacaoContaController.prestacaoContas.get(0) == null ? 0 : prestacaoContaController.prestacaoContas.get(0).getValor()}">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestacaoContas.get(0) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<h:outputLabel
+										rendered="#{(prestacaoContaController.prestacaoContas.get(0) != null) and (prestacaoContaController.prestacaoContas.get(0).getMesOrdinal() == 1)}"
+										value="#{prestacaoContaController.prestacaoContas.get(0) == null ? 0 : prestacaoContaController.prestacaoContas.get(0).getValor()}-">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestacaoContas.get(1) != null and prestacaoContaController.prestacaoContas.get(1).getMesOrdinal() == 1}"
+										value="#{prestacaoContaController.prestacaoContas.get(1) != null ? prestacaoContaController.prestacaoContas.get(1).getValor() : null}">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestacaoContas.get(1) == null}"
+										value=" - " />
+
+								</p:column>
+								<p:column>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestacaoContas.get(1) != null and prestacaoContaController.prestacaoContas.get(1).getMesOrdinal() == 2}"
+										value="#{prestacaoContaController.prestacaoContas.get(1) != null ? prestacaoContaController.prestacaoContas.get(1).getValor() : null}-">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestacaoContas.get(2) != null and prestacaoContaController.prestacaoContas.get(2).getMesOrdinal() == 2}"
+										value="#{prestacaoContaController.prestacaoContas.get(2) != null ? prestacaoContaController.prestacaoContas.get(2).getValor() : null}">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestacaoContas.get(2) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestacaoContas.get(2) != null and prestacaoContaController.prestacaoContas.get(2).getMesOrdinal() == 3}"
+										value="#{prestacaoContaController.prestacaoContas.get(2) != null ? prestacaoContaController.prestacaoContas.get(2).getValor() : null}-">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestacaoContas.get(3) != null and prestacaoContaController.prestacaoContas.get(3).getMesOrdinal() == 3}"
+										value="#{prestacaoContaController.prestacaoContas.get(3) != null ? prestacaoContaController.prestacaoContas.get(3).getValor() : null}">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestacaoContas.get(3) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestacaoContas.get(3) != null and prestacaoContaController.prestacaoContas.get(3).getMesOrdinal() == 4}"
+										value="#{prestacaoContaController.prestacaoContas.get(3) != null ? prestacaoContaController.prestacaoContas.get(3).getValor() : null}-">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestacaoContas.get(4) != null and prestacaoContaController.prestacaoContas.get(4).getMesOrdinal() == 4}"
+										value="#{prestacaoContaController.prestacaoContas.get(4) != null ? prestacaoContaController.prestacaoContas.get(4).getValor() : null}">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestacaoContas.get(4) == null}"
+										value=" - " />
+
+								</p:column>
+								<p:column>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestacaoContas.get(4) != null and prestacaoContaController.prestacaoContas.get(4).getMesOrdinal() == 5}"
+										value="#{prestacaoContaController.prestacaoContas.get(4) != null ? prestacaoContaController.prestacaoContas.get(4).getValor() : null}-">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestacaoContas.get(5) != null and prestacaoContaController.prestacaoContas.get(5).getMesOrdinal() == 5}"
+										value="#{prestacaoContaController.prestacaoContas.get(5) != null ? prestacaoContaController.prestacaoContas.get(5).getValor() : null}">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestacaoContas.get(5) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestacaoContas.get(5) != null and prestacaoContaController.prestacaoContas.get(5).getMesOrdinal() == 6}"
+										value="#{prestacaoContaController.prestacaoContas.get(5) != null ? prestacaoContaController.prestacaoContas.get(5).getValor() : null}-">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestacaoContas.get(6) != null and prestacaoContaController.prestacaoContas.get(6).getMesOrdinal() == 6}"
+										value="#{prestacaoContaController.prestacaoContas.get(6) != null ? prestacaoContaController.prestacaoContas.get(6).getValor() : null}">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestacaoContas.get(6) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestacaoContas.get(6) != null and prestacaoContaController.prestacaoContas.get(6).getMesOrdinal() == 7}"
+										value="#{prestacaoContaController.prestacaoContas.get(6) != null ? prestacaoContaController.prestacaoContas.get(6).getValor() : null}-">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestacaoContas.get(7) != null and prestacaoContaController.prestacaoContas.get(7).getMesOrdinal() == 7}"
+										value="#{prestacaoContaController.prestacaoContas.get(7) != null ? prestacaoContaController.prestacaoContas.get(7).getValor() : null}">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestacaoContas.get(7) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestacaoContas.get(7) != null and prestacaoContaController.prestacaoContas.get(7).getMesOrdinal() == 8}"
+										value="#{prestacaoContaController.prestacaoContas.get(7) != null ? prestacaoContaController.prestacaoContas.get(7).getValor() : null}-">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestacaoContas.get(8) != null and prestacaoContaController.prestacaoContas.get(8).getMesOrdinal() == 8}"
+										value="#{prestacaoContaController.prestacaoContas.get(8) != null ? prestacaoContaController.prestacaoContas.get(8).getValor() : null}">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestacaoContas.get(8) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestacaoContas.get(8) != null and prestacaoContaController.prestacaoContas.get(8).getMesOrdinal() == 9}"
+										value="#{prestacaoContaController.prestacaoContas.get(8) != null ? prestacaoContaController.prestacaoContas.get(8).getValor() : null}-">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestacaoContas.get(9) != null and prestacaoContaController.prestacaoContas.get(9).getMesOrdinal() == 9}"
+										value="#{prestacaoContaController.prestacaoContas.get(9) != null ? prestacaoContaController.prestacaoContas.get(9).getValor() : null}">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestacaoContas.get(9) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestacaoContas.get(9) != null and prestacaoContaController.prestacaoContas.get(9).getMesOrdinal() == 10}"
+										value="#{prestacaoContaController.prestacaoContas.get(9) != null ? prestacaoContaController.prestacaoContas.get(9).getValor() : null}-">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestacaoContas.get(10) != null and prestacaoContaController.prestacaoContas.get(10).getMesOrdinal() == 10}"
+										value="#{prestacaoContaController.prestacaoContas.get(10) != null ? prestacaoContaController.prestacaoContas.get(10).getValor() : null}">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestacaoContas.get(10) == null}"
+										value=" - " />
+								</p:column>
+								<p:column>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestacaoContas.get(10) != null and prestacaoContaController.prestacaoContas.get(10).getMesOrdinal() == 11}"
+										value="#{prestacaoContaController.prestacaoContas.get(10) != null ? prestacaoContaController.prestacaoContas.get(10).getValor() : null}-">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestacaoContas.get(11) != null and prestacaoContaController.prestacaoContas.get(11).getMesOrdinal() == 11}"
+										value="#{prestacaoContaController.prestacaoContas.get(11) != null ? prestacaoContaController.prestacaoContas.get(11).getValor() : null}">
+										<f:convertNumber type="currency" currencyCode="BRL" />
+									</h:outputLabel>
+									<h:outputLabel
+										rendered="#{prestacaoContaController.prestacaoContas.get(11) == null}"
+										value=" - " />
+								</p:column>
+
+							</p:row>
+						</div>
+					</p:panelGrid>
 				</div>
-				<div class="col-md-4">
-					<p:outputLabel value="#{lb['prestacaoConta.totalRepasse']}"
-						for="totalRepasse" />
-				</div>
-				<div class="col-md-6" style="text-align: left;">
-					<p:outputLabel id="totalRepasse"
-						value="#{prestacaoContaController.totalRepasse}" />
-				</div>
-				<div class="col-md-3">
-					<p:outputLabel value="#{lb['prestacaoConta.saldoAberto']}"
-						for="saldoAberto" />
-				</div>
-				<div class="col-md-6" style="text-align: left;">
-					<p:outputLabel id="saldoAberto"
-						value="#{prestacaoContaController.saldoAberto}" />
-				</div>
-			</div>
-			<div class="clear" />
+			</FIELDSET>
+			<br />
+			<p:messages id="messages" />
 			<fieldset>
-				<legend>Dados Documentos</legend>
-				<div class="row">
-					<div class="col-md-2">
-						<p:outputLabel value="#{lb['prestacaoConta.tipoDoc']}"
-							for="tipoDoc" />
-					</div>
-					<div class="col-md-6">
-						<p:inputText id="tipoDoc"
-							value="#{prestacaoContaController.documento.tipo}"
-							required="true" immediate="true">
-							<!-- 					<f:convertNumber type="number" minFractionDigits="1" pattern="#0.000" minIntegerDigits="0" /> -->
-						</p:inputText>
-					</div>
-					<div class="col-md-2">
-						<p:outputLabel value="#{lb['prestacaoConta.numDoc']}" for="numDoc" />
-					</div>
-					<div class="col-md-6">
-						<p:inputText id="numDoc"
-							value="#{prestacaoContaController.documento.numero}"
-							required="false" immediate="true">
-						</p:inputText>
-					</div>
-					<div class="col-md-2">
-						<p:outputLabel value="#{lb['prestacaoConta.valorDoc']}"
-							for="valorDoc" />
-					</div>
-					<div class="col-md-6">
-						<p:inputText id="valorDoc"
-							value="#{prestacaoContaController.valorDoc}" required="true"
-							immediate="true" onkeypress="mascara(this,currency);">
-						</p:inputText>
-					</div>
+				<LEGEND>Documentos</LEGEND>
+				<div class="col-md-24"
+					style="background-color: #72A9D3; text-align: center; font-weight: bold; color: #FFF">
+					<h:outputLabel
+						value="Dados dos Documentos da Prestação de Contas Nº #{prestacaoContaController.repasse.numeroLiquidacao}" />
 				</div>
-				<div class="row">
-					<div class="col-md-2" style="margin-top: 10px;">
-						<p:outputLabel value="#{lb['prestacaoConta.arquivo']}"
-							for="arquivoNomeFileUpload" />
+				<br />
+				<f:validateBean disabled="true">
+					<div class="row">
+						<div class="col-md-2">
+							<p:outputLabel value="#{lb['prestacaoConta.tipoDoc']} Doc *"
+								for="tipoDoc" />
+						</div>
+						<div class="col-md-5">
+							<p:inputText id="tipoDoc"
+								value="#{prestacaoContaController.documento.tipo}"
+								immediate="true" binding="#{prestacaoContaController.tipoDoc}">
+								<!-- 					<f:convertNumber type="number" minFractionDigits="1" pattern="#0.000" minIntegerDigits="0" /> -->
+							</p:inputText>
+						</div>
+						<div class="col-md-2">
+							<p:outputLabel value="#{lb['prestacaoConta.numDoc']}"
+								for="numDoc" />
+						</div>
+						<div class="col-md-4">
+							<p:inputText id="numDoc"
+								value="#{prestacaoContaController.documento.numero}"
+								required="false">
+							</p:inputText>
+						</div>
+						<div class="col-md-2">
+							<p:outputLabel value="#{lb['prestacaoConta.dataPrestacao']} *"
+								for="prestContaData" />
+						</div>
+						<div class="col-md-3">
+							<p:calendar id="prestContaData"
+								value="#{prestacaoContaController.documento.data}"
+								showOn="button" pattern="dd/MM/yyyy" locale="pt"
+								navigator="true" effect="fadeIn" style="border-color:red;" />
+						</div>
+						<div class="col-md-2">
+							<p:outputLabel value="#{lb['prestacaoConta.valorDoc']} *"
+								for="valorDocText" />
+						</div>
+						<div class="col-md-4">
+							<p:inputText id="valorDocText"
+								value="#{prestacaoContaController.valorDoc}" immediate="true"
+								onkeypress="mascara(this,currency);"
+								binding="#{prestacaoContaController.valorDocText}">
+							</p:inputText>
+						</div>
 					</div>
-					<div class="col-md-17" style="margin-top: 10px;">
-						<p:inputText
-							value="#{prestacaoContaController.arquivoUploadFile != null ? prestacaoContaController.arquivoUploadFile.fileName : ''}"
-							disabled="false" readonly="true" id="arquivoNomeFileUpload"
-							required="true" onclick="clickUploadFile();"
-							binding="#{prestacaoContaController.arquivoNomeFileUpload}" />
+					<div class="row">
+						<div class="col-md-2" style="margin-top: 10px;">
+							<p:outputLabel value="#{lb['prestacaoConta.arquivo']} *"
+								for="arquivoNomeFileUpload" />
+						</div>
+						<div class="col-md-13" style="margin-top: 10px;">
+							<p:inputText id="arquivoNomeFileUpload"
+								widgetVar="arquivoNomeFileUpload"
+								value="#{prestacaoContaController.arquivoUploadFile != null ? prestacaoContaController.arquivoUploadFile.fileName : ''}"
+								disabled="false" readonly="true" 
+								onclick="clickUploadFile();"
+								binding="#{prestacaoContaController.arquivoNomeFileUpload}" />
+						</div>
+						<div class="col-md-5" style="text-align: left; padding-left: 0px">
+							<p:fileUpload id="arquivoFileUpload" label=" Selecionar Arquivo"
+								update="arquivoNomeFileUpload @this :prestacaoContaTabView:prestacaoContaForm:documentosDataTable :prestacaoContaTabView:prestacaoContaForm:messages"
+								styleClass="uploadFile" showButtons="true"
+								fileUploadListener="#{prestacaoContaController.uploadDoArquivoEvent}"
+								immediate="true" auto="true"
+								allowTypes="/(\.|\/)(gif|jpe?g|png|pdf)$/" />
+						</div>
 					</div>
-					<div class="col-md-5" style="text-align: left; padding-left: 0px">
-						<p:fileUpload id="arquivoFileUpload" label=" Selecionar Arquivo"
-							update="arquivoNomeFileUpload @this :prestacaoContaTabView:prestacaoContaForm:documentosDataTable :prestacaoContaTabView:prestacaoContaForm:messages"
-							styleClass="uploadFile" showButtons="true"
-							fileUploadListener="#{prestacaoContaController.uploadDoArquivoEvent}"
-							immediate="true" auto="true"
-							allowTypes="/(\.|\/)(gif|jpe?g|png|pdf)$/" />
-					</div>
-				</div>
+				</f:validateBean>
 				<div class="clear" />
-				<p:commandButton id="adicionarCommandButton"
-					value="#{wd['button.add']}" icon="ui-icon-plusthick"
-					process="@this :prestacaoContaTabView:prestacaoContaForm:tipoDoc, :prestacaoContaTabView:prestacaoContaForm:numDoc, :prestacaoContaTabView:prestacaoContaForm:valorDoc"
-					update=":prestacaoContaTabView:prestacaoContaForm:saldoAberto, @form"
-					action="#{prestacaoContaController.adicionarArquivo}"
-					styleClass="w3 r8" style="margin: 5px 5px 5px 5px" />
+				<p:commandButton id="adicionarCommandButton" value="Salvar"
+					icon="ui-icon-disk"
+					process="@this :prestacaoContaTabView:prestacaoContaForm:tipoDoc, :prestacaoContaTabView:prestacaoContaForm:numDoc, :prestacaoContaTabView:prestacaoContaForm:valorDocText, :prestacaoContaTabView:prestacaoContaForm:prestContaData, :prestacaoContaTabView:prestacaoContaForm:arquivoNomeFileUpload"
+					update="@form" action="#{prestacaoContaController.salvarArquivo}"
+					styleClass="w3 r8" style="margin: 5px 5px 5px 5px">
+
+				</p:commandButton>
+
+				<!-- 				<p:blockUI block="@form" trigger="adicionarCommandButton" widgetVar="addDocBlockUI"> -->
+				<!-- 						<h:outputLabel value="#{wd['blockui.loading.text']}" /> -->
+				<!-- 						<br /> -->
+				<!-- 						<h:graphicImage library="images" -->
+				<!-- 							name="#{wd['blockui.loading.img']}" /> -->
+				<!-- 					</p:blockUI> -->
+				<!-- 					:prestacaoContaTabView:prestacaoContaForm:saldoAberto, -->
+
+				<!-- 					selection="#{prestacaoContaController.documentosSelected}" rowKey="#{item.id}"-->
 				<p:dataTable id="documentosDataTable" draggableColumns="true"
 					emptyMessage="#{wd['item.emptyAddTable']}"
-					value="#{prestacaoContaController.documentos}" var="item">
+					value="#{prestacaoContaController.documentos}" var="item"
+					reflow="true" style="width:100%">
+
+					<p:column id="colunaTipoDoc"
+						headerText="#{lb['prestacaoConta.tipoDoc']}" width="30%">
+						<h:outputLabel value="#{item.tipo}" />
+					</p:column>
+					<p:column id="colunaNumDoc"
+						headerText="#{lb['prestacaoConta.numDoc']}" width="10%">
+						<h:outputLabel value="#{item.numero}" />
+					</p:column>
+					<p:column id="colunaValorDoc"
+						headerText="#{lb['prestacaoConta.valorDoc']}" width="10%">
+						<h:outputLabel value="#{item.valor}">
+							<f:convertNumber type="currency" currencyCode="BRL" />
+						</h:outputLabel>
+					</p:column>
+					<p:column id="colunaDataDoc" headerText="Data" width="10%">
+						<h:outputText value="#{item.data}">
+							<f:convertDateTime locale="pt,BR" dateStyle="long"
+								pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</p:column>
+					<p:column id="colunaArquivo"
+						headerText="#{lb['prestacaoConta.arquivo']}" width="30%">
+						<h:outputLabel value="#{item.nome}" />
+					</p:column>
 					<p:column id="colunaOpcao"
 						headerText="#{wd['table.columns.options']}"
-						style="width:50px; ; text-align: center;">
+						style="width:100px; text-align: center;" width="10%">
 						<p:commandButton id="editarCommandButton" icon="ui-icon-pencil"
-							process="@this" action="#{prestacaoContaController.editarDoc}"
-							title="#{wds['table.columns.options.update.hint']}"
-							update=":prestacaoContaTabView:prestacaoContaForm"
+							process="@this documentosDataTable"
+							action="#{prestacaoContaController.editarDoc}"
+							title="#{wd['table.columns.options.edit.hint']}" update="@form"
 							styleClass="icon">
 							<!-- 								<f:setPropertyActionListener -->
 							<!-- 									target="#{prestacaoContaController.documento}" value="#{item}" /> -->
@@ -128,43 +1307,31 @@
 
 						<p:commandButton id="removerCommandButton" icon="ui-icon-trash"
 							title="#{wd['table.columns.options.delete.hint']}"
-							onclick="removeConfirmDialog.show()" process="@this"
-							styleClass="icon">
+							onclick="PF('removeConfirmDialog').show()"
+							process="@this documentosDataTable" styleClass="icon">
+							<!-- 							<p:confirm header="#{wd['dialog.deleteConfirmation.header']}" -->
+							<!-- 								message="#{wd['dialog.deleteConfirmation.message']}" -->
+							<!-- 								icon="ui-icon-alert" /> -->
 							<f:setPropertyActionListener
 								target="#{prestacaoContaController.documentoRemove}"
 								value="#{item}" />
 						</p:commandButton>
 
 						<p:commandButton id="exibirCommandButton" icon="ui-icon-image"
-							title="#{wd['table.columns.options.show.hint']}" process="@this"
+							title="#{wd['table.columns.options.show.hint']}" process="@this documentosDataTable"
 							styleClass="icon"
 							action="#{prestacaoContaController.visualizarArquivo}"
-							update="@form">
+							update=":prestacaoContaTabView">
 							<f:setPropertyActionListener
 								target="#{prestacaoContaController.documentoExibe}"
 								value="#{item}" />
 						</p:commandButton>
 
 					</p:column>
+					<!-- :prestacaoContaTabView:prestacaoContaForm:imageStreamDialog -->
+					<!-- 					<p:column selectionMode="multiple" -->
+					<!-- 						style="width:10px; text-align:center" /> -->
 
-					<p:column id="colunaTipoDoc"
-						headerText="#{lb['prestacaoConta.tipoDoc']}">
-						<h:outputLabel value="#{item.tipo}" />
-					</p:column>
-					<p:column id="colunaNumDoc"
-						headerText="#{lb['prestacaoConta.numDoc']}">
-						<h:outputLabel value="#{item.numero}" />
-					</p:column>
-					<p:column id="colunaValorDoc"
-						headerText="#{lb['prestacaoConta.valorDoc']}">
-						<h:outputLabel value="#{item.valor}">
-							<f:convertNumber type="currency" currencyCode="BRL" />
-						</h:outputLabel>
-					</p:column>
-					<p:column id="colunaArquivo"
-						headerText="#{lb['prestacaoConta.arquivo']}">
-						<h:outputLabel value="#{item.nome}" />
-					</p:column>
 					<f:facet name="footer">
 						<div style="text-align: left;">
 							<h:outputLabel
@@ -178,19 +1345,38 @@
 				</p:dataTable>
 				<!-- 				</p:outputPanel> -->
 			</fieldset>
+			<!-- 			<p:commandButton value="Salvar" update="@form" process="@this" -->
+			<!-- 				action="#{prestacaoContaController.salvarPrestacaoConta}" -->
+			<!-- 				styleClass="w3 r8" style="margin: 5px 5px 5px 5px"  icon="ui-icon-disk" -->
+			<!-- 				id="salvarCommandButton" /> -->
 			<div class="clear" />
 
-			<p:commandButton value="Cadastrar" update=":prestacaoContaTabView"
-				process="@this :prestacaoContaTabView:prestacaoContaForm:dataPrestacao, :prestacaoContaTabView:prestacaoContaForm:totalRepasse, :prestacaoContaTabView:prestacaoContaForm:saldoAberto"
-				action="#{prestacaoContaController.registrar}"
-				styleClass="col-md-4 r6" icon="ui-icon-disk" />
+		</p:panel>
+		<div class="row">
+			<!-- 		<a href="#topo" id="topoLink">Tetse topo</a> -->
+			<!-- 		:prestacaoContaTabView:prestacaoContaForm:dataPrestacao, :prestacaoContaTabView:prestacaoContaForm:totalRepasse, :prestacaoContaTabView:prestacaoContaForm:saldoAberto -->
+			<p:commandButton value="Finalizar"
+				update=":prestacaoContaTabView documentosDataTable" process="@this"
+				styleClass="col-md-4 r6" icon="ui-icon-disk"
+				id="cadastrarCommandButton"
+				action="#{prestacaoContaController.mostrarDialogPrestConta}"
+				actionListener="#{prestacaoContaController.closeEditTab}">
+				<!-- 				action="#{prestacaoContaController.registrar}" -->
+				<p:blockUI block="@form" trigger="cadastrarCommandButton">
+					<h:outputLabel value="#{wd['blockui.loading.text']}" />
+					<br />
+					<h:graphicImage library="images"
+						name="#{wd['blockui.loading.img']}" />
+				</p:blockUI>
+			</p:commandButton>
 			<p:commandButton id="limparCommandButton"
 				value="#{wd['button.clean']}" icon="ui-icon-arrowrefresh-1-w"
 				actionListener="#{prestacaoContaController.init}" update="@form"
 				process="@this" styleClass="col-md-4 r7">
 			</p:commandButton>
-		</p:panel>
-
+		</div>
+		<div class="clear" />
+		<br />
 		<fieldset>
 			<LEGEND>Observação:</LEGEND>
 			<DIV style="font-weight: bold; color: red;">
@@ -199,31 +1385,274 @@
 		</fieldset>
 
 		<p:confirmDialog id="removeConfirmDialog"
-			message="#{wd['dialog.deleteConfirmation.message']}"
+			widgetVar="removeConfirmDialog" global="true" severity="alert"
 			header="#{wd['dialog.deleteConfirmation.header']}"
-			widgetVar="removeConfirmDialog" appendToBody="true">
+			message="#{wd['dialog.deleteConfirmation.message']}">
 			<p:commandButton value="#{wd['dialog.optionYes']}" styleClass="r6"
-				icon="ui-icon-check" oncomplete="removeConfirmDialog.hide()"
-				process="@parent" action="#{prestacaoContaController.removerDoc}"
-				update=":prestacaoContaTabView:prestacaoContaForm:documentosDataTable, :prestacaoContaTabView:prestacaoContaForm:saldoAberto">
+				icon="ui-icon-check" oncomplete="PF('removeConfirmDialog').hide()"
+				process="@this" action="#{prestacaoContaController.removerDoc}"
+				update=":prestacaoContaTabView:prestacaoContaForm:documentosDataTable">
+				<!-- 				@parent documentosDataTable valore para o atributo process -->
+				<!-- 				, :prestacaoContaTabView:prestacaoContaForm:saldoAberto -->
 				<p:collector value="#{prestacaoContaController.documentoRemove}"
 					removeFrom="#{prestacaoContaController.documentos}" />
 			</p:commandButton>
-			<p:commandButton onclick="removeConfirmDialog.hide()" styleClass="r7"
-				icon="ui-icon-cancel" value="#{wd['dialog.optionNo']}" type="button" />
+			<p:commandButton onclick="PF('removeConfirmDialog').hide()"
+				styleClass="r6" icon="ui-icon-cancel"
+				value="#{wd['dialog.optionNo']}" type="button" />
 		</p:confirmDialog>
 
-		<p:dialog widgetVar="imageStreamDialog" id="imageStreamDialog"
-			height="500px" width="800px" resizable="false">
-			<p:graphicImage value="#{prestacaoContaController.imageStream}"
-				height="500px" width="800px"
-				rendered="#{prestacaoContaController.imageStream eq null ? false : true}" />
-			<p:media id="pdfView" player="pdf"
-				binding="#{prestacaoContaController.pdfView}" height="500px"
-				width="800px"
-				rendered="#{prestacaoContaController.imageStream eq null ? true : false}" />
-			<!--     value="../images/#{imgBean.selectedBook.imagePath}.png" -->
+		<p:confirmDialog id="confirmFinalizarDialog"
+			widgetVar="confirmFinalizarDialog" global="true" header="Alerta"
+			message="Deseja Realmente Finalizar esta Prestação de Contas?">
+			<p:commandButton id="yesCommandButton" widgetVar="yesCommandButton"
+				value="#{wd['dialog.optionYes']}" styleClass="r6"
+				icon="ui-icon-check"
+				onclick="PF('confirmFinalizarDialog').hide()"
+				process="@this" action="#{prestacaoContaController.prestarContas}"
+				update=":prestacaoContaTabView"
+				oncomplete="PF('confirmFinalizeBlockUI').hide();">
+				<!-- 				, :prestacaoContaTabView:prestacaoContaForm:saldoAberto -->
+
+			</p:commandButton>
+			<p:commandButton onclick="PF('confirmFinalizarDialog').hide();"
+				styleClass="r6" icon="ui-icon-cancel"
+				value="#{wd['dialog.optionNo']}" type="button" />
+		</p:confirmDialog>
+
+		<p:blockUI block=":prestacaoContaTabView" trigger="yesCommandButton"
+			widgetVar="confirmFinalizeBlockUI">
+			<h:outputLabel value="#{wd['blockui.loading.text']}" />
+			<br />
+			<h:graphicImage library="images" name="#{wd['blockui.loading.img']}" />
+		</p:blockUI>
+		<p:confirmDialog id="confirmFimDialogAtrasado"
+			widgetVar="confirmFimDialogAtrasado" global="true" header="Alerta"
+			message="Deseja Realmente Finalizar esta Prestação de Contas?">
+			<div style="font-weight: bold;">
+				<h:outputLabel id="mensagemPrestContaLabel"
+					value="Prestação de contas realizada fora do prazo sujeita o responsável às penalidades da lei."
+					style="width:400px; text-align:center;text" />
+			</div>
+			<br />
+			<p:commandButton id="yesCBAtrasado" widgetVar="yesCBAtrasado"
+				value="#{wd['dialog.optionYes']}" styleClass="r6"
+				icon="ui-icon-check"
+				onclick="PF('confirmFimDialogAtrasado').hide();"
+				process="@this" action="#{prestacaoContaController.prestarContas}"
+				update=":prestacaoContaTabView"
+				oncomplete="PF('finalizaBlockUI').hide()">
+				<!-- 				, :prestacaoContaTabView:prestacaoContaForm:saldoAberto -->
+
+			</p:commandButton>
+			<p:commandButton onclick="PF('confirmFimDialogAtrasado').hide();"
+				styleClass="r6" icon="ui-icon-cancel"
+				value="#{wd['dialog.optionNo']}" type="button" />
+		</p:confirmDialog>
+		<!-- BlovkUI para o bbotão de finalizar prestação de contas -->
+		<p:blockUI block=":prestacaoContaTabView:prestacaoContaForm"
+			trigger=":prestacaoContaTabView:prestacaoContaForm:yesCBAtrasado"
+			widgetVar="finalizaBlockUI">
+			<h:outputLabel value="#{wd['blockui.loading.text']}" />
+			<br />
+			<h:graphicImage library="images" name="#{wd['blockui.loading.img']}" />
+		</p:blockUI>
+
+		<!-- Dialog de confirmação da prestação de contas com Documentos atrasados -->
+		<p:confirmDialog id="confirmDialogDocAtrasado"
+			widgetVar="confirmDialogDocAtrasado" global="true" header="Alerta"
+			message="Deseja Realmente Finalizar esta Prestação de Contas?">
+			<div style="font-weight: bold;">
+				<h:outputLabel id="mensagemDocLabel"
+					value="Prestação de contas possui documento(s) com data posterior a data da Prestação, sujeita o responsável às penalidades da lei."
+					style="width:400px; text-align:center;text" />
+			</div>
+			<br />
+			<p:commandButton id="yesDoctrasado" widgetVar="yesDoctrasado"
+				value="#{wd['dialog.optionYes']}" styleClass="r6"
+				icon="ui-icon-check"
+				onclick="PF('confirmDialogDocAtrasado').hide();" process="@this"
+				action="#{prestacaoContaController.prestarContas}"
+				update=":prestacaoContaTabView">
+				<p:blockUI block=":prestacaoContaTabView" trigger="yesDoctrasado">
+					<h:outputLabel value="#{wd['blockui.loading.text']}" />
+					<br />
+					<h:graphicImage library="images"
+						name="#{wd['blockui.loading.img']}" />
+				</p:blockUI>
+			</p:commandButton>
+			<p:commandButton onclick="PF('confirmDialogDocAtrasado').hide();"
+				styleClass="r6" icon="ui-icon-cancel"
+				value="#{wd['dialog.optionNo']}" type="button" />
+		</p:confirmDialog>
+
+
+		<!-- Dialog visualizar dados das liquidações -->
+
+		<p:dialog widgetVar="liqDialog" id="liqDialog" height="200px"
+			width="800px" resizable="false"
+			header="#{prestacaoContaController.itemSelected}"
+			binding="#{prestacaoContaController.liqDialog}">
+
+			<p:panelGrid title="Tabela" styleClass="ui-responsive"
+				style="width:100%">
+				<f:facet name="header">
+					<p:row>
+						<p:column>
+							<h:outputLabel value="#{lb['liquidacao.numero']}" />
+						</p:column>
+						<p:column>
+							<h:outputLabel value="#{lb['liquidacao.data']}" />
+						</p:column>
+						<p:column>
+							<h:outputLabel value="#{lb['liquidacao.valor']}" />
+						</p:column>
+						<p:column>
+							<h:outputLabel value="Saldo" />
+						</p:column>
+					</p:row>
+				</f:facet>
+				<p:row>
+					<p:column>
+						<h:outputLabel
+							value="#{prestacaoContaController.liqSelecionado.numero}" />
+					</p:column>
+
+					<p:column>
+						<h:outputText
+							value="#{prestacaoContaController.liqSelecionado.data}">
+							<f:convertDateTime locale="pt,BR" dateStyle="long"
+								pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</p:column>
+					<p:column>
+						<h:outputLabel
+							value="#{prestacaoContaController.liqSelecionado.valor}" />
+
+					</p:column>
+					<p:column>
+						<h:outputLabel
+							value="#{prestacaoContaController.liqSelecionado.saldo}" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+		</p:dialog>
+
+		<!-- Dialog visualizar dados dos Pagamentos -->
+
+		<p:dialog widgetVar="pagDialog" id="pagDialog" height="200px"
+			width="800px" resizable="false"
+			header="#{prestacaoContaController.itemSelected}">
+
+			<p:panelGrid title="Tabela" styleClass="ui-responsive"
+				style="width:100%">
+				<f:facet name="header">
+					<p:row>
+						<p:column>
+							<h:outputLabel value="#{lb['pagamento.numero']}" />
+						</p:column>
+						<p:column>
+							<h:outputLabel value="#{lb['pagamento.data']}" />
+						</p:column>
+						<p:column>
+							<h:outputLabel value="#{lb['pagamento.valor']}" />
+						</p:column>
+						<p:column>
+							<h:outputLabel value="#{lb['pagamento.saldo']}" />
+						</p:column>
+					</p:row>
+				</f:facet>
+				<p:row>
+					<p:column>
+						<h:outputLabel
+							value="#{prestacaoContaController.pagSelecionado.numero}" />
+
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{prestacaoContaController.pagSelecionado.data}">
+							<f:convertDateTime locale="pt,BR" dateStyle="long"
+								pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</p:column>
+					<p:column>
+						<h:outputLabel
+							value="#{prestacaoContaController.pagSelecionado.valor}" />
+					</p:column>
+					<p:column>
+						<h:outputLabel
+							value="#{prestacaoContaController.pagSelecionado.saldo}" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+		</p:dialog>
+
+		<!-- Dialog visualizar dados das Prestações de Conta -->
+
+		<p:dialog widgetVar="prestDialog" id="prestDialog" height="200px"
+			width="800px" resizable="false"
+			header="#{prestacaoContaController.itemSelected}">
+			<p:panelGrid title="Tabela" styleClass="ui-responsive"
+				style="width:100%">
+				<f:facet name="header">
+					<p:row>
+						<p:column>
+							<h:outputLabel value="#{lb['prestacaoConta.numDoc']}" />
+						</p:column>
+						<p:column>
+							<h:outputLabel value="#{lb['prestacaoConta.dataPrestacao']}" />
+						</p:column>
+						<p:column>
+							<h:outputLabel value="#{lb['prestacaoConta.valorDoc']}" />
+						</p:column>
+						<p:column>
+							<h:outputLabel value="Status" />
+						</p:column>
+
+					</p:row>
+				</f:facet>
+				<p:row>
+					<p:column>
+						<h:outputLabel
+							value="#{prestacaoContaController.prestSelecionado.repasse.numeroLiquidacao}" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{prestacaoContaController.prestSelecionado.dataPrestacao}">
+							<f:convertDateTime locale="pt,BR" dateStyle="long"
+								pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</p:column>
+					<p:column>
+						<h:outputLabel
+							value="#{prestacaoContaController.prestSelecionado.valor}">
+							<f:convertNumber type="currency" currencyCode="BRL" />
+						</h:outputLabel>
+					</p:column>
+					<p:column>
+						<h:outputLabel
+							value="#{prestacaoContaController.prestSelecionado.status.toString()}" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
 		</p:dialog>
 	</h:form>
+	<p:dialog widgetVar="imageStreamDialog" id="imageStreamDialog"
+		height="500px" width="800px" resizable="false">
+		<p:graphicImage value="#{prestacaoContaController.imageStream}"
+			height="500px" width="800px"
+			rendered="#{prestacaoContaController.imageStream eq null ? false : true}" />
+		<p:media id="pdfView" player="pdf"
+			binding="#{prestacaoContaController.pdfView}" height="500px"
+			width="800px"
+			rendered="#{prestacaoContaController.imageStream eq null ? true : false}" />
+		<!--     value="../images/#{imgBean.selectedBook.imagePath}.png" -->
+	</p:dialog>
+
 </div>
+<SCRIPT type="text/javascript">  
+	function topo(){  
+		window.location.href='#topoMessage';
+	}
+</SCRIPT>
 </html>

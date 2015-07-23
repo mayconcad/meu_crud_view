@@ -19,20 +19,24 @@
 
 		<p:confirmDialog id="confirmationTermo"
 			message="#{wd['dialog.termoCompromissoConfirmation.message']}"
-			hideEffect="explode" header="#{wd['dialog.alert.header']}"
-			severity="alert" widgetVar="confirmationTermo" modal="true"
-			appendToBody="true">
-			<p:commandButton id="botaoSim" value="#{wd['dialog.optionYes']}"
-				oncomplete="confirmationTermo.hide();" styleClass="r6"
-				action="#{unidadeController.gerarTermoCompromisso}" process="@this"
-				update="@form" actionListener="#{unidadeController.init}">
+			header="#{wd['dialog.alert.header']}"
+			severity="alert" widgetVar="confirmationTermo" global="true">
+			<p:commandButton id="botaoSim" widgetVar="botaoSim" value="#{wd['dialog.optionYes']}"
+				oncomplete="PF('confirmationTermo').hide();" styleClass="r6"
+				action="#{unidadeController.criar(true)}" process="@this"
+				update=":unidadeTabView">
 				<!-- 				<p:resetInput target=":unidadeTabView:createUnidadeForm" /> -->
 			</p:commandButton>
-			<p:commandButton id="botaoNao" value="#{wd['dialog.optionNo']}"
-				onclick="confirmationTermo.hide();" type="button" styleClass="r7"
+			<p:commandButton id="botaoNao" widgetVar="botaoNao" value="#{wd['dialog.optionNo']}"
+				onclick="PF('confirmationTermo').hide() PF('confirmBlockUI').show()" oncomplete="PF('confirmBlockUI').hide()" type="button" styleClass="r7"
 				action="#{unidadeController.criar(false)}" process="@this"
-				update=":unidadeTabView:createUnidadeForm:confirmationTermo :unidadeTabView:createUnidadeForm" />
+				update="@form" />
 		</p:confirmDialog>
+		<p:blockUI block="@form" trigger="botaoSim botaoNao" widgetVar="confirmBlockUI">
+				<h:outputLabel value="#{wd['blockui.loading.text']}" />
+				<br />
+				<h:graphicImage library="images" name="#{wd['blockui.loading.img']}" />
+			</p:blockUI>
 
 		<p:panel header="#{wd['fieldset.data']}" toggleable="false"
 			styleClass="clearfix" id="dataPanel">
@@ -75,7 +79,7 @@
 						converter="autocompleteConverter" var="var"
 						itemLabel="#{var.nome}" itemValue="#{var}" dropdown="true"
 						required="true" scrollHeight="250" minQueryLength="3"
-						queryDelay="3" widgetVar="responsavelAC">
+						queryDelay="3" widgetVar="responsavelAC" requiredMessage="Campo Responsável: O item deve ser selecionado.">
 						<p:ajax event="itemSelect" process="@this" />
 						<f:attribute name="entityClass"
 							value="br.com.sts.ddum.model.entities.Responsavel" />
@@ -95,7 +99,7 @@
 							label="#{lb['parametroRepasse']}" required="true"
 							completeMethod="#{unidadeController.autocompletarParametro}"
 							converter="autocompleteConverter" var="var"
-							itemLabel="#{var.descricao}" itemValue="#{var}" dropdown="true">
+							itemLabel="#{var.descricao}" itemValue="#{var}" dropdown="true" requiredMessage="Campo Parâmetro Repasse: O item deve ser selecionado.">
 							<f:attribute name="entityClass"
 								value="br.com.sts.ddum.model.entities.ParametroRepasse" />
 							<!-- 							<p:ajax event="itemSelect" process="@this" -->
@@ -227,7 +231,7 @@
 			</fieldset>
 
 			<p:commandButton value="#{wd['button.create']}"
-				actionListener="#{unidadeController.criar(false)}"
+				actionListener="#{unidadeController.showDialog}"
 				styleClass="col-md-4 r6" update="@form" icon="ui-icon-disk" />
 			<!-- 					styleClass="w4 r7" actionListener="#{unidadeController.showDialog}" update="@form"/> -->
 
@@ -236,6 +240,7 @@
 				actionListener="#{unidadeController.init}" update="@form"
 				process="@this" styleClass="col-md-4 r7">
 			</p:commandButton>
+			
 		</p:panel>
 	</h:form>
 </div>

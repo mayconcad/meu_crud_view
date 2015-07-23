@@ -125,9 +125,9 @@
 				actionListener="#{buscarParametroRepasseController.editar}"
 				styleClass="col-md-4 r6" icon="ui-icon-disk" process="@form"/>
 
-			<p:commandButton value="#{wd['button.cancel']}" type="reset"
+			<p:commandButton value="#{wd['button.cancel']}"
 				icon="ui-icon-cancel"
-				onclick="parametroRepasseTabs.remove(parametroRepasseTabs.getActiveIndex())"
+				actionListener="#{buscarParametroRepasseController.closeEditTab}"
 				styleClass="col-md-4 r7" process="@this"/>
 		</p:panel>
 	</h:form>

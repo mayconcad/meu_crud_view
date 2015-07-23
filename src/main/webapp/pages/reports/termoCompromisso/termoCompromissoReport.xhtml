@@ -12,7 +12,7 @@
 
 		<p:inputText id="emptyReportField"
 			value="#{termoCompromissoReportController.emptyReport}" type="hidden" />
-		<f:validateBean disabled="true">
+<!-- 		<f:validateBean disabled="true"> -->
 			<!-- 		<div class="ui-grid-row"> -->
 			<p:panel id="reportPanel" header="Filtros" styleClass="clearfix"
 				toggleable="true">
@@ -21,31 +21,31 @@
 						<p:outputLabel value="#{lb['responsavel']}" for="responsavelAC" />
 					</div>
 					<div class="col-md-10">
-						<p:autoComplete id="responsavelAC"
+						<p:autoComplete id="responsavelAC" minQueryLength="3"
 							value="#{termoCompromissoReportController.responsavel}"
 							label="#{lb['responsavel']}"
 							completeMethod="#{responsavelController.autocompletar}"
 							converter="autocompleteConverter" var="var"
 							itemLabel="#{var.nome}" itemValue="#{var}" dropdown="true"
-							required="true" scrollHeight="250">
-							<p:ajax event="itemSelect" process="@this" />
+							required="true" scrollHeight="250" requiredMessage="Campo Responsável: O item deve ser selecionado.">
 							<f:attribute name="entityClass"
 								value="br.com.sts.ddum.model.entities.Responsavel" />
+							<p:ajax event="itemSelect" process="@this"/>
 						</p:autoComplete>
 					</div>
-					<div class="col-md-2">
+					<div class="col-md-3">
 						<p:outputLabel value="#{lb['unidadeContabil']}"
 							for="unidadeContabil" />
 					</div>
-					<div class="col-md-10">
+					<div class="col-md-9">
 						<p:autoComplete id="unidadeContabil" minQueryLength="3"
 							value="#{termoCompromissoReportController.unidade}"
-							label="#{lb['unidadeContabil']}" required="true"
+							label="#{lb['unidade']}" required="true"
 							completeMethod="#{termoCompromissoReportController.autocompletarUnidade}"
 							queryDelay="3" widgetVar="unidadeContabil" var="var"
 							itemLabel="#{var.nome}" itemValue="#{var}" process="@this"
 							dropdown="true" converter="autocompleteConverter"
-							forceSelection="true" scrollHeight="250">
+							forceSelection="true" scrollHeight="250" requiredMessage="Campo Unidade Física: O item deve ser selecionado.">
 							<p:ajax event="itemSelect" process="@this" />
 							<f:attribute name="entityClass"
 								value="br.com.sts.ddum.model.entities.Unidade" />
@@ -54,12 +54,18 @@
 
 					</div>
 					<div class="clear"/>
-					<p:commandButton value="Gerar Termo"
+					<p:commandButton id="gerarTermoCommandButton" widgetVar="gerarTermoCommandButton" value="Gerar Termo"
 						action="#{termoCompromissoReportController.generateReportByTemplate(null,null)}"
 						styleClass="col-md-4 r8" update="@form" icon="ui-icon-disk"
-						style="margin-top: 15px" />
+						style="margin-top: 15px">
+						<p:blockUI block="termoCompromissoReportForm" trigger="gerarTermoCommandButton">
+					<h:outputLabel value="#{wd['blockui.loading.text']}" />
+					<br />
+					<h:graphicImage library="images" name="#{wd['blockui.loading.img']}" />
+				</p:blockUI>
+						</p:commandButton>
 			</p:panel>
-		</f:validateBean>
+<!-- 		</f:validateBean> -->
 		<fieldset>
 			<p:media id="termoCompromissoMedia" height="450" width="100%"
 				player="pdf"

@@ -8,18 +8,6 @@
 	<h:form id="buscarUsuarioForm" prependId="false">
 		<p:messages id="messages" />
 
-		<p:confirmDialog message="#{wd['dialog.deleteConfirmation.message']}"
-			hideEffect="explode" header="#{wd['dialog.alert.header']}"
-			severity="alert" widgetVar="confirmation" modal="true"
-			appendToBody="true">
-			<p:commandButton id="btnSim" value="#{wd['dialog.optionYes']}"
-				oncomplete="confirmation.hide();" styleClass="r6"
-				action="#{buscarUserController.remover}" process="@this"
-				update="buscarUsuarioTable messages" />
-			<p:commandButton id="btnNao" value="#{wd['dialog.optionNo']}"
-				onclick="confirmation.hide();" type="button" styleClass="r7" />
-		</p:confirmDialog>
-
 		<p:panel header="#{wd['fieldset.filters']}" toggleable="true"
 			id="filtersPanel" styleClass="clearfix">
 			<f:validateBean disabled="true">
@@ -65,7 +53,13 @@
 		<p:commandButton value="#{wd['button.search']}"
 			action="#{buscarUserController.buscar}" icon="ui-icon-search"
 			id="searchCommandButton" styleClass="col-md-4 r6"
-			update="buscarUsuarioTable" process="@this"/>
+			update="buscarUsuarioTable" process="@this">
+			<p:blockUI block="buscarUsuarioTable" trigger="searchCommandButton">
+					<h:outputLabel value="#{wd['blockui.loading.text']}" />
+					<br />
+					<h:graphicImage library="images" name="#{wd['blockui.loading.img']}" />
+				</p:blockUI>
+			</p:commandButton>
 		<p:commandButton value="#{wd['button.clean']}" process="@this"
 			action="#{buscarUserController.init}" update="filtersPanel"
 			icon="ui-icon-arrowrefresh-1-w" id="clearCommandButton"
@@ -79,22 +73,6 @@
 				emptyMessage="#{wd['item.emptyFind']}" var="usuario"
 				id="buscarUsuarioTable" paginator="true" rows="5"
 				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
-
-				<p:column headerText="#{wd['table.columns.options']}"
-					style="width:50px; ; text-align: center;">
-					<p:commandButton icon="ui-icon-trash" onclick="confirmation.show()"
-						styleClass="icon"
-						title="#{wd['table.columns.options.delete.hint']}">
-						<f:setPropertyActionListener
-							target="#{buscarUserController.userRemove}" value="#{usuario}" />
-					</p:commandButton>
-					<p:commandButton icon="ui-icon-pencil" styleClass="icon"
-						action="#{buscarUserController.carregar}" update=":usuarioTabView"
-						process="@form" title="#{wd['table.columns.options.edit.hint']}">
-						<f:setPropertyActionListener
-							target="#{buscarUserController.userEdite}" value="#{usuario}" />
-					</p:commandButton>
-				</p:column>
 
 				<p:column headerText="#{lb['userSystem.name']}"
 					style="width: 250px; text-align: center; white-space:normal !important;">
@@ -115,8 +93,42 @@
 							pattern="dd/MM/yyyy" />
 					</h:outputText>
 				</p:column>
+				<p:column headerText="#{wd['table.columns.options']}"
+					style="width:50px; ; text-align: center;">
+					<p:commandButton icon="ui-icon-trash"
+						action="#{buscarUserController.verificarPermissao}"
+						styleClass="icon"
+						title="#{wd['table.columns.options.delete.hint']}" update="@form">
+						<f:setPropertyActionListener
+							target="#{buscarUserController.userRemove}" value="#{usuario}" />
+<!-- 						<p:confirm header="#{wd['dialog.deleteConfirmation.header']}" -->
+<!-- 							message="#{wd['dialog.deleteConfirmation.message']}" -->
+<!-- 							icon="ui-icon-alert" /> -->
+					</p:commandButton>
+					<p:commandButton icon="ui-icon-pencil" styleClass="icon"
+						action="#{buscarUserController.carregar}" update=":usuarioTabView"
+						process="@form" title="#{wd['table.columns.options.edit.hint']}">
+						<f:setPropertyActionListener
+							target="#{buscarUserController.userEdite}" value="#{usuario}" />
+					</p:commandButton>
+				</p:column>
+				
 			</p:dataTable>
 		</fieldset>
+
+		<!-- 			message="#{wd['dialog.deleteConfirmation.message']}" -->
+		<!-- 			header="#{wd['dialog.deleteConfirmation.header']}" -->
+		<p:confirmDialog id="confirmation" widgetVar="confirmation"
+			global="true" header="#{wd['dialog.deleteConfirmation.header']}" message="#{wd['dialog.deleteConfirmation.message']}">
+			<p:commandButton id="btnSim" icon="ui-icon-check"
+				value="#{wd['dialog.optionYes']}"
+				oncomplete="PF('confirmation').hide()"
+				action="#{buscarUserController.remover}"
+				update="buscarUsuarioTable messages" process="@this" styleClass="r6" />
+			<p:commandButton id="btnNao" onclick="PF('confirmation').hide()"
+				icon="ui-icon-cancel" value="#{wd['dialog.optionNo']}"
+				styleClass="r6" type="button" />
+		</p:confirmDialog>
 	</h:form>
 </div>
 </html>

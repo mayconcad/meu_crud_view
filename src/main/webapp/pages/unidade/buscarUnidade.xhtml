@@ -8,16 +8,16 @@
 	<h:form id="buscarUnidadeForm" prependId="false">
 		<p:messages id="messages" />
 
-		<p:confirmDialog message="#{wd['dialog.deleteConfirmation.message']}"
-			hideEffect="explode" header="#{wd['dialog.alert.header']}"
-			severity="alert" widgetVar="confirmation" modal="true"
-			appendToBody="true">
+		<p:confirmDialog id="confirmation" severity="alert"
+			widgetVar="confirmation" global="true" header="#{wd['dialog.deleteConfirmation.header']}" message="#{wd['dialog.deleteConfirmation.message']}">
 			<p:commandButton id="btnSim" value="#{wd['dialog.optionYes']}"
-				oncomplete="confirmation.hide();" styleClass="r6"
+				oncomplete="PF('confirmation').hide();"
+				styleClass="r6" icon="ui-icon-check"
 				action="#{buscarUnidadeController.remover}" process="@this"
 				update="buscarUnidadeTable messages" />
 			<p:commandButton id="btnNao" value="#{wd['dialog.optionNo']}"
-				onclick="confirmation.hide();" type="button" styleClass="r7" />
+				onclick="PF('confirmation').hide();" type="button"
+				styleClass="r6" icon="ui-icon-cancel"/>
 		</p:confirmDialog>
 
 		<f:validateBean disabled="true">
@@ -66,15 +66,14 @@
 
 				<div class="row">
 					<div class="col-md-2">
-						<p:outputLabel value="Unid. Física"
-							for="unidadeContabilBuscaAC" />
+						<p:outputLabel value="Unid. Física" for="unidadeContabilBuscaAC" />
 					</div>
 
 					<div class="col-md-10">
 						<p:autoComplete id="unidadeContabilBuscaAC" minQueryLength="3"
 							value="#{buscarUnidadeController.unidadeBusca.unidadeContabil}"
 							label="#{lb['unidadeContabil']}"
-							completeMethod="#{buscarUnidadeController.autocompletarUnidadeContabil}"
+							completeMethod="#{buscarUnidadeController.autocompletarUnidadeContabilLocal}"
 							queryDelay="3" widgetVar="unidadeContabilBuscaAC" var="var"
 							itemLabel="#{var.nome}" itemValue="#{var}" process="@this"
 							dropdown="true" converter="autocompleteConverter"
@@ -107,9 +106,20 @@
 				<div class="clear" />
 			</p:panel>
 	  </f:validateBean>
-		<p:commandButton value="#{wd['button.search']}" process="@this findPanel"
-			styleClass="col-md-4 r8" action="#{buscarUnidadeController.buscar}"
-			update="buscarUnidadeTable" icon="ui-icon-search">
+		<p:commandButton value="#{wd['button.search']}"
+			process="@this findPanel" styleClass="col-md-4 r6"
+			action="#{buscarUnidadeController.buscar}"
+			update="buscarUnidadeTable" icon="ui-icon-search" id="buscarUnidade">
+			<p:blockUI block="buscarUnidadeTable" trigger="buscarUnidade" >
+				<h:outputLabel value="#{wd['blockui.loading.text']}" />
+				<br />
+				<h:graphicImage library="images" name="#{wd['blockui.loading.img']}" />
+			</p:blockUI>
+		</p:commandButton>
+		<p:commandButton value="#{wd['button.clean']}" process="@this"
+			action="#{buscarUnidadeController.limparFiltroBusca}" update="findPanel"
+			icon="ui-icon-arrowrefresh-1-w" id="clearCommandButton"
+			styleClass="col-md-4 r7">
 		</p:commandButton>
 		<div class="clear" />
 		<fieldset>
@@ -119,25 +129,6 @@
 				emptyMessage="#{wd['item.emptyFind']}" var="unidade"
 				id="buscarUnidadeTable" paginator="true" rows="5"
 				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
-
-				<p:column headerText="#{wd['table.columns.options']}"
-					style="width:50px; ; text-align: center;">
-					<p:commandButton icon="ui-icon-trash" onclick="confirmation.show()"
-						styleClass="icon"
-						title="#{wd['table.columns.options.delete.hint']}">
-						<f:setPropertyActionListener
-							target="#{buscarUnidadeController.unidadeRemove}"
-							value="#{unidade}" />
-					</p:commandButton>
-					<p:commandButton icon="ui-icon-pencil" styleClass="icon"
-						action="#{buscarUnidadeController.carregar}"
-						update=":unidadeTabView" process="@form"
-						title="#{wd['table.columns.options.edit.hint']}">
-						<f:setPropertyActionListener
-							target="#{buscarUnidadeController.unidadeEdite}"
-							value="#{unidade}" />
-					</p:commandButton>
-				</p:column>
 
 				<p:column headerText="#{lb['unidade.nome']}"
 					style="width: 200px; text-align: center; white-space:normal !important;">
@@ -168,9 +159,31 @@
 						<f:convertNumber type="currency" currencyCode="BRL" />
 					</h:outputLabel>
 				</p:column>
+				<p:column headerText="#{wd['table.columns.options']}"
+					style="width:50px; ; text-align: center;">
+					<p:commandButton icon="ui-icon-trash"
+						actionListener="#{buscarUnidadeController.verificarPermissao}"
+						styleClass="icon"
+						title="#{wd['table.columns.options.delete.hint']}" update="@form">
+
+						<f:setPropertyActionListener
+							target="#{buscarUnidadeController.unidadeRemove}"
+							value="#{unidade}" />
+<!-- 						<p:confirm header="#{wd['dialog.deleteConfirmation.header']}" -->
+<!-- 							message="#{wd['dialog.deleteConfirmation.message']}" -->
+<!-- 							icon="ui-icon-alert" /> -->
+					</p:commandButton>
+					<p:commandButton icon="ui-icon-pencil" styleClass="icon"
+						action="#{buscarUnidadeController.carregar}"
+						update=":unidadeTabView" process="@form"
+						title="#{wd['table.columns.options.edit.hint']}">
+						<f:setPropertyActionListener
+							target="#{buscarUnidadeController.unidadeEdite}"
+							value="#{unidade}" />
+					</p:commandButton>
+				</p:column>
 			</p:dataTable>
 		</fieldset>
-
 	</h:form>
 </div>
 </html>

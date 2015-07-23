@@ -21,13 +21,30 @@
 	<context:annotation-config />
 	<!-- Define o pacote onde o Spring vai procurar por beans anotados -->
 	<context:component-scan
-		base-package="br.com.sts.ddum.model.repository.interfaces, br.com.sts.ddum.model.repository.impls, br.com.sts.ddum.model.interceptors, br.com.sts.ddum.model.utils,br.com.sts.ddum.model.handlers, br.com.sts.ddum.view.controllers, br.com.sts.ddum.service.interfaces, br.com.sts.ddum.service.impls" />
+		base-package="br.com.sts.ddum.model.repository.interfaces, br.com.sts.ddum.model.repository.impls, br.com.sts.ddum.model.interceptors, br.com.sts.ddum.model.utils,br.com.sts.ddum.model.handlers, br.com.sts.ddum.view.controllers,br.com.sts.ddum.view.jobs, br.com.sts.ddum.service.interfaces, br.com.sts.ddum.service.impls" />
 
 	<!-- Indica onde se encontram as interfaces que estendem JpaRepository -->
 	<jpa:repositories base-package="br.com.sts.ddum.model.repository.interfaces" />
 
 	<!-- define que as transaÃ§oes irao ser anotadas -->
 	<tx:annotation-driven />
+	
+<!-- 	<bean class="br.com.sts.ddum.service.interfaces.ResponsavelService" -->
+<!-- 		name="responsavelService" /> -->
+
+<!-- 	<bean name="schedulerJob" class="org.springframework.scheduling.quartz.JobDetailBean"> -->
+
+<!-- 		<property name="jobClass" -->
+<!-- 			value="br.com.sts.ddum.view.controllers.SchedulerJob" /> -->
+
+<!-- 		<property name="jobDataAsMap"> -->
+<!-- 			<map> -->
+<!-- 				<entry key="responsavelService" value-ref="responsavelService" /> -->
+<!-- 				<entry key="respService" value="br.com.sts.ddum.service.interfaces.ResponsavelService" /> -->
+<!-- 			</map> -->
+<!-- 		</property> -->
+<!-- 	</bean> -->
+
 
 	<!-- cache -->
 	<bean class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"
@@ -46,11 +63,12 @@
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="org.postgresql.Driver" />
-		<property name="url" value="jdbc:postgresql://192.10.0.10:5432/ddum"/>
-<!-- 		<property name="url" value="jdbc:postgresql://localhost:5432/ddum"/> -->
+		<property name="url" value="jdbc:postgresql://stsinformatica.com.br:5432/ddum"/>
+<!-- 		<property name="url" value="jdbc:postgresql://192.10.0.10:5432/ddumteste"/> -->
+<!-- 		<property name="url" value="jdbc:postgresql://localhost:5432/ddum" /> -->
 		<property name="username" value="postgres" />
 		<property name="password" value="postgres" />
-		
+
 	</bean>
 	<!-- Configuracao do Hibernate -->
 	<bean id="entityManagerFactory"

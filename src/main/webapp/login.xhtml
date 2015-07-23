@@ -8,7 +8,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title>Dinheiro Direto nas Unidades</title>
 
-	<script src='https://www.google.com/recaptcha/api.js'></script>
+<!-- 	<script src='https://www.google.com/recaptcha/api.js'></script> -->
 </h:head>
 <style type="text/css">
 .ui-widget-header {
@@ -16,13 +16,36 @@
 	color: white;
 	text-shadow: none;
 }
-#messages{
-font-size: 0.8em;
+
+.content_captcha {
+	width: 320px;
+	height: 45px;
+/* 	background-color: #F8F8F8; */
+	 background: url('..#{request.contextPath}/resources/images/bg_captcha.png') no-repeat;
+	margin: 0 auto;
+	line-height: 50px;
+	font-size: 30px;
+	font-family: sans-serif;
+	margin: 0 auto;
+	color: #CCC;
+	font-weight: bold;
+}
+.ui-dialog .ui-dialog-title{
+text-align: center;
+float: none;
+}
+.ui-dialog .ui-dialog-titlebar{
+padding: 0em 0em 0em 0em;
+}
+
+#messages {
+	font-size: 0.8em;
 }
 </style>
 
-<h:body id="bodyId"
-	style="background: url('..#{request.contextPath}/resources/images/fundo_azul.jpg') no-repeat center center !important; ">
+<!-- 	style="background: url('..#{request.contextPath}/resources/images/fundo_azul.jpg') no-repeat center center !important; " -->
+<h:body id="bodyId" style="background: url('..#{request.contextPath}/resources/images/fundo_azul.jpg') no-repeat center center !important;"
+	onload="loginFunction()">
 	<!-- 	<p:dialog header="Login" visible="true" closable="false" -->
 	<!-- 		draggable="false" resizable="false" width="420"> -->
 
@@ -61,16 +84,18 @@ font-size: 0.8em;
 	<!-- 	</p:dialog> -->
 
 	<div class="container">
-		<p:dialog header="Login" visible="true" closable="false"
-			draggable="false" resizable="false" width="350">
-			<p:messages id="messages" rendered="#{loginBean.error eq true ? false : true}"/>
 			<h:form id="ddum_login_form" prependId="false">
+		<p:dialog header="Login" visible="true" closable="false"
+			draggable="false" resizable="false" width="35%" style="text-align: center;">
+			<p:messages id="messages"
+				rendered="#{loginBean.error eq true ? false : true}" />
+<!-- 				<p:growl id="messageGrowl" rendered="#{recuperaSenhaController.EmailInvalido() eq true ? false : true}"/> -->
 				<!-- 				<div class="imageLogo" style="text-align: right;"> -->
 				<!-- 					<h:graphicImage library="images" -->
 				<!-- 						name="bandeira-parnaiba.300x225.jpg" width="200" height="30" /> -->
 				<!-- 				</div> -->
 				<div style="text-align: center;">
-					<h:outputText value="Usuário ou senha incorretos!"
+					<h:outputText id="errorLogin" value="Usuário ou senha incorretos!"
 						rendered="#{loginBean.error}" style="color: darkred" />
 				</div>
 
@@ -104,21 +129,46 @@ font-size: 0.8em;
 						value="#{wd['login.password']}">
 					</p:watermark>
 				</div>
-				<div style="text-align: center; margin-top: 5px;">
-					<p:captcha id="captch" label="Captcha" language="pt_BR" theme="white" validatorMessage="Captcha: Erro de Validação: O texto não confere!"/>
+				<div style="text-align: center; margin-top: 5px;"
+					class="content_captcha">
+					<p:outputLabel value="#{captchaBean.captcha}" />
 				</div>
+				<div style="text-align: center; margin-top: 5px;">
+					<p:inputText id="inputCaptcha" value="#{captchaBean.inputCaptcha}" style="width:310px"/>
+					<p:watermark for="inputCaptcha" value="Informe os caracteres">
+					</p:watermark>
+				</div>
+				<!-- 				<div style="text-align: center; margin-top: 5px;"> -->
+				<!-- 					<p:captcha id="captch" label="Captcha" language="pt_BR" -->
+				<!-- 						theme="white" -->
+				<!-- 						validatorMessage="Captcha: Erro de Validação: O texto não confere!" /> -->
+				<!-- 				</div> -->
 
-<!-- 				<div class="g-recaptcha" data-sitekey="6LdjYwMTAAAAAM1Du_WUUp3CUfFu92jMe8JF4ul6"></div> -->
+				<!-- 				<div class="g-recaptcha" data-sitekey="6LdjYwMTAAAAAM1Du_WUUp3CUfFu92jMe8JF4ul6"></div> -->
 				<div style="text-align: center; margin-top: 5px;">
 					<p:commandButton id="login_loginButton_button"
 						action="#{loginBean.login}" value="Logar" update="@form"
-						process="@form" style="height: 35px" icon="ui-icon-locked"
-						ajax="false" actionListener="#{captchaBean.checar}"/>
+						process="@form" style="height: 35px; font-size: 0.8em" icon="ui-icon-locked"
+						ajax="false"/>
 				</div>
-			</h:form>
+				<div id="recuperaSenhaLink"
+					style="text-align: center; margin-top: 5px; display: none">
+					<br /><a
+						href="#{request.contextPath}/recuperaSenha.xhtml"><i><font color="0000FF">Clique
+							aqui para Recuperar sua Senha</font></i></a>
+				</div>
 
 		</p:dialog>
+			</h:form>
 		<br /> <br />
 	</div>
 </h:body>
+<script type="text/javascript">
+	function loginFunction() {
+		if ($("#errorLogin").get(0).hidden)
+			$("#recuperaSenhaLink").css('display', 'none');
+		else
+			$("#recuperaSenhaLink").css('display', 'block');
+	}
+</script>
 </html>

@@ -1,0 +1,22 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<div class="selectedMenu">
+	<span class="headerTitle">Demonstrativo de Empenho</span>
+</div>
+
+<p:tabView id="reportEmpenhoTabView">
+
+	<p:ajax event="tabClose" process="@all" />
+	<p:ajax event="tabChange" process="@all" />
+
+	<p:tab id="reportTab" title="Demonstrativo Empenho">
+		<ui:include src="guiaEmpenhoReport.xhtml" />
+	</p:tab>
+
+</p:tabView>
+
+</html>

@@ -1,0 +1,171 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body onload="init();">
+	<div class="container">
+		<h:form id="buscarFeriadoForm" prependId="false">
+
+			<p:messages id="messages" />
+			<p:confirmDialog severity="alert" widgetVar="confirmation"
+				id="confirmation" global="true"
+				header="#{wd['dialog.deleteConfirmation.header']}"
+				message="#{wd['dialog.deleteConfirmation.message']}">
+				<p:commandButton id="btnSim" value="#{wd['dialog.optionYes']}"
+					oncomplete="PF('confirmation').hide();" styleClass="r6"
+					icon="ui-icon-check"
+					actionListener="#{buscarFeriadoController.remover}" process="@this"
+					update="buscarFeriadoTable messages" />
+				<p:commandButton id="btnNao" value="#{wd['dialog.optionNo']}"
+					onclick="PF('confirmation').hide();" type="button" styleClass="r6"
+					icon="ui-icon-cancel" />
+			</p:confirmDialog>
+
+			<f:validateBean disabled="true">
+				<p:panel header="#{wd['fieldset.filters']}" id="findPanel">
+					<div class="row">
+						<div class="col-md-2">
+							<p:outputLabel value="#{lb['feriado.descricao']}"
+								for="buscarNome" />
+						</div>
+						<div class="col-md-8">
+							<p:inputText id="buscarNome" widgetVar="buscarNome" alt="nome"
+								value="#{buscarFeriadoController.feriadoBusca.descricao}" />
+						</div>
+						<div class="col-md-1">
+							<p:outputLabel value="#{lb['feriado.ano']}" for="feriadoAno" />
+						</div>
+						<div class="col-md-2">
+							<p:inputMask id="feriadoAno"
+								value="#{buscarFeriadoController.feriadoBusca.ano}" mask="9999" />
+						</div>
+						<div class="col-md-1">
+							<p:outputLabel value="#{lb['feriado.mes']}" for="feriadoMes" />
+						</div>
+						<div class="col-md-2">
+							<!-- 							<p:inputMask id="feriadoMes" -->
+							<!-- 								value="#{buscarFeriadoController.feriadoBusca.mes}" mask="99" /> -->
+							<p:selectOneMenu id="feriadoMes"
+								itemLabel="#{wd['dialog.optionYes']}"
+								value="#{buscarFeriadoController.mesBusca}" rendered="true">
+								<f:selectItem itemLabel="#{wd['selection.allLabel']}"
+									itemValue="" />
+								<f:selectItems value="#{buscarFeriadoController.meses}" />
+								<p:ajax event="change" process="@this" />
+							</p:selectOneMenu>
+						</div>
+						<div class="col-md-1">
+							<p:outputLabel value="#{lb['feriado.dia']}" for="feriadoDia" />
+						</div>
+						<div class="col-md-2">
+							<!-- 							<p:inputMask id="feriadoDia" -->
+							<!-- 								value="#{buscarFeriadoController.feriadoBusca.dia}" mask="99" /> -->
+							<p:selectOneMenu id="feriadoDia"
+								itemLabel="#{wd['dialog.optionYes']}"
+								value="#{buscarFeriadoController.diaBusca}" rendered="true">
+								<f:selectItem itemLabel="#{wd['selection.allLabel']}"
+									itemValue="" />
+								<f:selectItems value="#{buscarFeriadoController.diasBusca}" />
+							</p:selectOneMenu>
+						</div>
+						<div class="col-md-2">
+							<p:outputLabel value="#{lb['feriado.tipo']}" for="feriadoTipo" />
+						</div>
+						<div class="col-md-3">
+							<p:selectOneMenu id="feriadoTipo"
+								itemLabel="#{wd['dialog.optionYes']}"
+								value="#{buscarFeriadoController.feriadoBusca.tipo}"
+								rendered="true">
+								<f:selectItem itemLabel="#{wd['selection.allLabel']}"
+									itemValue="" />
+								<f:selectItems value="#{buscarFeriadoController.tipos}" />
+							</p:selectOneMenu>
+						</div>
+					</div>
+					<div class="clear" />
+				</p:panel>
+			</f:validateBean>
+			<p:commandButton value="#{wd['button.search']}"
+				process="@this findPanel" styleClass="col-md-4 r6"
+				action="#{buscarFeriadoController.buscar}"
+				update="buscarFeriadoTable" icon="ui-icon-search"
+				id="buscarCommandButton">
+				<p:blockUI block="buscarFeriadoTable" trigger="buscarCommandButton">
+					<h:outputLabel value="#{wd['blockui.loading.text']}" />
+					<br />
+					<h:graphicImage library="images"
+						name="#{wd['blockui.loading.img']}" />
+				</p:blockUI>
+			</p:commandButton>
+			<p:commandButton value="#{wd['button.clean']}" process="@this"
+			action="#{buscarFeriadoController.limparFiltroBusca}" update="findPanel"
+			icon="ui-icon-arrowrefresh-1-w" id="clearCommandButton"
+			styleClass="col-md-4 r7">
+		</p:commandButton>
+			<div class="clear" />
+
+			<fieldset>
+				<legend>Resultados</legend>
+				<p:dataTable value="#{buscarFeriadoController.feriados}"
+					emptyMessage="#{wd['item.emptyFind']}" var="feriado"
+					id="buscarFeriadoTable" paginator="true" rows="5"
+					currentPageReportTemplate="{currentPage} de {totalPages}"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+					<p:column headerText="#{lb['feriado.descricao']}"
+						style="width: 150px; text-align: center; white-space:normal !important;">
+						<h:outputText value="#{feriado.descricao}" style="font-weight:100" />
+					</p:column>
+
+					<p:column headerText="#{lb['feriado.dia']}"
+						style="width: 50px; text-align: center;">
+						<h:outputLabel value="#{feriado.dia}" style="font-weight:100" />
+					</p:column>
+
+					<p:column headerText="#{lb['feriado.mes']}"
+						style="width: 50px; text-align: center;">
+						<h:outputText value="#{buscarFeriadoController.getMesAno(feriado.mes).getDescricao()}" style="font-weight:100" />
+					</p:column>
+
+					<p:column headerText="#{lb['feriado.ano']}"
+						style="width: 30px; text-align: center;">
+						<h:outputText value="#{feriado.ano eq '0' ? '-' : feriado.ano}" style="font-weight:100" />
+					</p:column>
+
+					<p:column headerText="#{lb['feriado.tipo']}"
+						style="width: 30px; text-align: center;">
+						<h:outputText value="#{feriado.tipo.toString()}"
+							style="font-weight:100" />
+					</p:column>
+					<p:column headerText="#{wd['table.columns.options']}"
+						style="width:50px; ; text-align: center;">
+						<p:commandButton icon="ui-icon-trash"
+							actionListener="#{buscarFeriadoController.verificarPermissao}"
+							styleClass="icon"
+							title="#{wd['table.columns.options.delete.hint']}">
+							<f:setPropertyActionListener
+								target="#{buscarFeriadoController.feriadoRemove}"
+								value="#{feriado}" />
+						</p:commandButton>
+						<p:commandButton icon="ui-icon-pencil" styleClass="icon"
+							action="#{buscarFeriadoController.carregar}"
+							update=":feriadoTabView" process="@form"
+							title="#{wd['table.columns.options.edit.hint']}">
+							<f:setPropertyActionListener
+								target="#{buscarFeriadoController.feriadoEdite}"
+								value="#{feriado}" />
+						</p:commandButton>
+					</p:column>
+				</p:dataTable>
+			</fieldset>
+		</h:form>
+	</div>
+</h:body>
+<SCRIPT type="text/javascript">
+	function init() {
+		$(".ui-outputlabel ui-widget").removeClass("span.ui-outpulabel-rti");
+	}
+</SCRIPT>
+</html>

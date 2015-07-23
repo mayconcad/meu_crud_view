@@ -20,7 +20,7 @@
 						completeMethod="#{userController.autocompletarRole}"
 						converter="autocompleteConverter" var="var"
 						itemLabel="#{var.name}" itemValue="#{var}" dropdown="true"
-						required="true" scrollHeight="250">
+						required="true" scrollHeight="250" requiredMessage="Campo Perfil: O item deve ser selecionado.">
 						<p:ajax event="itemSelect" process="@this"
 							listener="#{userController.enableField()}" update="@form" />
 						<f:attribute name="entityClass"
@@ -41,7 +41,7 @@
 						converter="autocompleteConverter" var="var"
 						itemLabel="#{var.nome}" itemValue="#{var}" dropdown="true"
 						required="true" scrollHeight="250"
-						rendered="#{userController.enableAutocomplete}">
+						rendered="#{userController.enableAutocomplete}" requiredMessage="Campo Responsável: O item deve ser selecionado.">
 						<p:ajax event="itemSelect" process="@this" />
 						<f:attribute name="entityClass"
 							value="br.com.sts.ddum.model.entities.Responsavel" />
@@ -64,7 +64,9 @@
 					</div>
 					<div class="col-md-4">
 						<p:password id="userPassword" value="#{userController.senha}"
-							required="true" />
+							required="true" validatorMessage="O Campo Senha deve possui pelo menos 5 caracteres!">
+							 <f:validateLongRange minimum="5" />
+							</p:password>
 					</div>
 					<div class="col-md-2">
 						<p:outputLabel value="#{lb['userSystem.email']}" for="userEmail" />
@@ -77,6 +79,7 @@
 		<p:commandButton value="#{wd['button.create']}" update="@form"
 			action="#{userController.save}" styleClass="col-md-4 r6"
 			process="@form" icon="ui-icon-disk" />
+<!-- 			 :usuarioTabView:criarUserForm:roleAC :usuarioTabView:criarUserForm:userName :usuarioTabView:criarUserForm:userUserName :usuarioTabView:criarUserForm:userPassword :usuarioTabView:criarUserForm:userEmail -->
 		<p:commandButton id="limparCommandButton"
 			value="#{wd['button.clean']}" icon="ui-icon-arrowrefresh-1-w"
 			actionListener="#{userController.init}" update="@form"
@@ -85,4 +88,7 @@
 		</p:panel>
 	</h:form>
 </div>
+<script type="text/javascript">
+	$("#userUserName").val="";
+</script>
 </html>

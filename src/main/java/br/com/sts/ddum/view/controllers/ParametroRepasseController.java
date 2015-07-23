@@ -8,6 +8,7 @@ import javax.faces.bean.ViewScoped;
 
 import org.apache.commons.lang3.StringUtils;
 import org.omnifaces.util.Ajax;
+import org.primefaces.context.RequestContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,7 @@ import br.com.sts.ddum.model.enums.ResultMessages;
 import br.com.sts.ddum.model.utils.UtilsModel;
 import br.com.sts.ddum.service.interfaces.ConnectionConfigService;
 import br.com.sts.ddum.service.interfaces.ParametroRepasseService;
+import br.com.sts.ddum.view.utils.UtilsView;
 
 @Controller
 @ViewScoped
@@ -53,9 +55,20 @@ public class ParametroRepasseController extends BaseController {
 
 	}
 
+	public void limparDados() {
+		init();
+		BuscarParametroRepasseController controllerInstance = UtilsView
+				.getControllerInstance(BuscarParametroRepasseController.class);
+		if (controllerInstance != null)
+			controllerInstance.init();
+		RequestContext.getCurrentInstance().update(":parametroRepasseTabView");
+	}
+
 	public void criar() {
 
 		try {
+			if (usuarioSemPermissao())
+				return;
 			createStatement = conexaoBanco.createStatement();
 
 			String query = String.format(
@@ -77,7 +90,7 @@ public class ParametroRepasseController extends BaseController {
 			createStatement.close();
 
 			if (parametroRepasse.getCodDotacao() == 0l) {
-				addErrorMessage("A dotação informada não existe, confira os valores campos!");
+				addErrorMessage("A dotação informada não existe, confira os valores dos campos da Dotação!");
 				return;
 			}
 
@@ -93,7 +106,8 @@ public class ParametroRepasseController extends BaseController {
 			addErrorMessage("O item já está cadastrado");
 			return;
 		} catch (Exception e) {
-			addErrorMessage(String.format("%s \nConsulte o Suporte Técnico: %s",
+			addErrorMessage(String.format(
+					"%s \nConsulte o Suporte Técnico: %s",
 					ResultMessages.ERROR_CRUD.getDescricao(),
 					e.getLocalizedMessage()));
 			return;

@@ -148,7 +148,7 @@
 					<div class="col-md-4">
 						<p:inputMask id="responsavelTelefone"
 							value="#{buscarResponsavelController.responsavelEdite.telefone}"
-							mask="(999)9999-9999" />
+							mask="(99)9999-9999" />
 					</div>
 				</div>
 			</fieldset>
@@ -215,18 +215,32 @@
 							required="true">
 							<f:selectItems
 								value="#{buscarResponsavelController.tipoContas()}" />
+								<p:ajax event="change"
+							listener="#{buscarResponsavelController.desabilitarOperacao()}"
+							process="@this"
+							update=":responsavelTabView:updateResponsavelForm:operacaoEdit" />
 						</p:selectOneMenu>
 					</div>
+					<div class="col-md-2">
+					<!-- #{buscarResponsavelController.desabilitaOperacao} -->
+						<p:outputLabel value="Cód. Operação" rendered="true"
+							for="operacaoEdit" />
+					</div>
+					<div class="col-md-2">
+						<p:inputText id="operacaoEdit" rendered="#{buscarResponsavelController.desabilitaOperacao}"
+							value="#{buscarResponsavelController.responsavelEdite.operacao}"/>
+					</div>
+					
 				</div>
 			</fieldset>
 
 			<p:commandButton value="#{wd['button.update']}"
 				update=":responsavelTabView, messages"
 				actionListener="#{buscarResponsavelController.editar}"
-				styleClass="col-md-4 r6" icon="ui-icon-disk" process="@this" />
-			<p:commandButton value="#{wd['button.cancel']}" type="reset"
+				styleClass="col-md-4 r6" icon="ui-icon-disk" process="@form" />
+			<p:commandButton value="#{wd['button.cancel']}"
 				icon="ui-icon-cancel"
-				onclick="responsavelTabs.remove(responsavelTabs.getActiveIndex())"
+				actionListener="#{buscarResponsavelController.closeEditTab}"
 				styleClass="col-md-4 r7" process="@this" />
 		</p:panel>
 	</h:form>

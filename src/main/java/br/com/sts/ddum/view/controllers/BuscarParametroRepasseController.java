@@ -22,6 +22,7 @@ import br.com.sts.ddum.model.enums.ResultMessages;
 import br.com.sts.ddum.model.utils.UtilsModel;
 import br.com.sts.ddum.service.interfaces.ConnectionConfigService;
 import br.com.sts.ddum.service.interfaces.ParametroRepasseService;
+import br.com.sts.ddum.view.utils.UtilsView;
 
 @ManagedBean
 @ViewScoped
@@ -59,6 +60,11 @@ public class BuscarParametroRepasseController extends BaseController {
 
 	public void buscar() {
 		parametrosRepasse.clear();
+		LoginBean controllerInstance = UtilsView
+				.getControllerInstance(LoginBean.class);
+		if (controllerInstance.getPrincipalRole().equals("AUDITOR"))
+			parametroRepasseBusca.setExercicio(2015);
+
 		Map<String, Object> params = new HashMap<String, Object>();
 		if (parametroRepasseBusca.getDescricao() != null
 				&& !"".equals(parametroRepasseBusca.getDescricao()))
@@ -113,6 +119,9 @@ public class BuscarParametroRepasseController extends BaseController {
 	}
 
 	public void editar(ActionEvent actionEvent) {
+
+		if (usuarioSemPermissao())
+			return;
 		try {
 			createStatement = conexaoBanco.createStatement();
 
@@ -154,6 +163,11 @@ public class BuscarParametroRepasseController extends BaseController {
 		loadToFind();
 	}
 
+	public void limparFiltroBusca() {
+		parametroRepasseBusca = new ParametroRepasse();
+		valorRepasseBusca = new String();
+	}
+
 	public SegmentoEnum[] getSegmentos() {
 		return SegmentoEnum.values();
 	}
@@ -166,6 +180,9 @@ public class BuscarParametroRepasseController extends BaseController {
 	}
 
 	public void carregar() {
+		if (usuarioSemPermissao("AUDITOR"))
+			return;
+
 		getEditTab().setRendered(true);
 		TabView parent = (TabView) getEditTab().getParent();
 		int editIndex = parent.getChildren().indexOf(getEditTab());

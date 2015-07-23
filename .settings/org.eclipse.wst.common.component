@@ -4,10 +4,10 @@
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
-        <dependent-module archiveName="ddum-service-0.0.6-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/ddum-service/ddum-service">
+        <dependent-module archiveName="ddum-service-1.0.8-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/ddum-service/ddum-service">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="ddum-model-0.0.6-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/ddum-model/ddum-model">
+        <dependent-module archiveName="ddum-model-1.0.8-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/ddum-model/ddum-model">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <property name="java-output-path" value="/ddum-view/target/classes"/>

@@ -55,7 +55,7 @@
 						converter="autocompleteConverter" var="var"
 						itemLabel="#{var.name}" itemValue="#{var}" dropdown="true"
 						required="true" scrollHeight="250"
-						disabled="#{loginController.principalRole eq 'ADMIN' ? false : true}">
+						disabled="#{loginController.principalRole eq 'ADMIN' ? false : true}" requiredMessage="Campo Perfil: O item deve ser selecionado.">
 						<p:ajax event="itemSelect" process="@this" />
 						<f:attribute name="entityClass"
 							value="br.com.sts.ddum.model.springsecurity.entities.Role" />
@@ -67,9 +67,9 @@
 				update=":usuarioTabView, messages"
 				actionListener="#{buscarUserController.editar}"
 				styleClass="col-md-4 r6" process="@form" icon="ui-icon-disk" />
-			<p:commandButton value="#{wd['button.cancel']}" type="reset"
+			<p:commandButton value="#{wd['button.cancel']}" 
 				process="@this" icon="ui-icon-cancel"
-				onclick="usuarioTabs.remove(usuarioTabs.getActiveIndex())"
+				actionListener="#{buscarUserController.closeEditTab}"
 				styleClass="col-md-4 r7" />
 		</p:panel>
 	</h:form>

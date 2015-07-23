@@ -1,0 +1,146 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<div class="container">
+	<h:form id="criarFeriadoForm">
+		<p:messages id="messages" />
+
+		<p:panel id="dataPanel" header="#{wd['fieldset.data']}"
+			toggleable="false" styleClass="clearfix">
+			<p:focus context="dataPanel" />
+
+			<div class="row">
+				<div class="col-md-2">
+					<p:outputLabel value="#{lb['feriado.descricao']}"
+						for="feriadoDescricao" />
+				</div>
+				<div class="col-md-8">
+					<p:inputText id="feriadoDescricao"
+						value="#{feriadoController.feriado.descricao}" required="true" />
+				</div>
+				<div class="col-md-1">
+					<p:outputLabel value="#{lb['feriado.ano']}" for="feriadoAno" />
+				</div>
+				<div class="col-md-2">
+					<p:inputMask id="feriadoAno"
+						value="#{feriadoController.feriado.ano}" mask="9999" />
+				</div>
+				<div class="col-md-1">
+					<p:outputLabel value="#{lb['feriado.mes']}" for="feriadoMes" />
+				</div>
+				<div class="col-md-2">
+					<!-- 					<p:inputMask id="feriadoMes" -->
+					<!-- 						value="#{feriadoController.feriado.mes}" required="true" mask="99" /> -->
+					<p:selectOneMenu id="feriadoMes"
+						itemLabel="#{wd['dialog.optionYes']}"
+						value="#{feriadoController.mes}" rendered="true">
+						<f:selectItems value="#{feriadoController.meses}" />
+						<p:ajax event="change" process="@this" />
+					</p:selectOneMenu>
+				</div>
+				<div class="col-md-1">
+					<p:outputLabel value="#{lb['feriado.dia']}" for="feriadoDia" />
+				</div>
+				<div class="col-md-2">
+					<!-- 					<p:inputMask id="feriadoDia" -->
+					<!-- 						value="#{feriadoController.feriado.dia}" required="true" mask="99"/> -->
+					<p:selectOneMenu id="feriadoDia"
+						itemLabel="#{wd['dialog.optionYes']}"
+						value="#{feriadoController.dia}" rendered="true">
+						<f:selectItems value="#{feriadoController.getDias()}" />
+					</p:selectOneMenu>
+				</div>
+				<div class="col-md-2">
+					<p:outputLabel value="#{lb['feriado.tipo']}" for="feriadoTipo" />
+				</div>
+				<div class="col-md-3">
+					<p:selectOneMenu id="feriadoTipo"
+						itemLabel="#{wd['dialog.optionYes']}"
+						value="#{feriadoController.feriado.tipo}" rendered="true">
+						<f:selectItems value="#{feriadoController.tipos}" />
+					</p:selectOneMenu>
+				</div>
+			</div>
+
+			<div class="clear" />
+
+			<p:commandButton id="adicionarCommandButton"
+				value="#{wd['button.add']}" icon="ui-icon-disk" process="@form"
+				update="@form" action="#{feriadoController.addFeriados}"
+				styleClass="w3 r8" style="margin: 5px 5px 5px 5px" />
+			<p:dataTable id="feriadosDataTable" draggableColumns="true"
+				emptyMessage="#{wd['item.emptyAddTable']}"
+				value="#{feriadoController.feriados}" var="item" reflow="true">
+
+				<p:column id="colunaDescricao"
+					headerText="#{lb['feriado.descricao']}">
+					<h:outputLabel value="#{item.descricao}" />
+				</p:column>
+				<p:column id="colunaDia" headerText="#{lb['feriado.dia']}">
+					<h:outputLabel value="#{item.dia}" />
+				</p:column>
+				<p:column id="colunaMes" headerText="#{lb['feriado.mes']}">
+					<h:outputLabel value="#{buscarFeriadoController.getMesAno(item.mes).getDescricao()}" />
+				</p:column>
+				<p:column id="colunaAno" headerText="#{lb['feriado.ano']}">
+					<h:outputLabel value="#{item.ano eq '0' ? '-' : item.ano}" />
+				</p:column>
+				<p:column id="colunaTipo" headerText="#{lb['feriado.tipo']}">
+					<h:outputLabel value="#{item.tipo.descricao}" />
+				</p:column>
+				<p:column id="colunaOpcao"
+					headerText="#{wd['table.columns.options']}"
+					style="width:100px; text-align: center;">
+					<p:commandButton id="editarCommandButton" icon="ui-icon-pencil"
+						process="@this feriadosDataTable"
+						action="#{feriadoController.editarFeriado}"
+						title="#{wd['table.columns.options.edit.hint']}" update="@form"
+						styleClass="icon">
+						<f:setPropertyActionListener
+							target="#{feriadoController.feriadoEdite}" value="#{item}" />
+						<p:collector value="#{feriadoController.feriadoEdite}"
+							removeFrom="#{feriadoController.feriados}" />
+					</p:commandButton>
+
+					<p:commandButton id="removerCommandButton" icon="ui-icon-trash"
+						title="#{wd['table.columns.options.delete.hint']}"
+						onclick="PF('removeConfirmDialog').show()"
+						process="@this feriadosDataTable" styleClass="icon">
+						<p:confirm header="#{wd['dialog.deleteConfirmation.header']}"
+							message="#{wd['dialog.deleteConfirmation.message']}"
+							icon="ui-icon-alert" />
+						<f:setPropertyActionListener
+							target="#{feriadoController.feriadoRemove}" value="#{item}" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+
+			<p:commandButton value="#{wd['button.create']}" update="@form"
+				actionListener="#{feriadoController.criar}" icon="ui-icon-disk"
+				styleClass="col-md-4 r6" process="@this" immediate="true" />
+			<p:commandButton id="limparCommandButton"
+				value="#{wd['button.clean']}" icon="ui-icon-arrowrefresh-1-w"
+				actionListener="#{feriadoController.init}" update="@form"
+				process="@this" styleClass="col-md-4 r7">
+			</p:commandButton>
+		</p:panel>
+		<p:confirmDialog id="removeConfirmDialog"
+			widgetVar="removeConfirmDialog" global="true">
+			<p:commandButton value="#{wd['dialog.optionYes']}" styleClass="r6"
+				icon="ui-icon-check" oncomplete="PF('removeConfirmDialog').hide()"
+				process="@parent feriadosDataTable"
+				action="#{feriadoController.removerFeriado}"
+				update=":feriadoTabView:criarFeriadoForm:feriadosDataTable">
+				<p:collector value="#{feriadoController.feriadoRemove}"
+					removeFrom="#{feriadoController.feriados}" />
+			</p:commandButton>
+			<p:commandButton onclick="PF('removeConfirmDialog').hide()"
+				styleClass="r6" icon="ui-icon-cancel"
+				value="#{wd['dialog.optionNo']}" type="button" />
+		</p:confirmDialog>
+	</h:form>
+</div>
+</html>

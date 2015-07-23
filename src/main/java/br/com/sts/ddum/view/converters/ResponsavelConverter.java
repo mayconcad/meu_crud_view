@@ -39,7 +39,8 @@ public class ResponsavelConverter implements Converter {
 			Object value) {
 		if (value != null)
 			try {
-				return String.valueOf(((BaseEntity) value).getId());
+				Long id = ((BaseEntity) value).getId();
+				return id == null ? "" : String.valueOf(id);
 			} catch (NumberFormatException e) {
 				return ((String) value);
 			}

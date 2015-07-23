@@ -1,6 +1,8 @@
 package br.com.sts.ddum.view.controllers;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.sql.Connection;
@@ -30,6 +32,7 @@ import org.primefaces.component.media.Media;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import br.com.sts.ddum.model.entities.Feriado;
 import br.com.sts.ddum.model.entities.Repasse;
 import br.com.sts.ddum.model.entities.Responsavel;
 import br.com.sts.ddum.model.entities.Unidade;
@@ -37,8 +40,11 @@ import br.com.sts.ddum.model.enums.ResultMessages;
 import br.com.sts.ddum.model.utils.UtilsModel;
 import br.com.sts.ddum.model.vos.ReservaDotacaoVO;
 import br.com.sts.ddum.service.interfaces.ConnectionConfigService;
+import br.com.sts.ddum.service.interfaces.FeriadoService;
+import br.com.sts.ddum.service.interfaces.LiquidacaoService;
 import br.com.sts.ddum.service.interfaces.RepasseService;
 import br.com.sts.ddum.service.interfaces.ResponsavelService;
+import br.com.sts.ddum.view.utils.UtilsView;
 
 @Controller
 @ViewScoped
@@ -55,6 +61,12 @@ public class RepasseController extends BaseReportController {
 	private ResponsavelService responsavelService;
 
 	@Autowired
+	private FeriadoService feriadoService;
+
+	@Autowired
+	private LiquidacaoService liquidacaoServiceJob;
+
+	@Autowired
 	private ConnectionConfigService connectionConfigService;
 
 	private Unidade unidade;
@@ -68,6 +80,8 @@ public class RepasseController extends BaseReportController {
 
 	private Media empenhoMedia;
 
+	private BigDecimal saldoDotacao = BigDecimal.ZERO;
+
 	@PostConstruct
 	public void init() {
 		empenhoMedia = new Media();
@@ -80,8 +94,14 @@ public class RepasseController extends BaseReportController {
 	}
 
 	public void gerarRepasse() {
-		if (true) {
-			addErrorMessage("Esta funcionalidade ainda não está disponível!");
+
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("unidade.id", repasse.getUnidade().getId());
+		params.put("exercicio", repasse.getUnidade().getParametroRepasse()
+				.getExercicio());
+		List<Repasse> repasses = repasseService.buscar(params);
+		if (repasses != null && !repasses.isEmpty()) {
+			addErrorMessage("Já existe um Empenho para o Exercício e Unidade Física Informados!");
 			return;
 		}
 
@@ -102,6 +122,7 @@ public class RepasseController extends BaseReportController {
 			long proximoNumeroEmpenho = repasseService
 					.obterProximoNumeroEmpenho(repasse.getUnidade()
 							.getParametroRepasse().getCodUnidade());
+
 			// int exercicio = repasse.getUnidade().getParametroRepasse()
 			// .getExercicio();
 			// String codConta = StringUtils.rightPad(repasse.getUnidade()
@@ -138,38 +159,93 @@ public class RepasseController extends BaseReportController {
 			//
 			repasse.setNumeroProcesso(Long.parseLong(getNumeroProcessoLabel()
 					.replace(".", "")));
-			repasseService.repasseAutomatico(repasse, credor, repasse
+			repasse.setSaldoAberto(BigDecimal.ZERO);
+
+			// "0 0 1 * * *"
+			// liquidacaoServiceJob.agendar("0 0 2 ? * *", LiquidacaoJob.class);
+
+			// para o primeiro repasse a data do repasse deve equivale ao
+			// primeiro dia útil do mês
+			Calendar dataAtual = Calendar.getInstance();
+			dataAtual.setTime(new Date());
+
+			// Calendar calendar = Calendar.getInstance();
+			// calendar.setTime(repasse.getDataEmissao());
+			byte dia = ((byte) dataAtual.get(Calendar.DAY_OF_MONTH));
+			byte mes = ((byte) (dataAtual.get(Calendar.MONTH) + 1));
+
+			// verifica se a data do empenho é equivamente ao primeiro dia
+			// util do mês, caso contrário a data para liquidação será
+			// primeiro dia útil do próximo mês
+			// if (dia == dataAtual.get(Calendar.DAY_OF_MONTH)) {
+			if (dia == 1) {
+				Feriado feriado = feriadoService.buscarPorDiaMes(dia, mes);
+				if (feriado != null) {
+					++mes;
+					int diaUtilMes = obterDiaUtilMes(1, mes);
+					dataAtual.set(dataAtual.get(Calendar.YEAR), --mes,
+							diaUtilMes);
+					repasse.setDataEmissao(dataAtual.getTime());
+				} else {
+					dataAtual.set(dataAtual.get(Calendar.YEAR), mes, dia);
+					repasse.setDataEmissao(dataAtual.getTime());
+				}
+			} else {
+				++mes;
+				int diaUtilMes = obterDiaUtilMes(1, mes);
+				dataAtual.set(dataAtual.get(Calendar.YEAR), --mes, diaUtilMes);
+				repasse.setDataEmissao(dataAtual.getTime());
+			}
+
+			// dataAtual.set(dataAtual.get(Calendar.YEAR), mes, dia);
+			// repasse.setDataEmissao(dataAtual.getTime());
+
+			repasseService.registrarEmpenho(repasse, credor, repasse
 					.getUnidade().getParametroRepasse().getValorRepasse(),
-					proximoNumeroEmpenho, true);
+					BigDecimal.ZERO, saldoDotacao, proximoNumeroEmpenho, true);
+			//
+			// Calendar dataLiquidacao = Calendar.getInstance();
+			// dataLiquidacao.setTime(repasse.getDataEmissao());
+			//
+
+			// }else{
+			//
+			// repasse = repasseService.repasseAutomatico(repasse, credor,
+			// repasse
+			// .getUnidade().getParametroRepasse().getValorRepasse(),
+			// BigDecimal.ZERO, proximoNumeroEmpenho, true);
+			// }
+			// } else {
+			// ++mes;
+			// int diaUtilMes = obterDiaUtilMes(dia, mes);
+			// calendar.set(calendar.get(Calendar.YEAR), mes, diaUtilMes);
+			// entidade.setDataEmissao(calendar.getTime());
+			// }
 
 			addInfoMessage(String.format(
 					"Foi gerado um Empenho com o número ( %s )",
 					proximoNumeroEmpenho));
+			repasse.setNumeroEmpenho(proximoNumeroEmpenho);
+			String fileNameReport = String.format("GuiaEmpenho_%d_%d_%d",
+					repasse.getUnidade().getResponsavel().getId(), repasse
+							.getUnidade().getId(), repasse.getExercicio());
+			generateReportStream(
+					repasse,
+					String.format("%d - %s", credor.getCodigoCredor(),
+							credor.getNome()), fileNameReport);
 
-			generateReportStream(repasse.getNumeroEmpenho(),
-					repasse.getDataEmissao(), repasse.getExercicio(),
-					repasse.getNumeroProcesso(),
-					UtilsModel.convertBigDecimalToString(repasse
-							.getValorEmpenho()), repasse.getTipoCredito()
-							.getDescricao(), repasse.getTipoMeta()
-							.getDescricao(), repasse.getTipoEmpenho()
-							.getDescricao(), repasse.getNaturezaEmpenho()
-							.getDescricao(), String.format("%s - %s", repasse
-							.getUnidade().getParametroRepasse()
-							.getCodElementoDespesa(), repasse.getUnidade()
-							.getUnidadeContabil().getAtividade()
-							.getContaContabil().getDescricao()), String.format(
-							"%s - %s",
-							repasse.getUnidade().getParametroRepasse()
-									.getCodFonteRecurso(), repasse.getUnidade()
-									.getUnidadeContabil().getAtividade()
-									.getContaContabil().getFonteRecurso()
-									.getDescricao()), String.format("%d - %s",
-							credor.getCodigoCredor(), credor.getNome()),
-					repasse.getCodAplicacao(), repasse.getHistorico());
+			ServletContext servletContext = (ServletContext) FacesContext
+					.getCurrentInstance().getExternalContext().getContext();
+			String caminho = servletContext.getRealPath(File.separator);
+
+			// getEmpenhoMedia().setValue(
+			// String.format("%s%s%s%s%s", caminho, File.separator,
+			// "reports", File.separator, "GuiaEmpenho.pdf"));
+
 			getEmpenhoMedia().setValue(
 					File.separator.concat("reports").concat(
-							File.separator.concat("GuiaEmpenho.pdf")));
+							File.separator.concat(fileNameReport)
+									.concat(".pdf")));
 
 			// credor =
 			// buildUpdateCredor(repasse.getUnidade().getResponsavel());
@@ -189,7 +265,17 @@ public class RepasseController extends BaseReportController {
 		}
 		responsavelService.salvar(repasse.getUnidade().getResponsavel());
 		init();
+		saldoDotacao = BigDecimal.ZERO;
+	}
 
+	private int obterDiaUtilMes(int dia, int mes) {
+
+		Feriado feriado = feriadoService
+				.buscarPorDiaMes((byte) dia, (byte) mes);
+		if (feriado != null)
+			return obterDiaUtilMes(dia + 1, mes);
+
+		return dia;
 	}
 
 	private Responsavel buildUpdateCredor(Responsavel credor) {
@@ -239,39 +325,77 @@ public class RepasseController extends BaseReportController {
 		return responsavel;
 	}
 
-	private void generateReportStream(long numEmpenho, Date dataEmissao,
-			int exercicio, long numProcesso, String valorEmpenho,
-			String tipoCredito, String tipoMeta, String tipoEmpenho,
-			String naturezaEmpenho, String elemDespesa, String fonteRecurso,
-			String credor, String codAplicacao, String historico) {
+	private void generateReportStream(Repasse repasse, String credor,
+			String fileNameReport) {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-
-		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("numEmpenho", numEmpenho);
-		parameters.put("dataEmissao", sdf.format(dataEmissao));
-		parameters.put("exercicio", exercicio);
-		parameters.put("numProcesso", numProcesso);
-		parameters.put("valorEmpenho", valorEmpenho);
-		parameters.put("tipoCredito", tipoCredito);
-		parameters.put("tipoMeta", tipoMeta);
-		parameters.put("tipoEmpenho", tipoEmpenho);
-		parameters.put("naturezaEmpenho", naturezaEmpenho);
-		parameters.put("elemDespesa", elemDespesa);
-		parameters.put("fonteRecurso", fonteRecurso);
-		parameters.put("credor", credor);
-		parameters.put("codAplicacao",
-				String.format("%s - %s", codAplicacao, "Geral"));
-		parameters.put("historico", historico);
-		parameters.put("local", "Parnaíba - PI");
-
 		FacesContext context = FacesContext.getCurrentInstance();
 		ServletContext servletContext = (ServletContext) context
 				.getExternalContext().getContext();
 
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("numEmpenho", repasse.getNumeroEmpenho());
+		parameters.put("dataEmissao", sdf.format(new Date()));
+		parameters.put("exercicio", repasse.getExercicio());
+		parameters
+				.put("valorEmpenho", UtilsModel
+						.convertBigDecimalToString(repasse.getValorEmpenho()));
+		parameters.put("numProcesso", repasse.getNumeroProcesso());
+		// parameters
+		// .put("valorEmpenho", UtilsModel
+		// .convertBigDecimalToString(repasse.getValorEmpenho()));
+		parameters.put("tipoCredito", repasse.getTipoCredito().getDescricao());
+		parameters.put("tipoMeta", repasse.getTipoMeta().getDescricao());
+		parameters.put("tipoEmpenho", repasse.getTipoEmpenho().getDescricao());
+		parameters.put(
+				"elemDespesa",
+				String.format("%s - %s", repasse.getUnidade()
+						.getParametroRepasse().getCodElementoDespesa(), repasse
+						.getUnidade().getUnidadeContabil().getAtividade()
+						.getContaContabil().getDescricao()));
+		parameters.put("naturezaEmpenho", repasse.getNaturezaEmpenho()
+				.getDescricao());
+		parameters.put(
+				"fonteRecurso",
+				String.format("%s - %s", repasse.getUnidade()
+						.getParametroRepasse().getCodFonteRecurso(), repasse
+						.getUnidade().getUnidadeContabil().getAtividade()
+						.getContaContabil().getFonteRecurso().getDescricao()));
+		parameters.put("unidadeFisica", repasse.getUnidade().getNome());
+		parameters.put(
+				"unidade",
+				String.format("%s - %s", repasse.getUnidade()
+						.getParametroRepasse().getCodUnidade(), repasse
+						.getUnidade().getUnidadeContabil().getNome()));
+		parameters.put(
+				"atividade",
+				String.format("%s - %s", repasse.getUnidade()
+						.getParametroRepasse().getCodAtividade(), repasse
+						.getUnidade().getUnidadeContabil().getAtividade()
+						.getDescricao()));
+		parameters.put("credor", credor);
+		parameters.put("codAplicacao",
+				String.format("%s - %s", repasse.getCodAplicacao(), "Geral"));
+		parameters.put("historico", repasse.getHistorico());
+		LoginBean controllerInstance = UtilsView
+				.getControllerInstance(LoginBean.class);
+		parameters.put("gestor", controllerInstance.getCurrentUser().getName());
+		parameters.put("prefeitura", "Prefeitura Municipal de Parnaíba - PI");
+
+		FileInputStream logoInputStream = null;
+		try {
+			logoInputStream = new FileInputStream(
+					new File(
+							servletContext
+									.getRealPath("/resources/images/bandeira-parnaiba.300x225.jpg")));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		parameters.put("logo", logoInputStream);
+
 		generateStremedReport(servletContext.getRealPath(File.separator.concat(
-				"reports").concat(File.separator)), "GuiaEmpenho",
-				new ArrayList(), parameters);
+				"reports").concat(File.separator)), fileNameReport,
+				"GuiaEmpenho", new ArrayList(), parameters);
 
 	}
 
@@ -283,6 +407,8 @@ public class RepasseController extends BaseReportController {
 					.getDescricao());
 			return;
 		}
+		setSaldoDotacao(repasseService.calculoSaldoDotacao(
+				repasse.getUnidade(), new Date()));
 	}
 
 	public void limparRelatorio() {
@@ -368,27 +494,37 @@ public class RepasseController extends BaseReportController {
 			result.close();
 			return responsavel;
 		}
+		String fone = "0";
+		String ddd = "0";
+		if (!"".equals(responsavel.getTelefone())) {
+			fone = responsavel.getTelefone().replace("(", "").replace(")", "")
+					.replace("-", "");
+			ddd = fone.substring(0, 2);
+			fone = fone.substring(2, fone.length());
+		}
 		String queryInseriCredor = String
-				.format("INSERT INTO cgp.credor(cd_credor, nu_rg, de_orgao_rg, dt_rg, de_razao_social, cd_cpfcnpj, tp_credor, st_credor,de_endereco, de_bairro, de_cidade, cd_uf, cd_cep, de_lotacao, dt_cadastro, cd_nivel_integracao, dt_registro) VALUES((SELECT MAX(c.cd_credor) + 1 FROM cgp.credor c), '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s', '%s', %d, '%s')",
+				.format("INSERT INTO cgp.credor(cd_credor, nu_rg, de_orgao_rg, dt_rg, de_razao_social, cd_cpfcnpj, tp_credor, st_credor,de_endereco, de_bairro, de_cidade, cd_uf, cd_cep, de_lotacao, dt_cadastro, cd_nivel_integracao, dt_registro, cd_ddd, nu_telefone) VALUES((SELECT MAX(c.cd_credor) + 1 FROM cgp.credor c), '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, '%s',%d,  %d)",
 						responsavel.getRg(), responsavel.getOrgaoExpedidor(),
 						responsavel.getDataExpedicao(), responsavel.getNome(),
 						responsavel.getCpf(), 0, 0, responsavel.getEndereco(),
 						responsavel.getBairro(), responsavel.getCidade(),
 						responsavel.getUf(), responsavel.getCep(),
 						responsavel.getLotacao(), sdf.format(new Date()), 1,
-						sdf.format(new Date()));
+						sdf.format(new Date()), Integer.parseInt(ddd),
+						Integer.parseInt(fone));
 		createStatement.executeUpdate(queryInseriCredor);
 
 		String queryContaCredor = String
 				.format("INSERT INTO cgp.conta_credor(cd_credor, cd_banco, cd_agencia, dv_agencia, cd_conta, dv_conta, cd_operacao, dt_registro) VALUES ((SELECT MAX(c.cd_credor) FROM cgp.credor c WHERE c.cd_cpfcnpj = '%s'), '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
-						responsavel.getCpf(), responsavel.getCodigoBanco(),
+						responsavel.getCpf(),
+						responsavel.getCodigoBanco(),
 						responsavel.getNumeroAgencia(),
 						responsavel.getDigitoAgencia(),
 						responsavel.getNumeroConta(),
 						responsavel.getDigitoConta(),
-						responsavel.getOperacao(),
-						sdf.format(responsavel.getDataInicial()));
-		createStatement.executeQuery(queryContaCredor);
+						responsavel.getOperacao() == null ? "" : responsavel
+								.getOperacao(), sdf.format(new Date()));
+		createStatement.executeUpdate(queryContaCredor);
 
 		result = createStatement.executeQuery(queryBuscaCredor);
 		while (result.next()) {
@@ -641,5 +777,13 @@ public class RepasseController extends BaseReportController {
 
 	public void setResponsavelService(ResponsavelService responsavelService) {
 		this.responsavelService = responsavelService;
+	}
+
+	public BigDecimal getSaldoDotacao() {
+		return saldoDotacao;
+	}
+
+	public void setSaldoDotacao(BigDecimal saldoDotacao) {
+		this.saldoDotacao = saldoDotacao;
 	}
 }

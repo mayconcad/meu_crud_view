@@ -1,0 +1,342 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:of="http://omnifaces.org/functions"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+
+<!-- <div class="container"> -->
+<!-- .ui-datatable-resizable thead th, .ui-datatable-resizable tbody td, .ui-datatable-resizable tfoot td { -->
+<!--     white-space: nowrap -->
+<style>
+/* .ui-datatable-resizable thead th, .ui-datatable-resizable tbody td, */
+/* 	.ui-datatable-resizable tfoot td { */
+/* 	white-space: none; */
+/* } */
+</style>
+
+<h:form id="auditoriaForm" prependId="false"
+	enctype="multipart/form-data">
+	<p:messages id="message" />
+	<p:focus context="message" />
+
+	<p:panel header="#{wd['fieldset.data']}" toggleable="false"
+		styleClass="clearfix" id="dadosAuditPanel">
+		<fieldset>
+			<LEGEND>Filtros</LEGEND>
+			<div class="col-md-24" style="text-align: left;">
+				<div class="col-md-2">
+					<p:outputLabel value="Exercício" />
+				</div>
+				<div class="col-md-3">
+					<p:selectOneMenu id="exercicio"
+						itemLabel="#{wd['dialog.optionYes']}"
+						value="#{auditoriaController.exercicio}" rendered="true"
+						height="200">
+						<f:selectItems value="#{auditoriaController.exercicios}" />
+						<p:ajax event="change"
+							listener="#{auditoriaController.carregarDados()}"
+							update="auditoriaDataTable" process="@this" />
+					</p:selectOneMenu>
+				</div>
+				<div class="col-md-2">
+					<p:outputLabel value="Segmento" />
+				</div>
+				<div class="col-md-3">
+					<p:selectOneMenu id="unidadeTipo"
+						itemLabel="#{wd['dialog.optionYes']}"
+						value="#{auditoriaController.segmento}">
+						<f:selectItem itemLabel="#{wd['selection.allLabel']}" />
+						<f:selectItems value="#{unidadeController.tipos}" />
+						<p:ajax event="change"
+							listener="#{auditoriaController.carregarDados()}" process="@this"
+							update="auditoriaDataTable" />
+					</p:selectOneMenu>
+				</div>
+				<div class="col-md-1">
+					<p:outputLabel value="Status" />
+				</div>
+				<div class="col-md-3">
+					<p:selectOneMenu id="statusPrestConta"
+						itemLabel="#{wd['dialog.optionYes']}"
+						value="#{auditoriaController.status}">
+						<f:selectItem itemLabel="#{wd['selection.allLabel']}" />
+						<f:selectItems value="#{auditoriaController.listaStatus}" />
+						<p:ajax event="change"
+							listener="#{auditoriaController.carregarDados()}" process="@this"
+							update="auditoriaDataTable" />
+					</p:selectOneMenu>
+				</div>
+
+
+				<div class="col-md-2">
+					<p:outputLabel value="#{lb['responsavel']}" for="responsavelAC" />
+				</div>
+				<div class="col-md-8">
+					<p:autoComplete id="responsavelAC"
+						value="#{auditoriaController.responsavel}"
+						label="#{lb['responsavel']}"
+						completeMethod="#{responsavelController.autocompletar}"
+						converter="autocompleteConverter" var="var"
+						itemLabel="#{var.nome}" itemValue="#{var}" dropdown="true"
+						scrollHeight="250" minQueryLength="3" queryDelay="3"
+						widgetVar="responsavelAC">
+						<p:ajax event="itemSelect" process="@this"
+							listener="#{auditoriaController.carregarDados()}"
+							update="auditoriaDataTable" />
+						<p:ajax event="blur" process="@this"
+							listener="#{auditoriaController.carregarDados()}"
+							update="auditoriaDataTable" />
+						<f:attribute name="entityClass"
+							value="br.com.sts.ddum.model.entities.Responsavel" />
+					</p:autoComplete>
+				</div>
+			</div>
+		</fieldset>
+		<br />
+		<div class="clear" />
+		<!-- 			<FIELDSET> -->
+		<div class="col-md-24" style="text-align: left; width: 100%">
+			<!-- 				<div class="row"> -->
+
+			<p:dataTable id="auditoriaDataTable" draggableColumns="true"
+				emptyMessage="#{wd['table.emptyMessage']}" resizableColumns="true"
+				value="#{auditoriaController.auditoriaVOs}" var="item" reflow="true"
+				scrollable="true" scrollWidth="180%" scrollHeight="250"
+				style="width:100%">
+
+				<p:columnGroup type="header">
+					<p:row>
+						<!-- 						<p:column rowspan="2" headerText="Team" /> -->
+						<p:column colspan="3" headerText="Unidades"
+							style="text-align:center;" width="30%" />
+						<p:column colspan="3" headerText="Empenhos"
+							style="text-align:center;" />
+						<p:column colspan="3" headerText="Liquidacões"
+							style="text-align:center;" />
+						<p:column colspan="3" headerText="Pagamentos"
+							style="text-align:center; " />
+						<p:column colspan="5" headerText="Prest.Contas"
+							style="text-align:center;" />
+					</p:row>
+					<p:row>
+						<p:column headerText="Segmento"
+							style="text-align:center; width:40%">
+						</p:column>
+						<p:column headerText="Unidade Física"
+							style="text-align:center; width:40%">
+						</p:column>
+						<p:column headerText="Responsável"
+							style="text-align:center; width:40%">
+						</p:column>
+
+						<p:column headerText="Nº" style="text-align:center; " width="33%">
+						</p:column>
+						<p:column headerText="Valor" style="text-align:center;"
+							width="33%">
+						</p:column>
+						<p:column headerText="#{lb['empenho.data']}"
+							style="text-align:center; " width="33%">
+						</p:column>
+
+						<p:column headerText="Nº" style="text-align:center;" width="33%">
+						</p:column>
+						<p:column headerText="Valor" style="text-align:center; "
+							width="33%">
+						</p:column>
+						<p:column headerText="#{lb['liquidacao.data']}"
+							style="text-align:center; " width="33%">
+						</p:column>
+
+						<p:column headerText="Nº" style="text-align:center; " width="33%">
+						</p:column>
+						<p:column headerText="Valor" style="text-align:center; "
+							width="33%">
+						</p:column>
+						<p:column headerText="#{lb['pagamento.data']}"
+							style="text-align:center; " width="33%">
+						</p:column>
+
+						<p:column headerText="Nº" style="text-align:center; " width="33%">
+						</p:column>
+						<p:column headerText="Valor" style="text-align:center; "
+							width="33%">
+						</p:column>
+						<p:column headerText="#{lb['pagamento.data']}"
+							style="text-align:center; " width="33%">
+						</p:column>
+
+						<p:column headerText="Status" style="text-align:center; "
+							width="33%">
+						</p:column>
+						<p:column headerText="Visualizar" style="text-align: center; "
+							width="33%">
+						</p:column>
+
+					</p:row>
+				</p:columnGroup>
+
+				<p:column id="colunaSeg" headerText="Segmento"
+					style="text-align:left; width:15%; font-size:0.9em" >
+					<h:outputLabel
+						value="#{item.unidade.parametroRepasse.segmento.toString()}" />
+				</p:column>
+				<p:column id="colunaUnidade" headerText="Unidade Física"
+					style="text-align:left; width:15%; font-size:0.9em">
+					<h:outputLabel value="#{item.unidade.nome}"
+						style="text-align:left;" />
+				</p:column>
+				<p:column id="colunaResponsavel" headerText="Responsável"
+					style="text-align:left; width:15%; font-size:0.9em">
+					<h:outputLabel value="#{item.unidade.responsavel.nome}"
+						style="text-align:left;" />
+				</p:column>
+
+				<p:column id="colunaNumEmp" headerText="Nº"
+					style="text-align:center; width:5%; font-size:0.9em">
+					<h:outputLabel value="#{item.empenhoVO.numero eq 0 ? '-' : item.empenhoVO.numero}" />
+				</p:column>
+				<p:column id="colunaValorEmp" headerText="Valor"
+					style="text-align:center; width:13%; font-size:0.9em">
+					<h:outputLabel value="#{item.empenhoVO.valor eq '' ? '-' : item.empenhoVO.valor}"
+						style="text-align:left;" />
+				</p:column>
+				<p:column id="colunaDataEmp" headerText="#{lb['empenho.data']}"
+					style="text-align:center; width:10%; font-size:0.9em">
+					<h:outputText value="#{item.empenhoVO.data eq '' ? '-' : item.empenhoVO.data}">
+						<f:convertDateTime locale="pt,BR" dateStyle="long"
+							pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</p:column>
+
+				<p:column id="colunaNumLiq" headerText="Nº"
+					style="text-align:center; width:5%; font-size:0.9em">
+					<h:outputLabel value="#{item.liquidacaoVO.numero eq 0 ? '-' : item.liquidacaoVO.numero}" />
+				</p:column>
+				<p:column id="colunaValorLiq" headerText="Valor"
+					style="text-align:center; width:10%; font-size:0.9em">
+					<h:outputLabel value="#{item.liquidacaoVO.valor eq '' ? '-' : item.liquidacaoVO.valor}"
+						style="text-align:left;" />
+				</p:column>
+				<p:column id="colunaDataLiq" headerText="#{lb['liquidacao.data']}"
+					style="text-align:center; width:10%; font-size:0.9em">
+					<h:outputText value="#{item.liquidacaoVO.data eq '' ? '-' : item.liquidacaoVO.data}">
+						<f:convertDateTime locale="pt,BR" dateStyle="long"
+							pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</p:column>
+
+				<p:column id="colunaNumPag" headerText="Nº"
+					style="text-align:center; width:5%; font-size:0.9em">
+					<h:outputLabel value="#{item.pagamentoVO.numero eq 0 ? '-' : item.pagamentoVO.numero}" />
+				</p:column>
+				<p:column id="colunaValorPag" headerText="Valor"
+					style="text-align:center; width:10%; font-size:0.9em">
+					<h:outputLabel value="#{item.pagamentoVO.valor eq null ? '-' : item.pagamentoVO.valor}"
+						style="text-align:left;" />
+				</p:column>
+				<p:column id="colunaDataPag" headerText="#{lb['liquidacao.data']}"
+					style="text-align:center; width:10%; font-size:0.9em">
+					<h:outputText value="#{item.pagamentoVO.data eq null ? '-' : item.pagamentoVO.data}">
+						<f:convertDateTime locale="pt,BR" dateStyle="long"
+							pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</p:column>
+
+				<p:column id="colunaNumConta" headerText="Nº"
+					style="text-align:center; width:5%; font-size:0.9em">
+					<h:outputLabel
+						value="#{item.prestacaoConta.finalizada eq false ? '-' : item.prestacaoConta.repasse.numeroLiquidacao}" />
+				</p:column>
+				<p:column id="colunaValorConta" headerText="Valor"
+					style="text-align:center; width:10%; font-size:0.9em">
+					<h:outputLabel value="#{item.prestacaoConta.valor eq null ? '-' : item.prestacaoConta.valor}">
+						<f:convertNumber type="currency" currencyCode="BRL" />
+					</h:outputLabel>
+				</p:column>
+				<p:column id="colunaDataConta" headerText="#{lb['pagamento.data']}"
+					style="text-align:center; width:10%; font-size:0.9em">
+					<h:outputText value="#{item.prestacaoConta.dataPrestacao eq null ? '-' : item.prestacaoConta.dataPrestacao}">
+						<f:convertDateTime locale="pt,BR" dateStyle="long"
+							pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</p:column>
+				<p:column id="colunaStatus" headerText="Status"
+					style="text-align:center; width:10%; font-size:0.9em">
+					<h:outputLabel id="status"
+						value="#{item.prestacaoConta.finalizada eq false ? '-' : item.prestacaoConta.status.toString()}" />
+				</p:column>
+				<p:column headerText="Visualizar"
+					style="text-align: center; width:5%">
+					<p:commandButton icon="ui-icon-pencil" styleClass="icon"
+						action="#{auditarPrestacaoContaController.carregar(item.prestacaoConta.repasse.numeroLiquidacao)}"
+						update="@parent" process="auditoriaDataTable"
+						title="#{wd['table.columns.options.show.hint']}"
+						disabled="#{(item.prestacaoConta eq null or item.prestacaoConta.finalizada eq false) ? true : false}">
+						<f:setPropertyActionListener
+							target="#{auditarPrestacaoContaController.prestacaoContaAudit}"
+							value="#{item.prestacaoConta}" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+		</div>
+	</p:panel>
+	<div class="clear" />
+	<br />
+
+	<p:confirmDialog id="removeConfirmDialog"
+		widgetVar="removeConfirmDialog" global="true">
+		<p:commandButton value="#{wd['dialog.optionYes']}" styleClass="r6"
+			icon="ui-icon-check" oncomplete="PF('removeConfirmDialog').hide()"
+			process="@parent" action="#{auditoriaController.removerDoc}"
+			update=":auditoriaTabView:auditoriaForm">
+			<!-- 				, :auditoriaTabView:auditoriaForm:saldoAberto -->
+			<p:collector value="#{auditoriaController.documentoRemove}"
+				removeFrom="#{auditoriaController.documentos}" />
+		</p:commandButton>
+		<p:commandButton onclick="PF('removeConfirmDialog').hide()"
+			styleClass="r6" icon="ui-icon-cancel"
+			value="#{wd['dialog.optionNo']}" type="button" />
+	</p:confirmDialog>
+
+	<p:confirmDialog id="confirmFinalizarDialog"
+		widgetVar="confirmFinalizarDialog" global="true" header="Alerta"
+		message="Deseja Realmente Finalizar esta Prestação de Contas?">
+		<div style="font-weight: bold;">
+			<h:outputLabel id="mensagemPrestContaLabel"
+				value="#{auditoriaController.messagemPrestacaoContas}"
+				style="width:400px; text-align:center;text" />
+		</div>
+		<br />
+		<p:commandButton id="yesCommandButton" widgetVar="yesCommandButton"
+			value="#{wd['dialog.optionYes']}" styleClass="r6"
+			icon="ui-icon-check" onclick="PF('confirmFinalizarDialog').hide();"
+			process="@this" action="#{auditoriaController.registrar}"
+			update=":auditoriaTabView">
+			<!-- 				, :auditoriaTabView:auditoriaForm:saldoAberto -->
+			<p:blockUI block=":auditoriaTabView" trigger="yesCommandButton">
+				<h:outputLabel value="#{wd['blockui.loading.text']}" />
+				<br />
+				<h:graphicImage library="images" name="#{wd['blockui.loading.img']}" />
+			</p:blockUI>
+		</p:commandButton>
+		<p:commandButton onclick="PF('confirmFinalizarDialog').hide();"
+			styleClass="r6" icon="ui-icon-cancel"
+			value="#{wd['dialog.optionNo']}" type="button" />
+	</p:confirmDialog>
+
+	<p:dialog widgetVar="imageDialog" id="imageDialog" height="500px"
+		width="800px" resizable="false">
+		<p:graphicImage value="#{auditoriaController.imageStream}"
+			height="500px" width="800px"
+			rendered="#{auditoriaController.imageStream eq null ? false : true}" />
+		<p:media id="pdfView" player="pdf"
+			binding="#{auditoriaController.pdfView}" height="500px" width="800px"
+			rendered="#{auditoriaController.imageStream eq null ? true : false}" />
+		<!--     value="../images/#{imgBean.selectedBook.imagePath}.png" -->
+	</p:dialog>
+</h:form>
+<!-- </div> -->
+</html>

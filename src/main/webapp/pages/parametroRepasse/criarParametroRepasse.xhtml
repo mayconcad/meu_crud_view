@@ -103,6 +103,7 @@
 							required="true" onkeypress="mascara(this,currency);">
 						</p:inputText>
 					</div>
+					<f:validateBean disabled="true">
 					<div class="col-md-3">
 						<p:outputLabel value="#{lb['parametroRepasse.codBanco']}"
 							for="pRepasseCodBanco" />
@@ -119,11 +120,12 @@
 						<p:inputText id="pRepasseDescBanco"
 							value="#{parametroRepasseController.parametroRepasse.descricaoBanco}" />
 					</div>
+					</f:validateBean>
 				</div>
 			</fieldset>
 			<p:commandButton value="#{wd['button.create']}" update="@form"
 				actionListener="#{parametroRepasseController.criar}"
-				icon="ui-icon-disk" styleClass="col-md-4 r6" />
+				icon="ui-icon-disk" styleClass="col-md-4 r6"/>
 			<p:commandButton id="limparCommandButton"
 				value="#{wd['button.clean']}" icon="ui-icon-arrowrefresh-1-w"
 				actionListener="#{parametroRepasseController.init}" update="@form"

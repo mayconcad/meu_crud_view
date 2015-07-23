@@ -8,8 +8,12 @@ import java.sql.Statement;
 import javax.faces.application.FacesMessage;
 import javax.faces.application.FacesMessage.Severity;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 
+import org.omnifaces.util.Ajax;
 import org.primefaces.component.tabview.Tab;
+import org.primefaces.component.tabview.TabView;
+import org.primefaces.context.RequestContext;
 
 import br.com.sts.ddum.model.enums.ResultMessages;
 import br.com.sts.ddum.view.utils.UtilsView;
@@ -29,6 +33,17 @@ public class BaseController implements Serializable {
 
 	private Tab editTab;
 	private Tab findTab;
+
+	public void closeEditTab(ActionEvent actionEvent) {
+		if (getEditTab() != null) {
+			getEditTab().setRendered(false);
+			TabView parent = (TabView) getEditTab().getParent();
+			int editIndex = parent.getChildren().indexOf(getEditTab());
+			// parent.getChildren().remove(editIndex);
+			parent.setActiveIndex(editIndex - 1);
+			Ajax.update(parent.getId());
+		}
+	}
 
 	public Tab getEditTab() {
 		return editTab;
@@ -73,12 +88,35 @@ public class BaseController implements Serializable {
 		return false;
 	}
 
+	protected boolean usuarioSemPermissao(String role) {
+		if (role != null) {
+			LoginBean controllerInstance = UtilsView
+					.getControllerInstance(LoginBean.class);
+			if (!controllerInstance.getPrincipalRole().equals("ADMIN")
+					&& !controllerInstance.getPrincipalRole().equals(role)) {
+				addErrorMessage(String.format(String.format("%s",
+						ResultMessages.ERROR_ONLY_ADMIN_AND_ROLE_OPERATION
+								.getDescricao()), !"".equals(role) ? role : ""));
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean verificarPermissao() {
+
+		if (usuarioSemPermissao())
+			return false;
+
+		RequestContext.getCurrentInstance().execute(
+				"PF('confirmation').show();");
+		return true;
+	}
+
 	private void addMessage(String componentId, String errorMessage,
 			Severity severity) {
 		FacesMessage message = new FacesMessage(errorMessage);
 		message.setSeverity(severity);
 		FacesContext.getCurrentInstance().addMessage(componentId, message);
-
 	}
-
 }

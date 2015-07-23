@@ -15,6 +15,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.persistence.EntityManager;
 
 import org.primefaces.component.tabview.Tab;
 import org.primefaces.component.tabview.TabView;
@@ -31,7 +32,9 @@ import br.com.sts.ddum.model.entities.UnidadeContabil;
 import br.com.sts.ddum.model.enums.QueryEnum;
 import br.com.sts.ddum.model.enums.ResultMessages;
 import br.com.sts.ddum.model.enums.ZonaLocalizacaoEnum;
+import br.com.sts.ddum.model.utils.JPAPersistence;
 import br.com.sts.ddum.service.interfaces.ParametroRepasseService;
+import br.com.sts.ddum.service.interfaces.UnidadeContabilService;
 import br.com.sts.ddum.service.interfaces.UnidadeService;
 
 @ManagedBean
@@ -63,6 +66,9 @@ public class BuscarUnidadeController extends BaseController {
 
 	@ManagedProperty("#{unidadeService}")
 	private UnidadeService unidadeService;
+
+	@ManagedProperty("#{unidadeContabilService}")
+	private UnidadeContabilService unidadeContabilService;
 
 	@ManagedProperty("#{parametroRepasseService}")
 	private ParametroRepasseService parametroRepasseService;
@@ -110,6 +116,10 @@ public class BuscarUnidadeController extends BaseController {
 				.replace(",", "."));
 	}
 
+	public List<UnidadeContabil> autocompletarUnidadeContabilLocal(String valor) {
+		return unidadeContabilService.autocompletar(valor);
+	}
+
 	public List<UnidadeContabil> autocompletarUnidadeContabil(String valor) {
 		return unidadeController.burcarUnidadeContabil(valor);
 	}
@@ -154,15 +164,22 @@ public class BuscarUnidadeController extends BaseController {
 
 	public void remover() {
 
-		if (usuarioSemPermissao())
-			return;
+		// if (usuarioSemPermissao())
+		// return;
 
 		try {
 			unidadeService.remover(unidadeRemove);
 		} catch (Exception e) {
-			addErrorMessage(String.format(
-					"%s \nConsulte o Suporte Técnico: %s",
-					ResultMessages.ERROR_CRUD.getDescricao(), e.getMessage()));
+			if (e.getMessage().equalsIgnoreCase("duplicate key")) {
+				EntityManager entityManager = JPAPersistence.getEntityManager();
+				entityManager.getTransaction().begin();
+				entityManager.remove(unidadeRemove);
+				entityManager.getTransaction().commit();
+			} else
+				addErrorMessage(String.format(
+						"%s \nConsulte o Suporte Técnico: %s",
+						ResultMessages.ERROR_CRUD.getDescricao(),
+						e.getMessage()));
 			return;
 		}
 		buscar();
@@ -191,6 +208,11 @@ public class BuscarUnidadeController extends BaseController {
 		loadToFind();
 	}
 
+	public void limparFiltroBusca() {
+		unidadeBusca = new Unidade();
+		valorRepasse = new String();
+	}
+
 	public void loadToFind() {
 		getEditTab().setRendered(false);
 		TabView parent = (TabView) getFindTab().getParent();
@@ -203,7 +225,7 @@ public class BuscarUnidadeController extends BaseController {
 		// getEditTab().setRendered(false);
 		// parent.setActiveIndex(1);
 
-		if (usuarioSemPermissao()) {
+		if (usuarioSemPermissao("GESTOR")) {
 
 			RequestContext.getCurrentInstance().update(
 					"unidadeTabView:buscarUnidadeForm");
@@ -470,4 +492,12 @@ public class BuscarUnidadeController extends BaseController {
 		this.unidadeController = unidadeController;
 	}
 
+	public UnidadeContabilService getUnidadeContabilService() {
+		return unidadeContabilService;
+	}
+
+	public void setUnidadeContabilService(
+			UnidadeContabilService unidadeContabilService) {
+		this.unidadeContabilService = unidadeContabilService;
+	}
 }
