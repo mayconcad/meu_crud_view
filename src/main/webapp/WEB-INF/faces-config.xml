@@ -28,33 +28,6 @@
 		</resource-bundle>
 
 	</application>
-	<converter>
-		<converter-id>autocompleteConverter</converter-id>
-		<converter-class>br.com.sts.ddum.view.converters.AutocompleteConverter</converter-class>
-	</converter>
-	<converter>
-		<converter-id>unidadeContabilConverter</converter-id>
-		<converter-class>br.com.sts.ddum.view.converters.UnidadeContabilConverter</converter-class>
-	</converter>
-	<converter>
-		<converter-id>atividadeContabilConverter</converter-id>
-		<converter-class>br.com.sts.ddum.view.converters.AtividadeContabilConverter</converter-class>
-	</converter>
-	<converter>
-		<converter-id>contaContabilConverter</converter-id>
-		<converter-class>br.com.sts.ddum.view.converters.ContaContabilConverter</converter-class>
-	</converter>
-	<converter>
-		<converter-id>fonteRecursoConverter</converter-id>
-		<converter-class>br.com.sts.ddum.view.converters.FonteRecursoConverter</converter-class>
-	</converter>
-	<converter>
-		<converter-id>responsavelConverter</converter-id>
-		<converter-class>br.com.sts.ddum.view.converters.ResponsavelConverter</converter-class>
-	</converter>
-	<!-- <factory> -->
-	<!-- <exception-handler-factory>br.com.sts.ddum.model.handlers.ServiceExceptionHandlerFactory</exception-handler-factory> -->
-	<!-- </factory> -->
 	<navigation-rule>
 		<navigation-case>
 			<from-outcome>sucessoLogin</from-outcome>

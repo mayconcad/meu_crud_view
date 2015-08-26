@@ -16,18 +16,20 @@
 		<form-login login-page="/login.xhtml" default-target-url="/pages/index.xhtml"
 			authentication-failure-url="/login.xhtml" />
 <!-- 		<logout logout-url="/logout" /> -->
-        <access-denied-handler error-page="/semPermissao.jsf" />
+<!--         <access-denied-handler error-page="/semPermissao.jsf" /> -->
 	</http>
 
 	<beans:bean id="passwordEncoder"
 		class="org.springframework.security.authentication.encoding.ShaPasswordEncoder">
 		<beans:constructor-arg value="256" />
 	</beans:bean>
-
+	
+<!-- 	<context:component-scan	base-package="br.com.meu_crud.service.impl"/> -->
+	
 	<authentication-manager alias="authenticationManager">
-		<authentication-provider user-service-ref="userDetailsService">
-			<password-encoder ref="passwordEncoder" />
-		</authentication-provider>
+<!-- 		<authentication-provider user-service-ref="userDetailsService"> -->
+<!-- 			<password-encoder ref="passwordEncoder" /> -->
+<!-- 		</authentication-provider> -->
 	</authentication-manager>
 
 
@@ -133,19 +135,19 @@
 <!-- 	</http> -->
 
 	
-<!-- 	<authentication-manager> -->
-<!-- 		<authentication-provider> -->
-<!-- 	    <password-encoder hash="sha-256" /> -->
-<!-- 			<user-service> -->
-<!-- 				<user name="admin" password="8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918" authorities="ROLE_ADMIN" /> -->
-<!-- 			</user-service> -->
-<!-- 		</authentication-provider> -->
+	<authentication-manager>
+		<authentication-provider>
+	    <password-encoder hash="sha-256" />
+			<user-service>
+				<user name="admin" password="8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918" authorities="ROLE_ADMIN" />
+			</user-service>
+		</authentication-provider>
 <!-- 		<authentication-provider> -->
 <!-- 		    <password-encoder hash="sha-256" /> -->
 <!-- 			<user-service> -->
 <!-- 				<user name="andrea" password="5f3d6952c5c5e22077fabf461de80f1ce475752fe75afcf5ca46bac438405619" authorities="ROLE_FUNC" /> -->
 <!-- 			</user-service> -->
 <!-- 		</authentication-provider> -->
-<!-- 	</authentication-manager> -->
+	</authentication-manager>
 
 </beans:beans>

@@ -15,7 +15,7 @@ import javax.faces.event.ActionEvent;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import br.com.meu_crud.model.entities.User;
+import br.com.meu_crud.model.entities.Usuario;
 import br.com.meu_crud.service.interfaces.AuthenticationService;
 import br.com.meu_crud.service.interfaces.UserService;
 
@@ -103,12 +103,12 @@ public class LoginBean extends BaseController {
 		}
 	}
 
-	public User getCurrentUser() {
+	public Usuario getCurrentUser() {
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("username", ((User) SecurityContextHolder.getContext()
+		params.put("username", ((Usuario) SecurityContextHolder.getContext()
 				.getAuthentication().getPrincipal()).getUsername());
-		List<User> list = userServiceImpl.buscar(params);
-		return list == null ? new User() : list.get(0);
+		List<Usuario> list = userServiceImpl.buscar(params);
+		return list == null ? new Usuario() : list.get(0);
 	}
 
 	public String getUserName() {
@@ -146,5 +146,13 @@ public class LoginBean extends BaseController {
 
 	public void setError(boolean error) {
 		this.error = error;
+	}
+
+	public UserService getUserServiceImpl() {
+		return userServiceImpl;
+	}
+
+	public void setUserServiceImpl(UserService userServiceImpl) {
+		this.userServiceImpl = userServiceImpl;
 	}
 }

@@ -21,31 +21,13 @@
 	<!-- Indica ao Spring o pacote onde encontrar os beans anotadas -->
 
 	<context:component-scan
-		base-package="br.com.sts.ddum.model.repository.interfaces, br.com.sts.ddum.model.repository.impls, br.com.sts.ddum.model.interceptors, br.com.sts.ddum.model.utils,br.com.sts.ddum.model.handlers, br.com.sts.ddum.view.controllers,br.com.sts.ddum.view.jobs, br.com.sts.ddum.service.interfaces, br.com.sts.ddum.service.impls" />
+		base-package="br.com.meu_crud.model.repository.interfaces, br.com.meu_crud.model.repository.impls, br.com.meu_crud.model.utils, br.com.meu_crud.view.controllers, br.com.meu_crud.service.interfaces, br.com.meu_crud.service.impls" />
 
 	<!-- Indica onde se encontram as interfaces que estendem JpaRepository -->
-	<jpa:repositories base-package="br.com.sts.ddum.model.repository.interfaces" />
+	<jpa:repositories base-package="br.com.meu_crud.model.repository.impl" />
 
 	<!-- define que as transaÃ§oes irao ser anotadas -->
 	<tx:annotation-driven />
-
-	<!-- <bean class="br.com.sts.ddum.service.interfaces.ResponsavelService" -->
-	<!-- name="responsavelService" /> -->
-
-	<!-- <bean name="schedulerJob" class="org.springframework.scheduling.quartz.JobDetailBean"> -->
-
-	<!-- <property name="jobClass" -->
-	<!-- value="br.com.sts.ddum.view.controllers.SchedulerJob" /> -->
-
-	<!-- <property name="jobDataAsMap"> -->
-	<!-- <map> -->
-	<!-- <entry key="responsavelService" value-ref="responsavelService" /> -->
-	<!-- <entry key="respService" value="br.com.sts.ddum.service.interfaces.ResponsavelService" 
-		/> -->
-	<!-- </map> -->
-	<!-- </property> -->
-	<!-- </bean> -->
-
 
 	<!-- cache -->
 	<bean class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"
@@ -55,18 +37,10 @@
 		<property name="cacheManager" ref="ehCacheManagerBean" />
 	</bean>
 
-	<!-- Configuracao do Banco de Dados -->
-	<!-- <bean id="dataSource" -->
-	<!-- class="org.springframework.jdbc.datasource.DriverManagerDataSource" -->
-	<!-- p:driverClassName="${jdbc.driverClassName}" p:url="${jdbc.databaseurl}" -->
-	<!-- p:username="${jdbc.username}" p:password="${jdbc.password}" /> -->
-
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="org.postgresql.Driver" />
-		<property name="url" value="jdbc:postgresql://stsinformatica.com.br:5432/ddum" />
-<!-- 		<property name="url" value="jdbc:postgresql://192.10.0.10:5432/ddum"/> -->
-<!-- 		<property name="url" value="jdbc:postgresql://localhost:5432/ddum" /> -->
+		<property name="url" value="jdbc:postgresql://localhost:5432/meu_crud" />
 		<property name="username" value="postgres" />
 		<property name="password" value="postgres" />
 
@@ -74,7 +48,7 @@
 	<!-- Configuracao do Hibernate -->
 	<bean id="entityManagerFactory"
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-		<property name="persistenceUnitName" value="ddumPU" />
+		<property name="persistenceUnitName" value="meu_crud_pu" />
 		<property name="dataSource" ref="dataSource" />
 		<property name="jpaVendorAdapter">
 			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
@@ -97,8 +71,6 @@
 		<property name="entityManagerFactory" ref="entityManagerFactory" />
 	</bean>
 
-	<bean class="br.com.sts.ddum.model.interceptors.ServiceInterceptor" />
-
 	<bean id="jspViewResolver"
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="viewClass"
@@ -106,7 +78,4 @@
 		<property name="prefix" value="/WEB-INF/pages/" />
 		<property name="suffix" value=".xhtml" />
 	</bean>
-
-	<aop:aspectj-autoproxy />
-
 </beans>
