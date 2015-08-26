@@ -1,8 +1,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>br.com.sts</groupId>
-	<artifactId>ddm-view</artifactId>
+	<groupId>br.com.meu_crud</groupId>
+	<artifactId>meu_crud_novo</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 
 	<packaging>war</packaging>
@@ -54,15 +54,9 @@
 			<version>1.6</version>
 		</dependency>
 		<dependency>
-			<groupId>br.com.sts</groupId>
-			<artifactId>ddum-service</artifactId>
-			<version>1.0.8-SNAPSHOT</version>
-<!-- 			<exclusions> -->
-<!-- 				<exclusion> -->
-<!-- 					<groupId>org.quartz-scheduler</groupId> -->
-<!-- 					<artifactId>quartz</artifactId> -->
-<!-- 				</exclusion> -->
-<!-- 			</exclusions> -->
+			<groupId>br.com.meu_crud</groupId>
+			<artifactId>meu_crud_service</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.primefaces</groupId>
@@ -123,23 +117,15 @@
 			<artifactId>activation</artifactId>
 			<version>1.1.1</version>
 		</dependency>
-		<!-- agendador de tarefas quartz -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.quartz-scheduler</groupId> -->
-<!-- 			<artifactId>quartz</artifactId> -->
-<!-- 			<version>1.8.5</version> -->
-<!-- 			<version>2.2.1</version> -->
-<!-- 			<exclusions> -->
-<!-- 				<exclusion> -->
-<!-- 					<groupId>org.slf4j</groupId> -->
-<!-- 					<artifactId>slf4j-api</artifactId> -->
-<!-- 				</exclusion> -->
-<!-- 			</exclusions> -->
-<!-- 		</dependency> -->
+		<dependency>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>itextpdf</artifactId>
+			<version>5.5.6</version>
+		</dependency>
 	</dependencies>
 
 	<build>
-		<finalName>ddum-view</finalName>
+		<finalName>meu_crud_novo</finalName>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>

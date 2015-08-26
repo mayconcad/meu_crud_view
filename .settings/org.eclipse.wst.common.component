@@ -4,13 +4,13 @@
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
-        <dependent-module archiveName="ddum-service-1.0.8-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/ddum-service/ddum-service">
+        <dependent-module archiveName="meu_crud_service-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/meu_crud_service/meu_crud_service">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="ddum-model-1.0.8-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/ddum-model/ddum-model">
+        <dependent-module archiveName="meu_crud_model-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/meu_crud_model/meu_crud_model">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <property name="java-output-path" value="/ddum-view/target/classes"/>
-        <property name="context-root" value="ddum-view"/>
+        <property name="context-root" value="meu_crud_view"/>
     </wb-module>
 </project-modules>

@@ -6,9 +6,9 @@
 	xmlns:f="http://java.sun.com/jsf/core">
 <h:head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title>Dinheiro Direto nas Unidades</title>
+	<title>Meu - CRUD</title>
+<!-- 	<link rel="shortcut icon" href="favicon.gif" type="image/x-icon"/> -->
 
-<!-- 	<script src='https://www.google.com/recaptcha/api.js'></script> -->
 </h:head>
 <style type="text/css">
 .ui-widget-header {
@@ -18,10 +18,12 @@
 }
 
 .content_captcha {
-	width: 320px;
+	width: 100%;
 	height: 45px;
-/* 	background-color: #F8F8F8; */
-	 background: url('..#{request.contextPath}/resources/images/bg_captcha.png') no-repeat;
+	/* 	background-color: #F8F8F8; */
+	background:
+		url('..#{request.contextPath}/resources/images/bg_captcha.png')
+		no-repeat;
 	margin: 0 auto;
 	line-height: 50px;
 	font-size: 30px;
@@ -30,136 +32,131 @@
 	color: #CCC;
 	font-weight: bold;
 }
-.ui-dialog .ui-dialog-title{
-text-align: center;
-float: none;
+
+.ui-dialog .ui-dialog-title {
+	text-align: center;
+	float: none;
 }
-.ui-dialog .ui-dialog-titlebar{
-padding: 0em 0em 0em 0em;
+
+.ui-dialog .ui-dialog-titlebar {
+	padding: 0em 0em 0em 0em;
 }
 
 #messages {
 	font-size: 0.8em;
 }
+.teste {
+/* background:#333; */
+width:450px;
+margin: auto;
+padding:10px;
+text-align:center;
+
+-moz-border-radius:7px;
+-webkit-border-radius:7px;
+ border-radius:7px;
+ 
+ /*novo trecho*/
+ margin-left:2px;
+ height:500px
+ 
+}
+
 </style>
 
-<!-- 	style="background: url('..#{request.contextPath}/resources/images/fundo_azul.jpg') no-repeat center center !important; " -->
-<h:body id="bodyId" style="background: url('..#{request.contextPath}/resources/images/fundo_azul.jpg') no-repeat center center !important;"
+<h:body id="bodyId" style="background-color:#E7F3FD"
 	onload="loginFunction()">
-	<!-- 	<p:dialog header="Login" visible="true" closable="false" -->
-	<!-- 		draggable="false" resizable="false" width="420"> -->
+	<div
+		style="float: left; margin-bottom: 30px; height: 60px; width: 100%; background-color: #FFF;  -moz-border-radius:10px; -webkit-border-radius:10px;  border-radius:10px;">
+		<div style="float: left; margin-right: -150px">
+			<h:graphicImage library="images" name="logo_company.jpg"
+				style="height: 55px; width:35%;" />
+		</div>
+		<div
+			style="margin-left: 30px; color: #2E6E9E; font-family: Times New Roman, Lucida Grande, Lucida Sans, sans-serif;">
+			<h4 style="margin-top: 7px;">Meu - CRUD</h4>
+			<h1 style="margin-top: -25px">Meu - CRUD</h1>
+		</div>
 
-	<!-- 		<h:form> -->
-	<!-- 			<div class="imageLogo"> -->
-	<!-- 				<h:graphicImage library="images" -->
-	<!-- 					name="bandeira-parnaiba.300x225.jpg" width="300" height="50" /> -->
-	<!-- 			</div> -->
-	<!-- 			<div> -->
-	<!-- 				<div class="div-menu-search"> -->
-	<!-- 					<h:outputText value="Usuário ou senha incorretos!" -->
-	<!-- 						rendered="#{loginBean.error}" style="color: darkred" /> -->
-	<!-- 								<h:panelGrid columns="2" cellpadding="5"> -->
-	<!-- 					<p:outputLabel id="username_label" for="username_input" -->
-	<!-- 						value="Usuário:" /> -->
-	<!-- 					<p:inputText id="username_input" required="true" -->
-	<!-- 						value="#{loginBean.userName}" /> -->
-	<!-- 					<p:watermark for="username_input" value="#{wd['login.username']}" /> -->
-	<!-- 									<h:message for="username_input" errorClass="error" /> -->
-	<!-- 				</div> -->
-	<!-- 				<div> -->
-	<!-- 					<p:outputLabel id="password_label" for="password_input" -->
-	<!-- 						value="Senha:" /> -->
-	<!-- 					<p:password id="password_input" required="true" -->
-	<!-- 						value="#{loginBean.password}" /> -->
-	<!-- 					<p:watermark for="password_input" value="#{wd['login.password']}" /> -->
-	<!-- 									<h:message for="password_input" errorClass="error" /> -->
-	<!-- 				</div> -->
-	<!-- 				</div> -->
-	<!-- 							</h:panelGrid> -->
-	<!-- 				<div style="text-align: center;"> -->
-	<!-- 					<p:commandButton value="Login" action="#{loginBean.login}" -->
-	<!-- 						icon="ui-icon-locked" styleClass="w4 r4" /> -->
-	<!-- 				</div> -->
-	<!-- 		</h:form> -->
-	<!-- 	</p:dialog> -->
-
+	</div>
 	<div class="container">
-			<h:form id="ddum_login_form" prependId="false">
-		<p:dialog header="Login" visible="true" closable="false"
-			draggable="false" resizable="false" width="35%" style="text-align: center;">
-			<p:messages id="messages"
-				rendered="#{loginBean.error eq true ? false : true}" />
-<!-- 				<p:growl id="messageGrowl" rendered="#{recuperaSenhaController.EmailInvalido() eq true ? false : true}"/> -->
-				<!-- 				<div class="imageLogo" style="text-align: right;"> -->
-				<!-- 					<h:graphicImage library="images" -->
-				<!-- 						name="bandeira-parnaiba.300x225.jpg" width="200" height="30" /> -->
-				<!-- 				</div> -->
-				<div style="text-align: center;">
-					<h:outputText id="errorLogin" value="Usuário ou senha incorretos!"
-						rendered="#{loginBean.error}" style="color: darkred" />
-				</div>
+		<h:form id="crudForm" prependId="false">
+			<div id="divDialog" style="width:100%">
+			
+			
+				<p:dialog header="Login" visible="true" closable="false"
+					draggable="true" resizable="false" width="25%"
+					style="text-align: center;" widgetVar="loginDialog" id="loginDialog">
+					<p:messages id="messages"
+						rendered="#{loginBean.error eq true ? false : true}" />
+					<div style="text-align: left;">
+						<h:outputText id="errorLogin" value="Usuário ou senha incorretos!"
+							rendered="#{loginBean.error}" style="color: darkred" />
+					</div>
 
-				<div style="text-align: center; margin-top: 5px">
-					<div class="div-menu-search" style="text-align: right;">
-						<!-- 						<p:outputLabel id="username_label" for="usernameInputText" -->
-						<!-- 							value="Usuário:" /> -->
+					<div style="text-align: left; margin-top: 5px">
 						<p:inputText id="usernameInputText" required="true"
 							value="#{loginBean.userName}" label="#{wd['login.username']}"
 							title="#{wd['login.username']}"
-							style="width:300px !important; background: url('..#{request.contextPath}/resources/icons/man-32.png') no-repeat center right !important;">
+							style="width:100% !important; background: url('..#{request.contextPath}/resources/icons/man-32.png') no-repeat center right !important;">
 						</p:inputText>
 
 						<p:watermark for="usernameInputText"
 							value="#{wd['login.username']}">
-							<!-- 							<p:graphicImage library="icons" name="man-32.png" /> -->
 						</p:watermark>
 
 					</div>
-				</div>
-				<div style="text-align: right; margin-top: 5px">
-					<!-- 					<p:outputLabel id="password_label" for="passwordInputText" -->
-					<!-- 						value="Senha:" /> -->
-					<p:password id="passwordInputText" required="true"
-						label="#{wd['login.password']}" title="#{wd['login.password']}"
-						value="#{loginBean.password}" feedback="false"
-						style="width:300px !important; background: url('..#{request.contextPath}/resources/icons/Lock-32.png') no-repeat center right !important; text-align:rigth;">
+					<div style="text-align: left; margin-top: 5px">
+						<p:password id="passwordInputText" required="true"
+							label="#{wd['login.password']}" title="#{wd['login.password']}"
+							value="#{loginBean.password}" feedback="false"
+							style="width:100% !important; background: url('..#{request.contextPath}/resources/icons/Lock-32.png') no-repeat center right !important; text-align:rigth;">
 
-					</p:password>
-					<p:watermark for="passwordInputText"
-						value="#{wd['login.password']}">
-					</p:watermark>
-				</div>
-				<div style="text-align: center; margin-top: 5px;"
-					class="content_captcha">
-					<p:outputLabel value="#{captchaBean.captcha}" />
-				</div>
-				<div style="text-align: center; margin-top: 5px;">
-					<p:inputText id="inputCaptcha" value="#{captchaBean.inputCaptcha}" style="width:310px"/>
-					<p:watermark for="inputCaptcha" value="Informe os caracteres">
-					</p:watermark>
-				</div>
-				<!-- 				<div style="text-align: center; margin-top: 5px;"> -->
-				<!-- 					<p:captcha id="captch" label="Captcha" language="pt_BR" -->
-				<!-- 						theme="white" -->
-				<!-- 						validatorMessage="Captcha: Erro de Validação: O texto não confere!" /> -->
-				<!-- 				</div> -->
+						</p:password>
+						<p:watermark for="passwordInputText"
+							value="#{wd['login.password']}">
+						</p:watermark>
+					</div>
+					<div style="text-align: center; margin-top: 5px;"
+						class="content_captcha">
+						<p:outputLabel value="#{captchaBean.captcha}"
+							style="width:100% !important" />
+					</div>
+					<div style="text-align: left; margin-top: 5px;">
+						<p:inputText id="inputCaptcha" value="#{captchaBean.inputCaptcha}"
+							style="width:100% !important" />
+						<p:watermark for="inputCaptcha" value="Informe os caracteres">
+						</p:watermark>
+					</div>
+					<div style="text-align: center; margin-top: 5px;">
+						<p:commandButton id="login_loginButton_button"
+							widgetVar="login_loginButton_button" action="#{loginBean.login}"
+							value="Logar" update="@form" process="@form"
+							style="height: 25px; font-size: 0.7em" icon="ui-icon-locked"
+							ajax="false" onclick="PF('loginBlockUI').show()"
+							oncomplete="PF('loginBlockUI').hide()" />
+						<p:commandButton id="login_recupera_senha" value="Recup.Senha"
+							action="#{loginBean.recuperarSenha}" process="@this"
+							immediate="true" style="height: 25px; font-size: 0.7em"
+							icon="ui-icon-locked" />
+					</div>
+					<div id="recuperaSenhaLink"
+						style="text-align: center; margin-top: 5px; display: none">
+						<br /> <a href="#{request.contextPath}/recuperaSenha.xhtml"><i><font
+								color="0000FF">Clique aqui para Recuperar sua Senha</font></i></a>
+					</div>
 
-				<!-- 				<div class="g-recaptcha" data-sitekey="6LdjYwMTAAAAAM1Du_WUUp3CUfFu92jMe8JF4ul6"></div> -->
-				<div style="text-align: center; margin-top: 5px;">
-					<p:commandButton id="login_loginButton_button"
-						action="#{loginBean.login}" value="Logar" update="@form"
-						process="@form" style="height: 35px; font-size: 0.8em" icon="ui-icon-locked"
-						ajax="false"/>
-				</div>
-				<div id="recuperaSenhaLink"
-					style="text-align: center; margin-top: 5px; display: none">
-					<br /><a
-						href="#{request.contextPath}/recuperaSenha.xhtml"><i><font color="0000FF">Clique
-							aqui para Recuperar sua Senha</font></i></a>
-				</div>
 
-		</p:dialog>
-			</h:form>
+				</p:dialog>
+			</div>
+			<p:blockUI block="loginDialog" trigger="login_loginButton_button"
+				widgetVar="loginBlockUI">
+				<h:outputLabel value="#{wd['blockui.loading.text']}" />
+				<br />
+				<h:graphicImage library="images" name="#{wd['blockui.loading.img']}" />
+			</p:blockUI>
+
+		</h:form>
 		<br /> <br />
 	</div>
 </h:body>

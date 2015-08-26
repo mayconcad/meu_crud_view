@@ -777,3 +777,7 @@ funcionalidade de Adicionar itens em uma tabela
 .ui-selectonemenu .ui-selectonemenu-trigger {
 	width: 20px !important;
 }
+/* diminue o tamanho da barra*/
+.ui-paginator {
+padding: 0px !important;	
+}

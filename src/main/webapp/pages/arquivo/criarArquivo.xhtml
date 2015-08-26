@@ -1,0 +1,60 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<div class="container">
+	<h:form id="createArquivoForm">
+		<p:messages id="messages" />
+
+		<p:panel header="#{wd['fieldset.data']}" toggleable="false"
+			styleClass="clearfix" id="dataPanel">
+			<p:focus context="dataPanel" />
+
+			<div class="row">
+				<div class="col-md-2">
+					<p:outputLabel value="#{lb['arquivo.nome']}"
+						for="arquivoAC" />
+				</div>
+				<div class="col-md-16">
+					<p:inputText value="#{arquivoController.arquivo.nome}"
+						id="responsavelManual"
+						rendered="true" />
+						
+<!-- 					<p:autoComplete id="arquivoAC" minQueryLength="3" -->
+<!-- 						rendered="#{arquivoController.cadastroManual eq true ? false : true}" requiredMessage="Campo Nome O item deve ser selecionado." -->
+<!-- 						label="#{lb['responsavel.nome']}" required="true" -->
+<!-- 						completeMethod="#{arquivoController.autocompletarBDFolha}" -->
+<!-- 						queryDelay="3" widgetVar="arquivoAC" var="var" -->
+<!-- 						itemLabel="#{var.nome}" itemValue="#{var}" -->
+<!-- 						process="@this" value="#{arquivoController.responsavel}" -->
+<!-- 						dropdown="true" converter="responsavelConverter" forceSelection="true" -->
+<!-- 						scrollHeight="250"> -->
+<!-- 						<p:ajax event="itemSelect" process="@this" update="@form" /> -->
+<!-- 					</p:autoComplete> -->
+				</div>
+				<div class="col-md-3">
+					<p:outputLabel value="#{lb['arquivo.dataRegistro']}"
+						for="dataRegistro" />
+				</div>
+				<div class="col-md-4">
+					<p:calendar id="dataRegistro"
+						value="#{arquivoController.arquivo.dataRegistro}"
+						showOn="button" pattern="dd/MM/yyyy" locale="pt" navigator="true"
+						effect="fadeIn" required="true" />
+				</div>
+			</div>
+
+			<p:commandButton value="#{wd['button.create']}" update="@form"
+				actionListener="#{arquivoController.criar}" styleClass="col-md-4 r6"
+				icon="ui-icon-disk" />
+			<p:commandButton id="limparCommandButton"
+				value="#{wd['button.clean']}" icon="ui-icon-arrowrefresh-1-w"
+				actionListener="#{arquivoController.init}" update="@form"
+				process="@this" styleClass="col-md-4 r7">
+			</p:commandButton>
+		</p:panel>
+	</h:form>
+</div>
+</html>

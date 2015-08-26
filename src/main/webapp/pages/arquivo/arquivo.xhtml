@@ -1,0 +1,27 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:outputScript name="utils.js" library="javascript" />
+<div class="selectedMenu">
+	<span class="headerTitle">Responsável</span>
+</div>
+<p:tabView id="responsavelTabView" widgetVar="responsavelTabs" >
+	<p:ajax event="tabClose" process="@all" />
+	<p:ajax event="tabChange" process="@all"/>
+
+	<p:tab id="createTab" title="Cadastrar">
+		<ui:include src="criarResponsavel.xhtml" />
+	</p:tab>
+	<p:tab id="findTab" title="#{wd['tab.search']}"
+		binding="#{buscarResponsavelController.findTab}">
+		<ui:include src="buscarResponsavel.xhtml" />
+	</p:tab>
+	<p:tab id="editTab" title="#{wd['tab.change']}" rendered="false"
+		binding="#{buscarResponsavelController.editTab}" closable="true">
+		<ui:include src="editarResponsavel.xhtml" />
+	</p:tab>
+</p:tabView>
+</html>

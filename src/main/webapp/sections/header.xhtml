@@ -3,44 +3,30 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
-	<h:form>
-		<div>
+	<h:form id="logoutForm" > 
+		<div style="width:100%">
 			<div style="float: left; margin-bottom: 1px; height: 50px;">
 				<h:graphicImage library="images"
-					name="bandeira-parnaiba.300x225.jpg" style="height: 52px; width:90px;" />
+					name="logo_company.jpg" style="height: 52px; width:90px;" />
 			</div>
 <!-- 			<p:spacer width="30" /> -->
 			<div style="float: left; height: 50px; color: #1E90FF">
-				<!-- 				<h:graphicImage library="images" -->
-				<!-- 					name="bandeira-parnaiba.300x225.jpg" -->
-				<!-- 					style="height: 50px; width:140px" /> -->
-				<h:graphicImage library="images" name="logo_ddum_azul.png"
+				<h:graphicImage library="images" name="logo-user.png"
 					style="height: 60px;" />
 			</div>
-			<!-- 			<div style="position: absolute; height: 30px; width:200px;"> -->
-			<!-- 					<h4>DDUM - Dinheiro Direto nas Unidades</h4> -->
-			<!-- 			</div> -->
-
-
-<!-- 			<div style="float: right; height: 25px;"> -->
-<!-- 				<h:graphicImage library="images" name="logo-user.png" -->
-<!-- 					style="height: 25px;" /> -->
-				<!-- 			<p:outputLabel value=" v1.0.0" -->
-				<!-- 				style=" color: #1C94C4 !important; left: 198px; position: absolute; top: 41px;" /> -->
-<!-- 			</div> -->
 
 			<div style="float: right;">
 
 				<p:commandButton styleClass="user" id="userCommandButton"
 					value="#{loginBean.userName}" icon="ui-icon-person"
 					style="height:25px" />
-				<p:commandButton styleClass="logout" alt="#{wd['login.exit']}"
+				<p:commandButton id="logoutButton" widgetVar="logoutButton"  styleClass="logout" alt="#{wd['login.exit']}"
 					title="#{wd['login.exit']}" value="#{wd['login.exit']}"
 					actionListener="#{loginBean.logout}" icon="ui-icon-power"
-					style="height:25px" />
+					style="height:25px" oncomplete="window.location.reload();"/>
 					<br/>
 					<br/>
-				<p:outputLabel value="v1.0.0 - Lei 2.928/2014" style="color:#268CBB;"/>
+				<p:outputLabel value="v1.0.0" style="color:#268CBB;"/>
 			</div>
 		</div>
 	</h:form>

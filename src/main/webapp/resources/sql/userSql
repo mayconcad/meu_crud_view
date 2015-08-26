@@ -1,3 +1,0 @@
-INSERT INTO public.authoritysystem (id, role, description ) VALUES (1, 'ROLE_ADMIN','Administrador');
-INSERT INTO public.usersystem (id,ativo , username, password, createdAt, enabled, accountNonExpired, accountNonLocked, credentialsNonExpired,name,email) VALUES (1,true,'admin','8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', '2014-01-01 00:00:00.0', true, true, true, true, 'Administrador', 'adm@email.com');
-INSERT INTO public.usersystem_authoritysystem (UserSystem_id, authorities_id) VALUES (1,1);

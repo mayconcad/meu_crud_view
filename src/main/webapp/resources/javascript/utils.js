@@ -116,6 +116,11 @@ function clickUploadFile() {
 	$(PrimeFaces.escapeClientId("prestacaoContaTabView:arquivoFileUpload_input")).click();
 }
 
+//carrega a página
+function carregarPagina(){
+	setTimeout("window.location.reload();", 100);
+}
+
 //Traduz para o português palavras em inglês do componente calendar do primefaces
 PrimeFaces.locales['pt'] = {  
         closeText: 'Fechar',  
