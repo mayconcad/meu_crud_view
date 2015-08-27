@@ -31,67 +31,51 @@
 	</script>
 </h:head>
 
-<h:body style="font-size: 12px; background-color:#2E6E9E"
-	onload="limparComponente()">
+<h:body style="font-size: 12px; background-color:#2E6E9E">
+
 	<pe:layout fullPage="true" id="layout">
 
-		<!-- 		<p:layoutUnit id="layoutUnitNorth" position="north" header="Meu - CRUD" size="75"/> -->
+		<!-- 		<p:layoutUnit id="layoutUnitNorth" position="north" header="DDUM" /> -->
 		<pe:layoutPane position="north" size="75">
 			<ui:include src="/sections/header.xhtml" />
 		</pe:layoutPane>
 
-		<!-- 		<pe:layoutPane id="layoutUnitWest" position="west" size="200" -->
-		<!-- 			header="Menu Principal"> -->
-		<pe:layoutPane id="layoutUnitCenter" position="center">
+		<pe:layoutPane id="layoutUnitWest" position="center" size="200"
+			header="Menu Principal">
+			<!-- 			position="west" -->
 			<h:form id="form" prependId="false">
 
 				<!-- 				<p:panelMenu id="panelMenu" style="width: 100%; "> -->
-				<p:menubar id="panelMenu" style="width: 100%;">
-					<p:submenu id="arquivos" label="Arquivos"
-						rendered="true" expanded="false">
-						<!-- 							oncomplete="carregarPagina();" -->
-						<p:menuitem id="arquivo"
-							value="Arquivo"
+				<p:menubar id="panelMenu" style="width: 100%; ">
+					<p:submenu label="Cadastros Básicos" rendered="true"
+						id="menuCadastro">
+						<p:menuitem id="arquivo" value="Arquivo"
 							styleClass="#{mainMenu.numIndex == 2 ? 'selectedMenu' : null}"
 							update=":centerContentPanel :form:panelMenu"
 							actionListener="#{arquivoController.init}"
-							action="#{mainMenu.arquivo}" icon="ui-icon-bookmark"
-							onclick="PF('reportBlockUI').show()"
-							oncomplete="PF('reportBlockUI').hide()" />
+							action="#{mainMenu.arquivo}" icon="ui-icon-bookmark" />
 
 					</p:submenu>
 				</p:menubar>
 				<!-- 				</p:panelMenu> -->
 
 				<p:remoteCommand name="logoutUser"
-					actionListener="#{loginBean.logout(false)}" process="@this" />
-				<p:remoteCommand name="limparComponente"
-					actionListener="#{mainMenu.init}" process="@this" update="@form" />
-
-				<p:blockUI block=":#{p:component('layoutUnitCenter')}" trigger=""
-					widgetVar="reportBlockUI">
-					<h:outputLabel value="#{wd['blockui.loading.text']}" />
-					<br />
-					<h:graphicImage library="images"
-						name="#{wd['blockui.loading.img']}" />
-				</p:blockUI>
+					actionListener="#{loginController.logout(false)}" process="@this" />
 			</h:form>
 			<!-- 		</pe:layoutPane> -->
 
+			<!-- 		<pe:layoutPane id="layoutUnitCenter" position="center"> -->
 			<h:panelGroup id="centerContentPanel">
 				<ui:include src="#{mainMenu.index}" />
 			</h:panelGroup>
 		</pe:layoutPane>
 
 	</pe:layout>
-	<!-- 900000 - equivale a 10 minutos-->
-	<p:idleMonitor timeout="900000">
-		<p:ajax event="idle" listener="#{idleViewExpired.idleExpired}" />
-	</p:idleMonitor>
+	<p:idleMonitor timeout="900000" onidle="idleDialog.show()" />
 
 	<p:dialog header="Expirou! " resizable="false" closable="false"
 		widgetVar="idleDialog" modal="true" width="300" height="110"
-		onShow="logoutFunction()" style="text-align: center;">
+		onShow="logoutFunction()">
 		<div style="text-align: center;">
 			<h:outputText value="Sua Sessão Expirou!" />
 		</div>
@@ -99,6 +83,8 @@
 		<br />
 		<br />
 		<div style="text-align: center;">
+			<!-- 			<p:commandButton styleClass="logout" alt="Logar Novamente" -->
+			<!-- 				value="Logar Novamente" actionListener="#{loginController.logout}"/> -->
 			<a href="#{request.contextPath}/login.xhtml">Clique Aqui para
 				Logar Novamente</a>
 		</div>

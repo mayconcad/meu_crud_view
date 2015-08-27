@@ -1,9 +1,9 @@
 package br.com.meu_crud.view.controllers;
 
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import br.com.meu_crud.model.entities.Arquivo;
@@ -17,7 +17,7 @@ public class ArquivoController extends BaseController {
 
 	private Arquivo arquivo;
 
-	@ManagedProperty("#{arquivoService}")
+	@Autowired
 	private ArquivoService arquivoService;
 
 	@PostConstruct
@@ -28,6 +28,7 @@ public class ArquivoController extends BaseController {
 	public void criar() {
 		arquivoService.salvar(arquivo);
 		addInfoMessage("Cadastro Realizado com Sucesso!");
+		init();
 	}
 
 	public Arquivo getArquivo() {

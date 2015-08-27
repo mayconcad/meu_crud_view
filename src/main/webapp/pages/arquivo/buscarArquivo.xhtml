@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui">
 
 <div class="container">
-	<h:form id="buscarResponsavelForm" prependId="false">
+	<h:form id="arquivoBuscaForm" prependId="false">
 		<p:messages id="messages" />
 		<p:confirmDialog severity="alert" widgetVar="confirmation"
 			global="true" header="#{wd['dialog.deleteConfirmation.header']}"
@@ -13,8 +13,8 @@
 			<p:commandButton id="btnSim" value="#{wd['dialog.optionYes']}"
 				oncomplete="PF('confirmation').hide();"
 				styleClass="r6" icon="ui-icon-check"
-				actionListener="#{buscarResponsavelController.remover}"
-				process="@this" update="buscarResponsavelTable messages" />
+				actionListener="#{buscarArquivoController.remover}"
+				process="@this" update="arquivoBuscaTable messages" />
 			<p:commandButton id="btnNao" value="#{wd['dialog.optionNo']}"
 				onclick="PF('confirmation').hide();" type="button"
 				styleClass="r6" icon="ui-icon-cancel"/>
@@ -24,44 +24,24 @@
 			<p:panel header="#{wd['fieldset.filters']}" id="findPanel">
 				<div class="row">
 					<div class="col-md-2">
-						<p:outputLabel value="#{lb['responsavel.nome']}" for="buscarNome" />
-					</div>
-					<div class="col-md-16">
-						<p:inputText id="buscarNome" widgetVar="buscarNome" alt="nome"
-							value="#{buscarResponsavelController.responsavelBusca.nome}" />
-					</div>
-					<div class="col-md-2">
-						<p:outputLabel value="#{lb['responsavel.matricula']}"
-							for="respMatrFunc" />
-					</div>
-					<div class="col-md-4">
-						<p:inputText id="respMatrFunc" widgetVar="respMatrFunc"
-							alt="matriculaFuncional"
-							value="#{buscarResponsavelController.responsavelBusca.matriculaFuncional}" />
-					</div>
+					<p:outputLabel value="#{lb['arquivo.nome']}"
+						for="arquivoAC" />
 				</div>
-				<div class="row">
-					<div class="col-md-2">
-						<p:outputLabel value="#{lb['responsavel.rg']}" for="respRG" />
-					</div>
-					<div class="col-md-4">
-						<p:inputText id="respRG" widgetVar="respRG" alt="rg"
-							value="#{buscarResponsavelController.responsavelBusca.rg}" />
-					</div>
-					<div class="col-md-1">
-						<p:outputLabel value="#{lb['responsavel.cpf']}" for="respCPF" />
-					</div>
-					<div class="col-md-6">
-						<p:inputText id="respCPF" widgetVar="respCPF" alt="cpf"
-							value="#{buscarResponsavelController.responsavelBusca.cpf}" />
-					</div>
-					<div class="col-md-1">
-						<p:outputLabel value="#{lb['responsavel.cargo']}" for="respCargo" />
-					</div>
-					<div class="col-md-10">
-						<p:inputText id="respCargo" widgetVar="respCargo" alt="cargo"
-							value="#{buscarResponsavelController.responsavelBusca.cargo}" />
-					</div>
+				<div class="col-md-14">
+					<p:inputText value="#{buscarArquivoController.arquivoBusca.nome}"
+						id="arquivoAC"
+						rendered="true" />
+				</div>
+				<div class="col-md-3">
+					<p:outputLabel value="#{lb['arquivo.dataRegistro']}"
+						for="dataRegistro" />
+				</div>
+				<div class="col-md-3">
+					<p:calendar id="dataRegistro"
+						value="#{buscarArquivoController.arquivoBusca.dataRegistro}"
+						showOn="button" pattern="dd/MM/yyyy" locale="pt" navigator="true"
+						effect="fadeIn"  />
+				</div>
 				</div>
 				<div class="clear" />
 			</p:panel>
@@ -69,66 +49,57 @@
 
 		<p:commandButton value="#{wd['button.search']}"
 			process="@this findPanel" styleClass="col-md-4 r6"
-			action="#{buscarResponsavelController.buscar}"
-			update="buscarResponsavelTable" icon="ui-icon-search" id="buscarResponsavel">
-			<p:blockUI block="buscarResponsavelTable" trigger="buscarResponsavel" >
+			action="#{buscarArquivoController.buscar}"
+			update="arquivoBuscaTable" icon="ui-icon-search" id="buscarResponsavel">
+			<p:blockUI block="arquivoBuscaTable" trigger="buscarResponsavel" >
 					<h:outputLabel value="#{wd['blockui.loading.text']}" />
 					<br />
 					<h:graphicImage library="images" name="#{wd['blockui.loading.img']}" />
 				</p:blockUI>
 		</p:commandButton>
 		<p:commandButton value="#{wd['button.clean']}" process="@this"
-			action="#{buscarResponsavelController.limparFiltroBusca}" update="findPanel"
+			action="#{buscarArquivoController.init}" update="findPanel"
 			icon="ui-icon-arrowrefresh-1-w" id="clearCommandButton"
 			styleClass="col-md-4 r7">
 		</p:commandButton>
 		<div class="clear" />
 		<fieldset>
 			<legend>Resultados</legend>
-			<p:dataTable value="#{buscarResponsavelController.responsaveis}"
+			<p:dataTable value="#{buscarArquivoController.arquivos}"
 				currentPageReportTemplate="{currentPage} de {totalPages}"
-				emptyMessage="#{wd['item.emptyFind']}" var="responsavel"
-				id="buscarResponsavelTable" paginator="true" rows="5"
+				emptyMessage="#{wd['item.emptyFind']}" var="arquivo"
+				id="arquivoBuscaTable" paginator="true" rows="5"
 				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
 
-				<p:column headerText="#{lb['responsavel.nome']}"
+				<p:column headerText="#{lb['arquivo.nome']}"
 					style="width: 250px; text-align: center; white-space:normal !important;">
-					<h:outputText value="#{responsavel.nome}" style="font-weight:100" />
+					<h:outputText value="#{arquivo.nome}" style="font-weight:100" />
 				</p:column>
-				<p:column headerText="#{lb['responsavel.matricula']}"
+				<p:column headerText="#{lb['arquivo.dataCadastro']}"
 					style="width: 100px; text-align: center; white-space:normal !important;">
-					<h:outputText value="#{responsavel.matriculaFuncional}"
-						style="font-weight:100" />
+					<h:outputText value="#{arquivo.dataRegistro}"
+						style="font-weight:100" >
+						<f:convertDateTime locale="pt,BR" dateStyle="long"
+									pattern="dd/MM/yyyy" />
+						</h:outputText>
 				</p:column>
-				<p:column headerText="#{lb['responsavel.rg']}"
-					style="width: 100px; text-align: center; white-space:normal !important;">
-					<h:outputText value="#{responsavel.rg}" style="font-weight:100" />
-				</p:column>
-				<p:column headerText="#{lb['responsavel.cpf']}"
-					style="width: 100px; text-align: center; white-space:normal !important;">
-					<h:outputText value="#{responsavel.cpf}" style="font-weight:100" />
-				</p:column>
-				<p:column headerText="#{lb['responsavel.cargo']}"
-					style="width: 200px; text-align: center; white-space:normal !important;">
-					<h:outputText value="#{responsavel.cargo}" style="font-weight:100" />
-				</p:column>
-				<p:column headerText="#{wd['table.columns.options']}"
+				<p:column headerText="Opções"
 					style="width:50px; text-align: center;">
 					<p:commandButton icon="ui-icon-trash"
-						action="#{buscarResponsavelController.verificarPermissao}"
+						action="#{buscarArquivoController.remover}"
 						styleClass="icon"
 						title="#{wd['table.columns.options.delete.hint']}" update="@form" process="@this">
 						<f:setPropertyActionListener
-							target="#{buscarResponsavelController.responsavelRemove}"
-							value="#{responsavel}" />
+							target="#{buscarArquivoController.arquivoRemove}"
+							value="#{arquivo}" />
 						
 					</p:commandButton>
 					<p:commandButton icon="ui-icon-pencil" styleClass="icon"
-						action="#{buscarResponsavelController.carregar}" process="@form"
+						action="#{buscarArquivoController.carregar}" process="@form" update=":arquivoTabView"
 						title="#{wd['table.columns.options.edit.hint']}">
 						<f:setPropertyActionListener
-							target="#{buscarResponsavelController.responsavelEdite}"
-							value="#{responsavel}" />
+							target="#{buscarArquivoController.arquivoEdita}"
+							value="#{arquivo}" />
 					</p:commandButton>
 				</p:column>
 			</p:dataTable>

@@ -19,8 +19,8 @@
 				</div>
 				<div class="col-md-16">
 					<p:inputText value="#{arquivoController.arquivo.nome}"
-						id="responsavelManual"
-						rendered="true" />
+						id="arquivoAC"
+						rendered="true" required="true"/>
 						
 <!-- 					<p:autoComplete id="arquivoAC" minQueryLength="3" -->
 <!-- 						rendered="#{arquivoController.cadastroManual eq true ? false : true}" requiredMessage="Campo Nome O item deve ser selecionado." -->
@@ -38,7 +38,7 @@
 					<p:outputLabel value="#{lb['arquivo.dataRegistro']}"
 						for="dataRegistro" />
 				</div>
-				<div class="col-md-4">
+				<div class="col-md-3">
 					<p:calendar id="dataRegistro"
 						value="#{arquivoController.arquivo.dataRegistro}"
 						showOn="button" pattern="dd/MM/yyyy" locale="pt" navigator="true"
@@ -47,7 +47,7 @@
 			</div>
 
 			<p:commandButton value="#{wd['button.create']}" update="@form"
-				actionListener="#{arquivoController.criar}" styleClass="col-md-4 r6"
+				actionListener="#{arquivoController.criar}" process="@form" styleClass="col-md-4 r6"
 				icon="ui-icon-disk" />
 			<p:commandButton id="limparCommandButton"
 				value="#{wd['button.clean']}" icon="ui-icon-arrowrefresh-1-w"

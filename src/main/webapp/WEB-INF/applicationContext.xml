@@ -21,7 +21,7 @@
 	<!-- Indica ao Spring o pacote onde encontrar os beans anotadas -->
 
 	<context:component-scan
-		base-package="br.com.meu_crud.model.repository.interfaces, br.com.meu_crud.model.repository.impls, br.com.meu_crud.model.utils, br.com.meu_crud.view.controllers, br.com.meu_crud.service.interfaces, br.com.meu_crud.service.impls" />
+		base-package="br.com.meu_crud.model.repository.interfaces, br.com.meu_crud.model.repository.impl, br.com.meu_crud.model.utils, br.com.meu_crud.view.controllers, br.com.meu_crud.service.interfaces, br.com.meu_crud.service.impl" />
 
 	<!-- Indica onde se encontram as interfaces que estendem JpaRepository -->
 	<jpa:repositories base-package="br.com.meu_crud.model.repository.impl" />

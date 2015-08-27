@@ -5,242 +5,40 @@
 	xmlns:p="http://primefaces.org/ui">
 
 <div class="container">
-	<h:form id="updateResponsavelForm">
+	<h:form id="arquivoEditaForm">
 		<p:messages id="messages" />
 
 		<p:panel header="#{wd['fieldset.data']}" toggleable="false"
 			styleClass="clearfix">
 			<div class="row">
-				<div class="col-md-2">
-					<p:outputLabel value="#{lb['responsavel.nome']}"
-						for="responsavelAC" />
+			<div class="col-md-2">
+					<p:outputLabel value="#{lb['arquivo.nome']}"
+						for="arquivoEditaAC" />
 				</div>
 				<div class="col-md-16">
-					<p:inputText
-						value="#{buscarResponsavelController.responsavelEdite.nome}"
-						for="responsavelAC" id="responsavelAC" />
-				</div>
-				<!-- 			<div class="grid_15"> -->
-				<!-- 				<p:autoComplete id="responsavelAC" minQueryLength="3" -->
-				<!-- 					value="#{buscarResponsavelController.responsavelEdite}" -->
-				<!-- 					label="#{lb['responsavel.nome']}" required="true" -->
-				<!-- 					completeMethod="#{responsavelController.autocompletarBDFolha}" -->
-				<!-- 					queryDelay="3" widgetVar="responsavelAC" var="var" -->
-				<!-- 					itemLabel="#{var.nome}" itemValue="#{var}" process="@this" -->
-				<!-- 					dropdown="true" converter="responsavelConverter" -->
-				<!-- 					forceSelection="true" scrollHeight="250"> -->
-				<!-- 					<p:ajax event="itemSelect" process="@this" update="@form" /> -->
-				<!-- 				</p:autoComplete> -->
-				<!-- 			</div> -->
-				<div class="col-md-2">
-					<p:outputLabel value="#{lb['responsavel.matricula']}"
-						for="respMatriFunc" />
-				</div>
-				<div class="col-md-4">
-					<p:inputText id="respMatriFunc"
-						value="#{buscarResponsavelController.responsavelEdite.matriculaFuncional}"
-						required="true" />
-				</div>
-			</div>
-			<div class="clear" />
-			<div class="row">
-				<div class="col-md-2">
-					<p:outputLabel value="#{lb['responsavel.rg']}" for="respRG" />
+					<p:inputText value="#{buscarArquivoController.arquivoEdita.nome}"
+						id="arquivoEditaAC"
+						rendered="true" required="true"/>
 				</div>
 				<div class="col-md-3">
-					<p:inputText id="respRG"
-						value="#{buscarResponsavelController.responsavelEdite.rg}"
-						required="true" />
-				</div>
-				<div class="col-md-2">
-					<p:outputLabel value="#{lb['responsavel.orgaoExpedidor']}"
-						for="respOrgExp" />
+					<p:outputLabel value="#{lb['arquivo.dataRegistro']}"
+						for="dataRegistro" />
 				</div>
 				<div class="col-md-3">
-					<p:inputText id="respOrgExp"
-						value="#{buscarResponsavelController.responsavelEdite.orgaoExpedidor}"
-						required="true" />
-				</div>
-
-				<div class="col-md-1">
-					<p:outputLabel value="#{lb['responsavel.cpf']}" for="respCPF" />
-				</div>
-				<div class="col-md-5">
-					<p:inputMask id="respCPF"
-						value="#{buscarResponsavelController.responsavelEdite.cpf}"
-						required="true" mask="999.999.999-99" />
-				</div>
-				<div class="col-md-1">
-					<p:outputLabel value="#{lb['responsavel.cargo']}" for="respCargo" />
-				</div>
-				<div class="col-md-7">
-					<p:inputText id="respCargo"
-						value="#{buscarResponsavelController.responsavelEdite.cargo}"
-						required="true" />
-				</div>
-			</div>
-
-			<div class="row">
-				<div class="col-md-3">
-					<p:outputLabel value="#{lb['responsavel.dataInicial']}"
-						for="dataInicial" />
-				</div>
-				<div class="col-md-4">
-					<p:calendar id="dataInicial"
-						value="#{buscarResponsavelController.responsavelEdite.dataInicial}"
+					<p:calendar id="dataRegistro"
+						value="#{buscarArquivoController.arquivoEdita.dataRegistro}"
 						showOn="button" pattern="dd/MM/yyyy" locale="pt" navigator="true"
 						effect="fadeIn" required="true" />
 				</div>
-				<div class="col-md-4">
-					<p:outputLabel value="#{lb['responsavel.dataFinal']}"
-						for="dataFinal" />
-				</div>
-				<div class="col-md-4">
-					<p:calendar id="dataFinal"
-						value="#{buscarResponsavelController.responsavelEdite.dataFinal}"
-						showOn="button" pattern="dd/MM/yyyy" locale="pt" navigator="true"
-						effect="fadeIn" />
-				</div>
-			</div>
-			<div class="clear" />
-			<fieldset>
-				<legend>Endereço</legend>
-				<div class="row">
-					<div class="col-md-2">
-						<p:outputLabel value="#{lb['responsavel.endereco']}"
-							for="responsavelEndereco" />
-					</div>
-					<div class="col-md-11">
-						<p:inputText id="responsavelEndereco"
-							value="#{buscarResponsavelController.responsavelEdite.endereco}" />
-					</div>
-					<div class="col-md-2">
-						<p:outputLabel value="#{lb['responsavel.bairro']}"
-							for="responsavelBairro" />
-					</div>
-					<div class="col-md-9">
-						<p:inputText id="responsavelBairro"
-							value="#{buscarResponsavelController.responsavelEdite.bairro}" />
-					</div>
-				</div>
-				<div class="clear" />
-				<div class="row">
-					<div class="col-md-2">
-						<p:outputLabel value="#{lb['responsavel.cidade']}"
-							for="responsavelCidade" />
-					</div>
-					<div class="col-md-13">
-						<p:inputText id="responsavelCidade"
-							value="#{buscarResponsavelController.responsavelEdite.cidade}" />
-					</div>
-					<div class="col-md-1">
-						<p:outputLabel value="#{lb['responsavel.uf']}" for="responsavelUf" />
-					</div>
-					<div class="col-md-2">
-						<p:inputText id="responsavelUf"
-							value="#{buscarResponsavelController.responsavelEdite.uf}" />
-					</div>
-					<div class="col-md-2">
-
-						<p:outputLabel value="#{lb['responsavel.telefone']}"
-							for="responsavelTelefone" />
-					</div>
-					<div class="col-md-4">
-						<p:inputMask id="responsavelTelefone"
-							value="#{buscarResponsavelController.responsavelEdite.telefone}"
-							mask="(99)9999-9999" />
-					</div>
-				</div>
-			</fieldset>
-
-			<fieldset>
-				<legend>Dados Bancários</legend>
-				<div class="row">
-					<div class="col-md-2">
-						<p:outputLabel value="#{lb['responsavel.codigoBanco']}"
-							for="codigoBanco" />
-					</div>
-					<div class="col-md-2">
-						<p:inputText id="codigoBanco"
-							value="#{buscarResponsavelController.responsavelEdite.codigoBanco}"
-							required="true" />
-					</div>
-					<div class="col-md-2">
-						<p:outputLabel value="#{lb['responsavel.numeroAgencia']}"
-							for="numeroAgencia" />
-					</div>
-					<div class="col-md-3">
-						<p:inputText id="numeroAgencia"
-							value="#{buscarResponsavelController.responsavelEdite.numeroAgencia}"
-							required="true" />
-					</div>
-					<div class="col-md-2">
-						<p:outputLabel value="#{lb['responsavel.digitoAgencia']}"
-							for="digitoAgencia" />
-					</div>
-					<div class="col-md-2">
-						<p:inputText id="digitoAgencia"
-							value="#{buscarResponsavelController.responsavelEdite.digitoAgencia}"
-							required="true" />
-					</div>
-					<div class="col-md-2">
-
-						<p:outputLabel value="#{lb['responsavel.numeroConta']}"
-							for="numeroConta" />
-					</div>
-					<div class="col-md-5">
-						<p:inputText id="numeroConta"
-							value="#{buscarResponsavelController.responsavelEdite.numeroConta}"
-							required="true" />
-					</div>
-					<div class="col-md-2">
-
-						<p:outputLabel value="#{lb['responsavel.digitoConta']}"
-							for="digitoConta" />
-					</div>
-					<div class="col-md-2">
-						<p:inputText id="digitoConta"
-							value="#{buscarResponsavelController.responsavelEdite.digitoConta}"
-							required="true" />
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-2">
-						<p:outputLabel value="#{lb['responsavel.tipo']}" for="tipoConta" />
-					</div>
-					<div class="col-md-3">
-						<p:selectOneMenu id="tipoConta"
-							itemLabel="#{wd['dialog.optionYes']}"
-							value="#{buscarResponsavelController.responsavelEdite.tipoConta}"
-							required="true">
-							<f:selectItems
-								value="#{buscarResponsavelController.tipoContas()}" />
-								<p:ajax event="change"
-							listener="#{buscarResponsavelController.desabilitarOperacao()}"
-							process="@this"
-							update=":responsavelTabView:updateResponsavelForm:operacaoEdit" />
-						</p:selectOneMenu>
-					</div>
-					<div class="col-md-2">
-					<!-- #{buscarResponsavelController.desabilitaOperacao} -->
-						<p:outputLabel value="Cód. Operação" rendered="true"
-							for="operacaoEdit" />
-					</div>
-					<div class="col-md-2">
-						<p:inputText id="operacaoEdit" rendered="#{buscarResponsavelController.desabilitaOperacao}"
-							value="#{buscarResponsavelController.responsavelEdite.operacao}"/>
-					</div>
-					
-				</div>
-			</fieldset>
+								</div>
 
 			<p:commandButton value="#{wd['button.update']}"
-				update=":responsavelTabView, messages"
-				actionListener="#{buscarResponsavelController.editar}"
+				update=":arquivoTabView, messages"
+				actionListener="#{buscarArquivoController.editar()}"
 				styleClass="col-md-4 r6" icon="ui-icon-disk" process="@form" />
 			<p:commandButton value="#{wd['button.cancel']}"
 				icon="ui-icon-cancel"
-				actionListener="#{buscarResponsavelController.closeEditTab}"
+				actionListener="#{buscarArquivoController.closeEditTab}"
 				styleClass="col-md-4 r7" process="@this" />
 		</p:panel>
 	</h:form>
